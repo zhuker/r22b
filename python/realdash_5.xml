@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RealDashCAN version="2">
+  <frames>
+    <frame id="0xC80">
+      <value name="Rear Diff Temp" targetId="138" units="C" offset="0" length="2" conversion="V/10"></value>
+    </frame>
+    
+    <!-- TPMS Data - Front Left -->
+    <frame id="0xC81">
+      <value name="Tyre Front Left Pressure" targetId="240" units="bar" offset="0" length="2" conversion="V/100"></value>
+      <value name="Tyre Front Left Temperature" targetId="232" units="C" offset="2" length="2" conversion="V/10"></value>
+      <value name="Tyre Front Left Leaking" targetId="739" offset="4" length="1"></value>
+      <value name="Tyre Front Left Battery Low" targetId="743" offset="5" length="1"></value>
+    </frame>
+    
+    <!-- TPMS Data - Front Right -->
+    <frame id="0xC82">
+      <value name="Tyre Front Right Pressure" targetId="241" units="bar" offset="0" length="2" conversion="V/100"></value>
+      <value name="Tyre Front Right Temperature" targetId="233" units="C" offset="2" length="2" conversion="V/10"></value>
+      <value name="Tyre Front Right Leaking" targetId="740" offset="4" length="1"></value>
+      <value name="Tyre Front Right Battery Low" targetId="744" offset="5" length="1"></value>
+    </frame>
+    
+    <!-- TPMS Data - Rear Left -->
+    <frame id="0xC83">
+      <value name="Tyre Rear Left Pressure" targetId="242" units="bar" offset="0" length="2" conversion="V/100"></value>
+      <value name="Tyre Rear Left Temperature" targetId="234" units="C" offset="2" length="2" conversion="V/10"></value>
+      <value name="Tyre Rear Left Leaking" targetId="741" offset="4" length="1"></value>
+      <value name="Tyre Rear Left Battery Low" targetId="745" offset="5" length="1"></value>
+    </frame>
+    
+    <!-- TPMS Data - Rear Right -->
+    <frame id="0xC84">
+      <value name="Tyre Rear Right Pressure" targetId="243" units="bar" offset="0" length="2" conversion="V/100"></value>
+      <value name="Tyre Rear Right Temperature" targetId="235" units="C" offset="2" length="2" conversion="V/10"></value>
+      <value name="Tyre Rear Right Leaking" targetId="742" offset="4" length="1"></value>
+      <value name="Tyre Rear Right Battery Low" targetId="746" offset="5" length="1"></value>
+    </frame>
+      
+  </frames>
+</RealDashCAN>

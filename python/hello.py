@@ -1,11 +1,15 @@
 import traceback
 import ADS1263
 import time
+import struct
+import asyncio
+import threading
 # --- BLE Imports ---
 from bluezero import adapter
 from bluezero import peripheral
 from bluezero import async_tools
 import logging
+from bleak import BleakScanner
 
 # --- Configuration ---
 V_SOURCE = 3.3          # We use 3.3V for Pi safety (Datasheet uses 5V, so we recalc)
@@ -59,6 +63,83 @@ CALIBRATION_TABLE = {
        57: 140,   # [cite: 198, 200]
        43: 150   # [cite: 198, 200]
 }
+
+# --- TPMS Data Storage ---
+tpms_data = {
+    'FL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+    'FR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+    'RL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+    'RR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0}
+}
+
+def decode_tpms(raw_bytes):
+    """
+    Decodes TPMS data from BLE advertisement
+    Returns: (pressure_bar, temp_c, battery_low)
+    """
+    try:
+        # Pressure is Bytes 6-9 (Little Endian uint32)
+        pressure_raw = struct.unpack('<I', raw_bytes[6:10])[0]
+        # Pressure is already in kPa, convert directly to bar
+        pressure_bar = pressure_raw / 100000
+
+        # Temp is Bytes 10-13 (Little Endian uint32)
+        temp_raw = struct.unpack('<I', raw_bytes[10:14])[0]
+        temp_c = temp_raw / 100
+
+        # Battery is typically at index 14
+        battery_raw = raw_bytes[14]
+        
+        # If battery is low (< 20%), set flag
+        battery_low = 1 if battery_raw < 20 else 0
+
+        leaking = raw_bytes[15]  
+
+        return pressure_bar, temp_c, battery_low, leaking
+    except:
+        return 0.0, 0.0, 0, 0
+
+def tpms_detection_callback(device, advertisement_data):
+    """Callback for TPMS sensor detection"""
+    if device.name and "TPMS" in device.name:
+        try:
+            p, t, b, l = decode_tpms(advertisement_data.manufacturer_data[256])
+            
+            # Map device name to tire position
+            # Adjust these names to match your actual TPMS sensor names
+            if "TPMS1" in device.name:
+                pos = 'FL'
+            elif "TPMS2" in device.name:
+                pos = 'FR'
+            elif "TPMS3" in device.name:
+                pos = 'RL'
+            elif "TPMS4" in device.name:
+                pos = 'RR'
+            else:
+                pos = 'FL'  # Default
+            
+            tpms_data[pos]['pressure'] = p
+            tpms_data[pos]['temp'] = t
+            tpms_data[pos]['battery'] = b
+            tpms_data[pos]['leaking'] = l
+            
+            print(f"{device.name} -> {pos}: {p:.2f} bar | {t:.1f} °C | Battery Low: {b}")
+        except Exception as e:
+            pass
+
+async def tpms_scanner_loop():
+    """Async loop for TPMS BLE scanning"""
+    scanner = BleakScanner(tpms_detection_callback)
+    await scanner.start()
+    print("TPMS Scanner started...")
+    while True:
+        await asyncio.sleep(1)
+
+def start_tpms_scanner():
+    """Start TPMS scanner in separate thread"""
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    loop.run_until_complete(tpms_scanner_loop())
 
 def get_temp_from_resistance(r_measured):
     """
@@ -205,28 +286,79 @@ def build_realdash_frame(can_id, value):
     # Pack into 8 bytes (2 bytes for data, 6 bytes padding)
     frame.extend(temp_int.to_bytes(2, byteorder='little', signed=True))
     frame.extend(bytearray([0,0,0,0,0,0]))
-    print(frame)
+    return list(frame)
+
+def build_tpms_frame(can_id, pressure_bar, temp_c, leaking, battery_low):
+    """
+    Builds TPMS CAN frame
+    Data layout:
+    - Offset 0-1: Pressure in bar * 100 (uint16)
+    - Offset 2-3: Temperature in C * 10 (int16)
+    - Offset 4: Leaking flag (uint8)
+    - Offset 5: Battery Low flag (uint8)
+    - Offset 6-7: Reserved (0)
+    """
+    frame = bytearray([0x44, 0x33, 0x22, 0x11])
+    frame.extend(can_id.to_bytes(4, byteorder='little'))
+    
+    # Pressure (bar * 100)
+    pressure_int = int(pressure_bar * 100)
+    frame.extend(pressure_int.to_bytes(2, byteorder='little', signed=False))
+    
+    # Temperature (C * 10)
+    temp_int = int(temp_c * 10)
+    frame.extend(temp_int.to_bytes(2, byteorder='little', signed=True))
+    
+    # Leaking flag
+    frame.append(leaking & 0xFF)
+    
+    # Battery Low flag
+    frame.append(battery_low & 0xFF)
+    
+    # Reserved bytes
+    frame.extend(bytearray([0, 0]))
+    
     return list(frame)
 
 # --- BLE Loop ---
 counter=0
 def send_can_frame(characteristic):
     global counter
-    # 1. Read Temp
+    # 1. Read Diff Temp
     temp = read_current_temp()
     
     if temp == -999.0:
-        return True # Skip if error, but keep timer running
-        
-    # 2. Build Frame (Using CAN ID 3200)
-    data_bytes = build_realdash_frame(3200, temp)
+        temp = 0.0  # Default value if error
     
-    # 3. Send
-    # Note: bluezero limits notifications to MTU size (usually 20 bytes). 
-    # Our frame is 4+4+8 = 16 bytes. It fits perfectly.
-    characteristic.set_value(data_bytes)
+    # 2. Build all frames
+    frames = []
     
-    print(f"\rSent RealDash Frame {counter}: {temp:.1f} C  ", end="")
+    # Frame 1: Diff Temp (CAN ID 0xC80 = 3200)
+    frames.append(build_realdash_frame(3200, temp))
+    
+    # Frame 2: Front Left TPMS (CAN ID 0xC81 = 3201)
+    fl = tpms_data['FL']
+    frames.append(build_tpms_frame(3201, fl['pressure'], fl['temp'], fl['leaking'], fl['battery']))
+    
+    # Frame 3: Front Right TPMS (CAN ID 0xC82 = 3202)
+    fr = tpms_data['FR']
+    frames.append(build_tpms_frame(3202, fr['pressure'], fr['temp'], fr['leaking'], fr['battery']))
+    
+    # Frame 4: Rear Left TPMS (CAN ID 0xC83 = 3203)
+    rl = tpms_data['RL']
+    frames.append(build_tpms_frame(3203, rl['pressure'], rl['temp'], rl['leaking'], rl['battery']))
+    
+    # Frame 5: Rear Right TPMS (CAN ID 0xC84 = 3204)
+    rr = tpms_data['RR']
+    frames.append(build_tpms_frame(3204, rr['pressure'], rr['temp'], rr['leaking'], rr['battery']))
+    
+    # 3. Send all frames individually
+    # Send each frame separately to avoid exceeding BLE MTU limits
+    for frame in frames:
+        characteristic.set_value(frame)
+        time.sleep(0.01)  # Small delay between frames
+    
+    print(f"\rFrame {counter}: Diff={temp:.1f}C FL={fl['pressure']:.2f}bar FR={fr['pressure']:.2f}bar RL={rl['pressure']:.2f}bar RR={rr['pressure']:.2f}bar  ", end="")
     counter += 1
     return True
 
@@ -260,6 +392,11 @@ def main(adapter_address):
                                   write_callback=None)
 
     print("Advertising 'STI_Diff_Sensor' for RealDash...")
+    
+    # Start TPMS scanner in background thread
+    tpms_thread = threading.Thread(target=start_tpms_scanner, daemon=True)
+    tpms_thread.start()
+    
     tx_monitor.publish()
 
 if __name__ == '__main__':
