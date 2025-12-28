@@ -24,6 +24,8 @@ TEMP_CHAR_UUID = '2A6E'
 NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E'
 NUS_RX_CHAR_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E' # Write (App to Pi)
 NUS_TX_CHAR_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E' # Notify (Pi to App)
+ENABLE_MTU_PROBE = True  # Set True to run a one-time notification length probe
+NOTIF_PAYLOAD_LIMIT = 20  # Default safe data bytes per notification
 
 # --- Calibration Table from AEM 30-2012 Datasheet  ---
 # Format: {Resistance_Ohms: Temp_Celsius}
@@ -320,6 +322,126 @@ def build_tpms_frame(can_id, pressure_bar, temp_c, leaking, battery_low):
     
     return list(frame)
 
+# --- D-Bus MTU Logger ---
+try:
+    from pydbus import SystemBus
+    _PYDBUS_AVAILABLE = True
+except Exception:
+    _PYDBUS_AVAILABLE = False
+
+def log_negotiated_mtu(target_uuid=NUS_TX_CHAR_UUID):
+    """Logs negotiated ATT MTU via BlueZ D-Bus.
+
+    Strategy:
+    1) Prefer org.bluez.Device1 'MTU' on any Connected device (server side).
+    2) Fallback: try to locate our characteristic UUID and read its 'MTU'.
+    """
+    if not _PYDBUS_AVAILABLE:
+        print("MTU: pydbus not installed; skipping MTU query.")
+        return
+    try:
+        bus = SystemBus()
+        om = bus.get('org.bluez', '/')
+        managed = om.GetManagedObjects()
+
+        # 1) Check Device1 objects for a connected central and read MTU
+        connected_devices = []
+        for path, ifaces in managed.items():
+            dev = ifaces.get('org.bluez.Device1')
+            if not dev:
+                continue
+            if dev.get('Connected'):
+                connected_devices.append((path, dev))
+        if connected_devices:
+            for path, dev in connected_devices:
+                mtu = dev.get('MTU')
+                addr = dev.get('Address')
+                name = dev.get('Name')
+                if mtu is not None:
+                    print(f"Negotiated MTU: {mtu} (device {name or ''} {addr or ''} at {path})")
+                    return
+            # If connected but MTU missing, continue to characteristic fallback
+
+        # 2) Fallback: locate our characteristic by UUID and attempt reading MTU
+        target_uuid_lower = (target_uuid or '').lower()
+        for path, ifaces in managed.items():
+            props = ifaces.get('org.bluez.GattCharacteristic1')
+            if not props:
+                continue
+            uuid = props.get('UUID', '').lower()
+            if target_uuid_lower and uuid == target_uuid_lower:
+                mtu = props.get('MTU')
+                if mtu is not None:
+                    print(f"Negotiated MTU: {mtu} (characteristic at {path})")
+                    return
+                try:
+                    char = bus.get('org.bluez', path)
+                    mtu = char.Get('org.bluez.GattCharacteristic1', 'MTU')
+                    print(f"Negotiated MTU: {mtu} (characteristic at {path})")
+                except Exception:
+                    print(f"MTU property not available on characteristic {path}.")
+                return
+
+        # At this point, likely running as GATT server. BlueZ typically exposes
+        # 'MTU' on Device1 only when acting as a GATT client. For server role,
+        # MTU may not be available via D-Bus.
+        print("MTU: no Device1 with MTU and matching characteristic not found.")
+        # Diagnostic: list connected Device1 entries and all GATT characteristics
+        try:
+            connected_paths = []
+            for path, ifaces in managed.items():
+                dev = ifaces.get('org.bluez.Device1')
+                if dev and dev.get('Connected'):
+                    connected_paths.append(path)
+            if connected_paths:
+                print("Connected Device1 paths:")
+                for p in connected_paths:
+                    dev = managed[p]['org.bluez.Device1']
+                    print(f" - {p} name={dev.get('Name')} addr={dev.get('Address')} hasMTU={'MTU' in dev}")
+            else:
+                print("No connected Device1 entries found (server role likely).")
+
+            print("Available GattCharacteristic1 UUIDs:")
+            for path, ifaces in managed.items():
+                props = ifaces.get('org.bluez.GattCharacteristic1')
+                if not props:
+                    continue
+                print(f" - {path} uuid={props.get('UUID')} service={props.get('Service')}")
+        except Exception:
+            pass
+    except Exception as e:
+        print(f"MTU query failed: {e}")
+
+def probe_notification_limit(characteristic):
+    """
+    Attempts to find the maximum notification payload length accepted
+    by the current connection. Starts from a safe upper bound and
+    decreases until a notification is accepted without error.
+
+    Note: This sends a dummy RealDash CAN-like frame padded to target length.
+    RealDash should ignore unknown CAN IDs. Use sparingly.
+    """
+    # Start from a typical negotiated max (e.g., 100 bytes) and go down.
+    # Default BLE 4.0 MTU (23) allows 20 data bytes.
+    global NOTIF_PAYLOAD_LIMIT
+    for length in [100, 64, 40, 32, 24, 20, 16]:
+        try:
+            # Build header + ID + data with padding
+            header = bytearray([0x44, 0x33, 0x22, 0x11])
+            can_id = (0xD000).to_bytes(4, byteorder='little')  # dummy CAN id
+            data_len = max(0, length - len(header) - len(can_id))
+            payload = header + can_id + bytearray([0]*data_len)
+            characteristic.set_value(list(payload))
+            print(f"MTU probe: notification accepted at {length} bytes.")
+            NOTIF_PAYLOAD_LIMIT = length
+            return length
+        except Exception as e:
+            # Try next smaller length
+            continue
+    print("MTU probe: unable to send even minimal payload; using 16 bytes.")
+    NOTIF_PAYLOAD_LIMIT = 16
+    return 16
+
 # --- BLE Loop ---
 counter=0
 def send_can_frame(characteristic):
@@ -352,11 +474,16 @@ def send_can_frame(characteristic):
     rr = tpms_data['RR']
     frames.append(build_tpms_frame(3204, rr['pressure'], rr['temp'], rr['leaking'], rr['battery']))
     
-    # 3. Send all frames individually
-    # Send each frame separately to avoid exceeding BLE MTU limits
+    # 3. Send frames: bundle if within NOTIF_PAYLOAD_LIMIT, else individually
+    combined = []
     for frame in frames:
-        characteristic.set_value(frame)
-        time.sleep(0.01)  # Small delay between frames
+        combined.extend(frame)
+    if len(combined) <= NOTIF_PAYLOAD_LIMIT:
+        characteristic.set_value(combined)
+    else:
+        for frame in frames:
+            characteristic.set_value(frame)
+            time.sleep(0.01)
     
     print(f"\rFrame {counter}: Diff={temp:.1f}C FL={fl['pressure']:.2f}bar FR={fr['pressure']:.2f}bar RL={rl['pressure']:.2f}bar RR={rr['pressure']:.2f}bar  ", end="")
     counter += 1
@@ -365,6 +492,10 @@ def send_can_frame(characteristic):
 def notify_callback(notifying, characteristic):
     if notifying:
         print("\nRealDash Connected! Streaming Data...")
+        # Log negotiated MTU once a central connects
+        log_negotiated_mtu()
+        if ENABLE_MTU_PROBE:
+            probe_notification_limit(characteristic)
         # Update fast (100ms) for smooth gauge movement
         async_tools.add_timer_seconds(1, send_can_frame, characteristic)
     else:
