@@ -110,6 +110,61 @@ class SensorReader:
         except:
             return -999.0
 
+
+class H264StreamSource:
+    """Manages H.264 frame loading and packetization."""
+    def __init__(self, frames_dir: str = "h264SampleFrames"):
+        self.frames_dir = frames_dir
+        self.frame_files: List[str] = []
+        self.current_frame = 0
+        self.total_packets_sent = 0
+        self._load_frame_files()
+    
+    def _load_frame_files(self):
+        """Load available frame files from directory."""
+        self.frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
+        self.current_frame = 0
+    
+    def reload_frames(self):
+        """Reload frame files from directory."""
+        self._load_frame_files()
+    
+    def reset(self):
+        """Reset to first frame."""
+        self.current_frame = 0
+    
+    def has_frames(self) -> bool:
+        """Check if frames are available."""
+        return len(self.frame_files) > 0
+    
+    def get_next_frame_packets(self) -> List[bytes]:
+        """Get packetized data for next frame."""
+        if not self.frame_files:
+            return []
+        
+        # Loop back to start if we've reached the end
+        if self.current_frame >= len(self.frame_files):
+            self.current_frame = 0
+        
+        frame_file = self.frame_files[self.current_frame]
+        
+        # Read and packetize frame
+        frame_data = h264_packetizer.read_h264_frame(frame_file)
+        packets = h264_packetizer.packetize_frame(frame_data)
+        
+        self.current_frame += 1
+        self.total_packets_sent += len(packets)
+        
+        return packets
+    
+    def get_stats(self) -> Dict[str, int]:
+        """Get streaming statistics."""
+        return {
+            'current_frame': self.current_frame,
+            'total_frames': len(self.frame_files),
+            'total_packets_sent': self.total_packets_sent
+        }
+
 # --- Temperature/TPMS Functions ---
 def get_temp_from_resistance(r_measured):
     """Interpolates temperature from resistance value."""
@@ -203,11 +258,11 @@ def build_tpms_frame(can_id, pressure_bar, temp_c, leaking, battery_low):
 # --- GATT Server Implementation ---
 class BumbleGATTServer:
     def __init__(self, device: Device, sensor_reader: SensorReader, tpms_data: TPMSData,
-                 frames_dir: str = "h264SampleFrames"):
+                 h264_source: H264StreamSource):
         self.device = device
         self.sensor_reader = sensor_reader
         self.tpms_data = tpms_data
-        self.frames_dir = frames_dir
+        self.h264_source = h264_source
         
         # Characteristic references
         self.nus_tx_char = None
@@ -219,9 +274,6 @@ class BumbleGATTServer:
         
         # H.264 streaming state
         self.h264_streaming_active = False
-        self.h264_current_frame = 0
-        self.h264_frame_files = []
-        self.sent_h264_packets = 0
         
         # Statistics
         self.counter = 0
@@ -291,14 +343,13 @@ class BumbleGATTServer:
         
         if cmd == "START":
             self.h264_streaming_active = True
-            self.h264_current_frame = 0
-            self.h264_frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
-            logger.info(f"H.264: Starting stream ({len(self.h264_frame_files)} frames)")
+            self.h264_source.reload_frames()
+            logger.info(f"H.264: Starting stream)")
         elif cmd == "STOP":
             self.h264_streaming_active = False
             logger.info("H.264: Stopping stream")
         elif cmd == "RESET":
-            self.h264_current_frame = 0
+            self.h264_source.reset()
             logger.info("H.264: Reset to frame 0")
     
     def _on_nus_tx_subscription(self, connection, notify_enabled, indicate_enabled):
@@ -316,7 +367,7 @@ class BumbleGATTServer:
             logger.info("H.264 Client Connected! Ready to stream.")
             logger.info("Send 'START' to begin streaming")
             self.h264_streaming_active = True
-            self.h264_frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
+            self.h264_source.reload_frames()
         else:
             logger.info("H.264 Client Disconnected.")
             self.h264_streaming_active = False
@@ -355,28 +406,27 @@ class BumbleGATTServer:
     
     async def send_h264_frame(self):
         """Send H.264 video frame."""
-        if not self.h264_stream_subscribed or not self.h264_streaming_active or not self.h264_frame_files:
+        if not self.h264_stream_subscribed or not self.h264_streaming_active:
             return
         
-        # Get current frame file
-        if self.h264_current_frame >= len(self.h264_frame_files):
-            self.h264_current_frame = 0
-        
-        frame_file = self.h264_frame_files[self.h264_current_frame]
+        if not self.h264_source.has_frames():
+            return
         
         try:
-            # Read and packetize frame
-            frame_data = h264_packetizer.read_h264_frame(frame_file)
-            packets = h264_packetizer.packetize_frame(frame_data)
+            # Get packetized frame from source
+            packets = self.h264_source.get_next_frame_packets()
+            
+            if not packets:
+                return
             
             # Send each packet as notification
             for packet in packets:
                 await self.device.notify_subscribers(self.h264_stream_char, packet)
-                self.sent_h264_packets += 1
             
-            print(f"\rH.264: Frame {self.h264_current_frame+1}/{len(self.h264_frame_files)} "
-                  f"({len(packets)} packets) Sent={self.sent_h264_packets} ", end="")
-            self.h264_current_frame += 1
+            # Get stats for display
+            stats = self.h264_source.get_stats()
+            print(f"\rH.264: Frame {stats['current_frame']}/{stats['total_frames']} "
+                  f"({len(packets)} packets) Total={stats['total_packets_sent']} ", end="")
             
         except Exception as e:
             logger.error(f"H.264 Error: {e}")
@@ -388,6 +438,7 @@ async def main():
     # Initialize state objects
     sensor_reader = SensorReader()
     tpms_data = TPMSData()
+    h264_source = H264StreamSource(frames_dir="h264SampleFrames")
     
     # Open transport
     async with await open_transport(TRANSPORT) as hci_transport:
@@ -402,7 +453,7 @@ async def main():
         )
         
         # Create GATT server with dependencies
-        gatt_server = BumbleGATTServer(device, sensor_reader, tpms_data)
+        gatt_server = BumbleGATTServer(device, sensor_reader, tpms_data, h264_source)
         
         # Debug print GATT attributes
         logger.info("GATT Server Attributes:")
