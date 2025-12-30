@@ -13,12 +13,16 @@ import asyncio
 import os
 import sys
 import glob
+import fractions
 from typing import List, Iterator, Dict
 from struct import pack
+from abc import ABC, abstractmethod
 import logging
 
 # Local imports
 import h264_packetizer
+from h264_stream_sources import H264StreamSource, H264FileStreamSource, H264CameraStreamSource
+import av
 
 # Bumble imports
 from bumble.device import Device, Connection, AdvertisingType
@@ -110,60 +114,6 @@ class SensorReader:
         except:
             return -999.0
 
-
-class H264StreamSource:
-    """Manages H.264 frame loading and packetization."""
-    def __init__(self, frames_dir: str = "h264SampleFrames"):
-        self.frames_dir = frames_dir
-        self.frame_files: List[str] = []
-        self.current_frame = 0
-        self.total_packets_sent = 0
-        self._load_frame_files()
-    
-    def _load_frame_files(self):
-        """Load available frame files from directory."""
-        self.frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
-        self.current_frame = 0
-    
-    def reload_frames(self):
-        """Reload frame files from directory."""
-        self._load_frame_files()
-    
-    def reset(self):
-        """Reset to first frame."""
-        self.current_frame = 0
-    
-    def has_frames(self) -> bool:
-        """Check if frames are available."""
-        return len(self.frame_files) > 0
-    
-    def get_next_frame_packets(self) -> List[bytes]:
-        """Get packetized data for next frame."""
-        if not self.frame_files:
-            return []
-        
-        # Loop back to start if we've reached the end
-        if self.current_frame >= len(self.frame_files):
-            self.current_frame = 0
-        
-        frame_file = self.frame_files[self.current_frame]
-        
-        # Read and packetize frame
-        frame_data = h264_packetizer.read_h264_frame(frame_file)
-        packets = h264_packetizer.packetize_frame(frame_data)
-        
-        self.current_frame += 1
-        self.total_packets_sent += len(packets)
-        
-        return packets
-    
-    def get_stats(self) -> Dict[str, int]:
-        """Get streaming statistics."""
-        return {
-            'current_frame': self.current_frame,
-            'total_frames': len(self.frame_files),
-            'total_packets_sent': self.total_packets_sent
-        }
 
 # --- Temperature/TPMS Functions ---
 def get_temp_from_resistance(r_measured):
@@ -394,7 +344,6 @@ class BumbleGATTServer:
         # Send all frames
         for frame in frames:
             await self.device.notify_subscribers(self.nus_tx_char, frame)
-            await asyncio.sleep(0.01)
         
         fl = self.tpms_data.get('FL')
         fr = self.tpms_data.get('FR')
@@ -438,7 +387,10 @@ async def main():
     # Initialize state objects
     sensor_reader = SensorReader()
     tpms_data = TPMSData()
-    h264_source = H264StreamSource(frames_dir="h264SampleFrames")
+    
+    # Choose H.264 source: file-based or camera
+    # h264_source = H264FileStreamSource(frames_dir="h264SampleFrames")
+    h264_source = H264CameraStreamSource(device='/dev/video0', width=640, height=360, framerate=30, bitrate=200000)
     
     # Open transport
     async with await open_transport(TRANSPORT) as hci_transport:
@@ -506,10 +458,13 @@ async def main():
                 
                 # Send H.264 frames at ~30 FPS (33ms per frame)
                 await gatt_server.send_h264_frame()
-                await asyncio.sleep(0.040)
+                await asyncio.sleep(0.001)
                 
         except KeyboardInterrupt:
             logger.info("Shutting down...")
+        finally:
+            # Cleanup H.264 source
+            h264_source.cleanup()
         
         # Wait for termination
         await hci_transport.source.wait_for_termination()
