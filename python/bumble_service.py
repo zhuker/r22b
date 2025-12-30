@@ -13,9 +13,12 @@ import asyncio
 import os
 import sys
 import glob
-from typing import List, Iterator
+from typing import List, Iterator, Dict
 from struct import pack
 import logging
+
+# Local imports
+import h264_packetizer
 
 # Bumble imports
 from bumble.device import Device, Connection, AdvertisingType
@@ -56,8 +59,6 @@ NUS_TX_CHAR_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E'
 H264_STREAM_CHAR_UUID = '6E400012-B5A3-F393-E0A9-E50E24DCCA9E'
 H264_CONTROL_CHAR_UUID = '6E400013-B5A3-F393-E0A9-E50E24DCCA9E'
 
-H264_PACKET_SIZE = 500
-
 # Calibration Table
 CALIBRATION_TABLE = {
     28136: -20, 15813: -10, 9319: 0, 5589: 10, 3476: 20,
@@ -66,135 +67,48 @@ CALIBRATION_TABLE = {
     73: 130, 57: 140, 43: 150
 }
 
-# TPMS Data Storage
-tpms_data = {
-    'FL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-    'FR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-    'RL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-    'RR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0}
-}
+# --- State Classes ---
+class TPMSData:
+    """Container for TPMS sensor data."""
+    def __init__(self):
+        self.data: Dict[str, Dict[str, float]] = {
+            'FL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+            'FR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+            'RL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
+            'RR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0}
+        }
+    
+    def update(self, position: str, pressure: float, temp: float, battery: int, leaking: int):
+        """Update TPMS data for a position."""
+        if position in self.data:
+            self.data[position]['pressure'] = pressure
+            self.data[position]['temp'] = temp
+            self.data[position]['battery'] = battery
+            self.data[position]['leaking'] = leaking
+    
+    def get(self, position: str) -> Dict[str, float]:
+        """Get TPMS data for a position."""
+        return self.data.get(position, {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0})
 
-# H.264 Streaming State
-h264_streaming_active = False
-h264_current_frame = 0
-h264_frame_files = []
 
-# H.264 Constants
-NAL_TYPE_FU_A = 28
-NAL_TYPE_STAP_A = 24
-NAL_HEADER_SIZE = 1
-FU_A_HEADER_SIZE = 2
-STAP_A_HEADER_SIZE = 1
-NAL_LENGTH_SIZE = 2
-
-# ADC
-ADC = ADS1263.ADS1263()
-if ADC.ADS1263_init_ADC1('ADS1263_400SPS') != -1:
-    ADC.ADS1263_SetMode(0)
-
-# --- H.264 Packetization Functions ---
-def find_nal_units(buf: bytes) -> Iterator[bytes]:
-    """Find NAL units in H.264 bitstream."""
-    i = 0
-    while True:
-        i = buf.find(b"\x00\x00\x01", i)
-        if i == -1:
-            return
-        i += 3
-        nal_start = i
-        i = buf.find(b"\x00\x00\x01", i)
-        if i == -1:
-            yield buf[nal_start:len(buf)]
-            return
-        elif buf[i - 1] == 0:
-            yield buf[nal_start:i - 1]
-        else:
-            yield buf[nal_start:i]
-
-def packetize_nal(nal_unit: bytes, max_size: int = H264_PACKET_SIZE) -> List[bytes]:
-    """Packetize single NAL unit."""
-    packets = []
-    nal_size = len(nal_unit)
-    if nal_size == 0:
-        return packets
-    nal_type = nal_unit[0] & 0x1F
-    f_nri = nal_unit[0] & 0xE0
-    if nal_size <= max_size:
-        packets.append(nal_unit)
-    else:
-        fu_indicator = f_nri | NAL_TYPE_FU_A
-        payload_size = max_size - FU_A_HEADER_SIZE
-        nal_payload = nal_unit[NAL_HEADER_SIZE:]
-        num_fragments = (len(nal_payload) + payload_size - 1) // payload_size
-        for i in range(num_fragments):
-            start = i * payload_size
-            end = min(start + payload_size, len(nal_payload))
-            fu_header = nal_type
-            if i == 0:
-                fu_header |= 0x80
-            if i == num_fragments - 1:
-                fu_header |= 0x40
-            packet = bytes([fu_indicator, fu_header]) + nal_payload[start:end]
-            packets.append(packet)
-    return packets
-
-def create_stap_a_packet(nal_units: List[bytes], max_size: int = H264_PACKET_SIZE) -> bytes:
-    """Create STAP-A packet from multiple NAL units."""
-    if not nal_units:
-        return b''
-    f_nri = nal_units[0][0] & 0xE0
-    stap_header = f_nri | NAL_TYPE_STAP_A
-    packet = bytes([stap_header])
-    for nal_unit in nal_units:
-        nal_size = len(nal_unit)
-        packet += pack('>H', nal_size)
-        packet += nal_unit
-    return packet
-
-def packetize_frame(frame_data: bytes, max_size: int = H264_PACKET_SIZE) -> List[bytes]:
-    """Packetize complete H.264 frame."""
-    all_packets = []
-    nal_units = list(find_nal_units(frame_data))
-    aggregation_buffer = []
-    aggregation_size = STAP_A_HEADER_SIZE
-    for nal_unit in nal_units:
-        nal_size = len(nal_unit)
-        needed_size = NAL_LENGTH_SIZE + nal_size
-        needs_fragmentation = nal_size > max_size
-        if needs_fragmentation:
-            if aggregation_buffer:
-                if len(aggregation_buffer) > 1:
-                    stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
-                    all_packets.append(stap_packet)
-                elif len(aggregation_buffer) == 1:
-                    all_packets.append(aggregation_buffer[0])
-                aggregation_buffer = []
-                aggregation_size = STAP_A_HEADER_SIZE
-            packets = packetize_nal(nal_unit, max_size)
-            all_packets.extend(packets)
-        elif aggregation_size + needed_size <= max_size:
-            aggregation_buffer.append(nal_unit)
-            aggregation_size += needed_size
-        else:
-            if len(aggregation_buffer) > 1:
-                stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
-                all_packets.append(stap_packet)
-            elif len(aggregation_buffer) == 1:
-                all_packets.append(aggregation_buffer[0])
-            aggregation_buffer = [nal_unit]
-            aggregation_size = STAP_A_HEADER_SIZE + needed_size
-    if aggregation_buffer:
-        if len(aggregation_buffer) > 1:
-            stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
-            all_packets.append(stap_packet)
-        elif len(aggregation_buffer) == 1:
-            all_packets.append(aggregation_buffer[0])
-    return all_packets
-
-def read_h264_frame(filepath: str) -> bytes:
-    """Read H.264 frame from file."""
-    with open(filepath, 'rb') as f:
-        return f.read()
+class SensorReader:
+    """Handles ADC sensor reading."""
+    def __init__(self):
+        self.adc = ADS1263.ADS1263()
+        if self.adc.ADS1263_init_ADC1('ADS1263_400SPS') != -1:
+            self.adc.ADS1263_SetMode(0)
+    
+    def read_temp(self) -> float:
+        """Reads sensor and returns temp in Celsius."""
+        try:
+            adc_value = self.adc.ADS1263_GetChannalValue(0)
+            v_out = adc_value * (REF / 0x7fffffff)
+            if v_out >= (REF - 0.05):
+                return -999.0
+            r_sensor = (R_PULLUP * v_out) / (REF - v_out)
+            return get_temp_from_resistance(r_sensor)
+        except:
+            return -999.0
 
 # --- Temperature/TPMS Functions ---
 def get_temp_from_resistance(r_measured):
@@ -215,18 +129,6 @@ def get_temp_from_resistance(r_measured):
             return temp
     return None
 
-def read_current_temp():
-    """Reads sensor and returns temp in Float."""
-    try:
-        ADC_Value = ADC.ADS1263_GetChannalValue(0)
-        V_out = ADC_Value * (REF / 0x7fffffff)
-        if V_out >= (REF - 0.05):
-            return -999.0
-        r_sensor = (R_PULLUP * V_out) / (REF - V_out)
-        return get_temp_from_resistance(r_sensor)
-    except:
-        return -999.0
-
 def decode_tpms(raw_bytes):
     """Decodes TPMS data from BLE advertisement."""
     try:
@@ -241,32 +143,29 @@ def decode_tpms(raw_bytes):
     except:
         return 0.0, 0.0, 0, 0
 
-def tpms_detection_callback(device, advertisement_data):
-    """Callback for TPMS sensor detection."""
-    if device.name and "TPMS" in device.name:
-        try:
-            p, t, b, l = decode_tpms(advertisement_data.manufacturer_data[256])
-            if "TPMS1" in device.name:
-                pos = 'FL'
-            elif "TPMS2" in device.name:
-                pos = 'FR'
-            elif "TPMS3" in device.name:
-                pos = 'RL'
-            elif "TPMS4" in device.name:
-                pos = 'RR'
-            else:
-                pos = 'FL'
-            tpms_data[pos]['pressure'] = p
-            tpms_data[pos]['temp'] = t
-            tpms_data[pos]['battery'] = b
-            tpms_data[pos]['leaking'] = l
-        except:
-            pass
-
-async def tpms_scanner_loop():
+async def tpms_scanner_loop(tpms_data: TPMSData):
     """Async loop for TPMS BLE scanning."""
+    def callback(device, advertisement_data):
+        """Callback for TPMS sensor detection."""
+        if device.name and "TPMS" in device.name:
+            try:
+                p, t, b, l = decode_tpms(advertisement_data.manufacturer_data[256])
+                if "TPMS1" in device.name:
+                    pos = 'FL'
+                elif "TPMS2" in device.name:
+                    pos = 'FR'
+                elif "TPMS3" in device.name:
+                    pos = 'RL'
+                elif "TPMS4" in device.name:
+                    pos = 'RR'
+                else:
+                    pos = 'FL'
+                tpms_data.update(pos, p, t, b, l)
+            except:
+                pass
+    
     try:
-        scanner = BleakScanner(tpms_detection_callback)
+        scanner = BleakScanner(callback)
         await scanner.start()
         logger.info("TPMS Scanner started...")
         while True:
@@ -303,12 +202,28 @@ def build_tpms_frame(can_id, pressure_bar, temp_c, leaking, battery_low):
 
 # --- GATT Server Implementation ---
 class BumbleGATTServer:
-    def __init__(self, device: Device):
+    def __init__(self, device: Device, sensor_reader: SensorReader, tpms_data: TPMSData,
+                 frames_dir: str = "h264SampleFrames"):
         self.device = device
+        self.sensor_reader = sensor_reader
+        self.tpms_data = tpms_data
+        self.frames_dir = frames_dir
+        
+        # Characteristic references
         self.nus_tx_char = None
         self.h264_stream_char = None
+        
+        # Subscription state
         self.nus_tx_subscribed = False
         self.h264_stream_subscribed = False
+        
+        # H.264 streaming state
+        self.h264_streaming_active = False
+        self.h264_current_frame = 0
+        self.h264_frame_files = []
+        self.sent_h264_packets = 0
+        
+        # Statistics
         self.counter = 0
         
         # Setup services
@@ -371,21 +286,19 @@ class BumbleGATTServer:
     
     def _write_h264_control(self, connection, value):
         """Write handler for H.264 control characteristic."""
-        global h264_streaming_active, h264_current_frame, h264_frame_files
-        
         cmd = value.decode('utf-8', errors='ignore').strip()
         logger.info(f"H.264 Control: {cmd}")
         
         if cmd == "START":
-            h264_streaming_active = True
-            h264_current_frame = 0
-            h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
-            logger.info(f"H.264: Starting stream ({len(h264_frame_files)} frames)")
+            self.h264_streaming_active = True
+            self.h264_current_frame = 0
+            self.h264_frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
+            logger.info(f"H.264: Starting stream ({len(self.h264_frame_files)} frames)")
         elif cmd == "STOP":
-            h264_streaming_active = False
+            self.h264_streaming_active = False
             logger.info("H.264: Stopping stream")
         elif cmd == "RESET":
-            h264_current_frame = 0
+            self.h264_current_frame = 0
             logger.info("H.264: Reset to frame 0")
     
     def _on_nus_tx_subscription(self, connection, notify_enabled, indicate_enabled):
@@ -397,17 +310,16 @@ class BumbleGATTServer:
             logger.info("RealDash Disconnected.")
     
     def _on_h264_subscription(self, connection, notify_enabled, indicate_enabled):
-        global h264_streaming_active, h264_frame_files
         """Handle subscription changes for H.264 stream."""
         self.h264_stream_subscribed = notify_enabled
         if notify_enabled:
             logger.info("H.264 Client Connected! Ready to stream.")
             logger.info("Send 'START' to begin streaming")
-            h264_streaming_active = True
-            h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
+            self.h264_streaming_active = True
+            self.h264_frame_files = sorted(glob.glob(f"{self.frames_dir}/frame-*.h264"))
         else:
             logger.info("H.264 Client Disconnected.")
-            h264_streaming_active = False
+            self.h264_streaming_active = False
     
     async def send_realdash_data(self):
         """Send RealDash CAN frames."""
@@ -415,7 +327,7 @@ class BumbleGATTServer:
             return
         
         # Read sensor data
-        temp = read_current_temp()
+        temp = self.sensor_reader.read_temp()
         if temp == -999.0:
             temp = 0.0
         
@@ -424,7 +336,7 @@ class BumbleGATTServer:
         frames.append(build_realdash_frame(3200, temp))
         
         for pos, can_id in [('FL', 3201), ('FR', 3202), ('RL', 3203), ('RR', 3204)]:
-            tpms = tpms_data[pos]
+            tpms = self.tpms_data.get(pos)
             frames.append(build_tpms_frame(can_id, tpms['pressure'], tpms['temp'], 
                                           tpms['leaking'], tpms['battery']))
         
@@ -433,42 +345,38 @@ class BumbleGATTServer:
             await self.device.notify_subscribers(self.nus_tx_char, frame)
             await asyncio.sleep(0.01)
         
-        fl = tpms_data['FL']
-        fr = tpms_data['FR']
-        rl = tpms_data['RL']
-        rr = tpms_data['RR']
+        fl = self.tpms_data.get('FL')
+        fr = self.tpms_data.get('FR')
+        rl = self.tpms_data.get('RL')
+        rr = self.tpms_data.get('RR')
         print(f"\rFrame {self.counter}: Diff={temp:.1f}C FL={fl['pressure']:.2f}bar "
               f"FR={fr['pressure']:.2f}bar RL={rl['pressure']:.2f}bar RR={rr['pressure']:.2f}bar  ", end="")
         self.counter += 1
     
-    sent_h264_packets = 0
     async def send_h264_frame(self):
         """Send H.264 video frame."""
-        global h264_streaming_active, h264_current_frame, h264_frame_files
-        
-        if not self.h264_stream_subscribed or not h264_streaming_active or not h264_frame_files:
+        if not self.h264_stream_subscribed or not self.h264_streaming_active or not self.h264_frame_files:
             return
         
         # Get current frame file
-        if h264_current_frame >= len(h264_frame_files):
-            h264_current_frame = 0
+        if self.h264_current_frame >= len(self.h264_frame_files):
+            self.h264_current_frame = 0
         
-        frame_file = h264_frame_files[h264_current_frame]
+        frame_file = self.h264_frame_files[self.h264_current_frame]
         
         try:
             # Read and packetize frame
-            frame_data = read_h264_frame(frame_file)
-            packets = packetize_frame(frame_data, H264_PACKET_SIZE)
+            frame_data = h264_packetizer.read_h264_frame(frame_file)
+            packets = h264_packetizer.packetize_frame(frame_data)
             
             # Send each packet as notification
             for packet in packets:
                 await self.device.notify_subscribers(self.h264_stream_char, packet)
-                # await asyncio.sleep(0.001)
                 self.sent_h264_packets += 1
             
-            print(f"\rH.264: Frame {h264_current_frame+1}/{len(h264_frame_files)} "
+            print(f"\rH.264: Frame {self.h264_current_frame+1}/{len(self.h264_frame_files)} "
                   f"({len(packets)} packets) Sent={self.sent_h264_packets} ", end="")
-            h264_current_frame += 1
+            self.h264_current_frame += 1
             
         except Exception as e:
             logger.error(f"H.264 Error: {e}")
@@ -477,11 +385,15 @@ TRANSPORT="hci-socket:0"
 DEVICE_NAME="22B_Sensors"
 
 async def main():
+    # Initialize state objects
+    sensor_reader = SensorReader()
+    tpms_data = TPMSData()
+    
     # Open transport
     async with await open_transport(TRANSPORT) as hci_transport:
         logger.info("Transport opened.")
         
-        # Create device with HCI transport (similar to Bumble example)
+        # Create device with HCI transport
         device = Device.with_hci(
             DEVICE_NAME,
             'F0:F1:F2:F3:F4:F5',
@@ -489,8 +401,8 @@ async def main():
             hci_transport.sink
         )
         
-        # Create GATT server and add services
-        gatt_server = BumbleGATTServer(device)
+        # Create GATT server with dependencies
+        gatt_server = BumbleGATTServer(device, sensor_reader, tpms_data)
         
         # Debug print GATT attributes
         logger.info("GATT Server Attributes:")
@@ -532,7 +444,7 @@ async def main():
         logger.info(f"Advertising '{DEVICE_NAME}' with Flags + NUS UUID; name/appearance in scan response.")
         
         # Start TPMS scanner
-        asyncio.create_task(tpms_scanner_loop())
+        asyncio.create_task(tpms_scanner_loop(tpms_data))
         
         # Main loop
         try:
