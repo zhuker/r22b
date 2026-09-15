@@ -3,6 +3,7 @@ from pimonitor.cu.PMCUStandardParameter import PMCUStandardParameter
 
 __author__ = 'citan'
 
+
 class PMCUFixedAddressParameter(PMCUStandardParameter):
     def __init__(self, pid, name, desc, target):
         PMCUStandardParameter.__init__(self, pid, name, desc, PMCUParameter.CU_INVALID_BYTE_INDEX(),
@@ -30,6 +31,9 @@ class PMCUFixedAddressParameter(PMCUStandardParameter):
         return self.get_address_for_id(cu_id) is not None
 
     def to_string(self):
-        return "id=" + self._id + "\nname=" + self._name + "\ndesc=" + self._desc +  "\ntarget=" + str(
-            self._target) + "\nconversion:\n\t" + '%s' % '\n\t'.join(x.to_string() for x in self._conversions) + \
-            '\necu: ' + ' '.join(['\n\tid={}, {}'.format(k,v.to_string()) for k,v in self._cu_ids.iteritems()])
+        return "id=" + self._id + "\nname=" + self._name + "\ndesc=" + self._desc + "\ntarget=" + str(
+            self._target) + "\nconversion:\n\t" + '%s' % '\n\t'.join(x.to_string() for x in self._conversions)
+
+        # return "id=" + self._id + "\nname=" + self._name + "\ndesc=" + self._desc + "\ntarget=" + str(
+        #     self._target) + "\nconversion:\n\t" + '%s' % '\n\t'.join(x.to_string() for x in self._conversions) + \
+        #     '\necu: ' + ' '.join(['\n\tid={}, {}'.format(k, v.to_string()) for k, v in self._cu_ids.items()])

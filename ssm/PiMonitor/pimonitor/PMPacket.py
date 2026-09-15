@@ -85,7 +85,7 @@ class PMPacket(object):
         return packet
 
     def to_string(self):
-        return array.array('B', self.to_bytes()).tostring()
+        return self.to_bytes()
 
     def dump(self):
         return "[" + ', '.join(("0x%0.2X" % s) for s in self.to_bytes()) + "], dst: " + hex(

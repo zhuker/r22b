@@ -93,13 +93,13 @@ class PMCUTestCase(unittest.TestCase):
     def test_5_read_parameters(self):
         self.prepare_4_match_parameters()
 
-        print self._ecu_parameters[120].to_string()
+        print(self._ecu_parameters[120].to_string())
         packet = self._connection.read_parameter(self._ecu_parameters[120])
         value = self._ecu_parameters[120].get_value(packet)
-        print 'value=' + value
+        print('value=' + value)
 
     def log(self, message, mid):
-        print message
+        print(message)
 
         return mid
 

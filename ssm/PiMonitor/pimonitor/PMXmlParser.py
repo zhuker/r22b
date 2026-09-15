@@ -89,7 +89,7 @@ class PMXmlParser(xml.sax.ContentHandler):
 
             for (k, v) in attrs.items():
                 if k == "id":
-                    print 'protocol ' + v
+                    print('protocol ' + v)
                     self._proto_id = v
 
         if self._proto_id != "SSM":

@@ -42,7 +42,7 @@ class PMCUContext(object):
     def match_parameters(self, parameters):
         matched = []
         rom_id = self.get_rom_id()
-        print 'rom id=' + rom_id
+        print('rom id=' + rom_id)
 
         for parameter in parameters:
             if parameter.get_target() not in self._targets:
@@ -55,7 +55,7 @@ class PMCUContext(object):
                     matched.append(parameter)
             elif cu_type == PMCUParameter.CU_TYPE_FIXED_ADDRESS_PARAMETER():
                 if parameter.is_supported(rom_id):
-                    print 'match=' + parameter.get_id()
+                    print('match=' + parameter.get_id())
                     parameter.switch_to_id(rom_id)
                     matched.append(parameter)
 
