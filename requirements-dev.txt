@@ -1,0 +1,5 @@
+# Laptop: offline tests (tests/), including the Bumble virtual-link GATT test
+bumble==0.0.220
+bleak==2.0.0
+av==16.0.1
+pytest

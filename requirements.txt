@@ -1,11 +1,7 @@
+# Pi runtime for r22b.ble_service. Pins match the venv on r22b (2026-09-14).
+bumble==0.0.220
 bleak==2.0.0
-bluezero==0.9.1
-dbus-fast==3.1.2
-dbus-python==1.4.0
-pycairo==1.29.0
-pydbus==0.6.0
-PyGObject==3.50.2
+av==16.0.1
 RPi.GPIO==0.7.1
 spidev==3.8
-pyserial>=3.5
-bumble>=0.0.177
+pyserial==3.5
