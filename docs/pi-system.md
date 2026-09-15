@@ -6,7 +6,12 @@ are copied under `system/`, mirroring their paths on the Pi.
 ## Hardware
 
 - Raspberry Pi 4 Model B Rev 1.5, 8 GB, 64 GB SD card (6.5 GB used)
-- Waveshare High-Precision AD HAT (ADS1263, SPI)
+- Waveshare High-Precision AD HAT (ADS1263, SPI),
+  [Amazon B09M7FLFB3](https://www.amazon.com/dp/B09M7FLFB3). Uses SPI
+  GPIO 10/9/11 (pins 19/21/23), CS GPIO22 (pin 15), DRDY GPIO17 (pin 11),
+  RST GPIO18 (pin 12), per Waveshare's wiki (the `r22b/adc/` driver is the
+  ground truth). It sits on top of
+  the 40-pin header.
   - IN0: AEM 30-2012 NTC temp sensor, 2.2 kΩ pull-up (rear diff temp)
   - IN1: AEM 30-2130-150 pressure sensor, 0.5–4.5 V = 0–150 psi
     (`experiments/adc_probe.py`; what it measures isn't recorded)
@@ -41,6 +46,59 @@ From `bash_history`, in order:
   `vc4-fkms-v3d`, fixed 1080p HDMI, no splash. `cmdline.txt` adds `quiet
   nosplash` and a forced HDMI mode.
 - **Bluetooth:** stock bluetoothd, enabled. See [ble.md](ble.md).
+
+## Access
+
+From the Mac, SSH first, serial console when the network is down (bad
+`systemd-networkd` config, boot hang, no Ethernet in the car).
+
+- **SSH:** `ssh r22b` (the `r22b` host entry in `~/.ssh/config`; static IP
+  192.168.1.50).
+- **Serial console:** a tmux session `pi` running `tio`, logged to
+  `~/pi-console.log`. Start it if `tmux has-session -t pi` fails:
+  ```
+  tmux new -d -s pi 'tio -b 115200 --log --log-file ~/pi-console.log /dev/cu.usbserial-0001'
+  ```
+  Read with `tmux capture-pane -pt pi` (add `-S -200` for scrollback), type with
+  `tmux send-keys -t pi -l 'command'; tmux send-keys -t pi Enter`. A human
+  can `tmux attach -t pi` (detach `Ctrl-b d`, quit tio `Ctrl-t q`).
+- **Logging in on serial:** the username and password are lines 1 and 2 of
+  `~/secrets/r22b.txt`. Send them from the file so the password never appears
+  in a command line or transcript:
+  ```
+  tmux send-keys -t pi -l "$(sed -n 1p ~/secrets/r22b.txt)"; tmux send-keys -t pi Enter
+  sleep 2
+  tmux send-keys -t pi -l "$(sed -n 2p ~/secrets/r22b.txt)"; tmux send-keys -t pi Enter
+  ```
+  The login stays open until `exit` or a reboot. Check the pane first: if it
+  already shows `zhukov@r22b:~$`, skip the login.
+- **Serial tips:** it's 115200 baud, so keep commands short and
+  non-interactive (`| head`, `--no-pager`, `SYSTEMD_PAGER=`). Wait a second or
+  two after sending before capturing. If the pane shows `Disconnected`, the
+  cable was unplugged; tio reconnects on its own when it comes back.
+
+## Serial console
+
+Set up 2026-09-14 with an Adafruit 954 cable (CP2102, shows up as
+`/dev/cu.usbserial-0001` on the Mac). The AD HAT doesn't use the UART, so the
+two coexist.
+
+- **Wiring:** black (GND) → pin 6, green (cable TX) → pin 10 GPIO15 RXD,
+  white (cable RX) → pin 8 GPIO14 TXD. Red (5 V) unconnected; the Pi has its
+  own supply.
+- **Reaching the pins:** the HAT covers the header. Use a 2×20 extra-long
+  stacking header, or a 40-pin splitter/ribbon for the car (holds up better to
+  vibration).
+- **Pi config:** `enable_uart=1` in `config.txt`, and `console=serial0,115200`
+  before `console=tty1` in `cmdline.txt` (this also starts
+  `serial-getty@ttyS0`). The console is on
+  the mini-UART (Bluetooth has the PL011). Don't add `dtoverlay=disable-bt`,
+  since the BLE services need it. Optional: `BOOT_UART=1` via
+  `rpi-eeprom-config --edit` for bootloader output.
+- **Mac:** `brew install tio`; the CP2102 needs no driver. See
+  [Access](#access) for the tmux session.
+- **In the car:** keep the laptop on battery, or use a USB isolator, to avoid
+  a ground loop through the laptop charger.
 
 ## Other things on the Pi, not copied
 
