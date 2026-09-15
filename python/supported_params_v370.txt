@@ -1,0 +1,132 @@
+E31 1 IAM (4-byte)* E31-KCA = (KA (max) map value * IAM) + FBKC + FLKC. Total Timing = KCA + base timing + timing compensations
+E32 1 Engine Load (4-Byte)* E32-This is the current engine load (g/rev) as determined by the ECU.
+E33 1 CL/OL Fueling* E33-Fuel system status. [8 = CL (normal)][10 = OL (normal)][7 = OL insufficient ECT][14 = OL due to system failure]
+E34 1 Turbo Dynamics Integral (4-byte)* E34-Current WG duty corr (ABS) applied by the Turbo Dynamics Integral tables to achieve target boost. Can be Cumulative
+E35 1 Boost Error* E35-Difference between target boost (post-compensations) and actual boost (target boost - actual boost)
+E36 1 Target Boost (4-byte)* E36-Current boost target as determined by the Target Boost table(s). This includes any compensation, if applicable.
+E37 1 Turbo Dynamics Proportional (4-byte)* E37-Current WG duty correction (absolute) that is being applied by the Turbo Dynamics Proportional table.
+E38 1 Throttle Plate Opening Angle (4-byte)* E38-Actual throttle plate opening percentage. More accurate than the standard Throttle Opening Angle % SSM parameter.
+E39 1 Feedback Knock Correction (4-byte)* E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock.
+E40 1 Knock Correction Advance (IAM only)* E40-Knock Correction Advance (IAM only)
+E41 1 Fine Learning Knock Correction (4-byte)* E41-Current learned correction that is being applied which is stored and applied across specific load and rpm ranges.
+E42 1 Map Ratio (Primary)* E42-The ratio used to determine the portion of specific multiple maps which are combined to determine the target value.
+E44 1 A/F Learning #1 A (Stored)* E44-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.
+E45 1 A/F Learning #1 B (Stored)* E45-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.
+E46 1 A/F Learning #1 C (Stored)* E46-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.
+E47 1 A/F Learning #1 D (Stored)* E47-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.
+E48 1 A/F Learning #1 (4-byte)* E48-Current A/F Learning being applied. Higher resolution then the standard SSM A/F Learning #1 parameter.
+E49 1 Idle Speed Map Selection* E49-Current Idle Speed Target MAP being used. 3 table ROM->[1=A],[2=B],[4=C]. 4 table ROM->[1=A],[2=B],[3=C],[4=D]
+E50 1 Fuel Injector #1 Latency (4-byte)* E50-Current injector latency as determined by the Injector Latency table.
+E51 1 Manifold Absolute Pressure (4-byte)* E51-MAP is limited to about 37 psi absolute (about 22 psig at sea level). This parameter has no effective limit.
+E52 1 Manifold Relative Sea Level Pressure (4-byte)* E52-Same as Manifold Absolute Pressure (Direct) except represented as relative pressure with the assumption of sea level.
+E53 1 Ignition Base Timing* E53-Current base ignition timing as determined by the Base Timing tables.
+E54 1 Tip-in Throttle* E54-This is the current throttle angle change % used as an input by the Throttle Tip-in Enrichment table.
+E55 1 Tip-in Enrichment (Last Calculated)* E55-Current (or last) calculated tip-in enrichment value. The value is  not cleared, effectively shows the last calculated value.
+E56 1 Requested Torque* E56-Current requested torque which is used as an input to the Target Throttle Plate Position (Requested Torque) table.
+E57 1 Target Throttle Plate Position* E57-Current target throttle plate position as determined by the Target Throttle Plate Position (Requested Torque) table.
+E58 1 Fine Learning Table Offset* E58-Current index position for the Fine Learning Knock Correction table being applied (and potentially adjusted), stored in ram.
+E59 1 Gear (Calculated)* E59-Current manual transmission gear selection as estimated by the ECU based on vehicle speed and RPM.
+E60 1 Fuel Injector #1 Pulse Width (4-byte)* E60-Fuel Injector #1 PW with higher resolution. Note: This parameter does not include latency unlike the standard parameter.
+E61 1 A/F Learning Airflow Range (Current)* E61-Current stored A/F Learning index position. A value of 1-4 corresponds to airflow ranges A-D respectively.
+E70 1 Primary Wastegate Duty Maximum* (4-byte)* E70-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.
+E77 1 Primary Wastegate Duty Maximum* (4-byte)* E77-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.
+E81 1 A/F Correction #1 (4-byte)* E81-A higher precision alternative to the standard SSM A/F Correction #1 parameter.
+E84 1 Primary Open Loop Map Enrichment (4-byte)* E84-Primary enrichment value based on the Primary Open Loop Fueling table(s) Note: this value is NOT the final fueling target.
+E91 1 A/F Sensor #1 (4-byte)* E91-A higher precision alternative to the standard SSM A/F Sensor #1 (AFR/lambda) parameter.
+E113 1 Manifold Relative Pressure (4-byte)* E113-Actual relative boost pressure and therefore will match a boost gauge regardless of local atmospheric pressure. No limit.
+E115 1 Primary Enrichment Final (4-byte)* E115-This is the Primary Open Loop Map Enrichment value with the minimum warm-up enrichment factors applied. Not Final.
+E116 1 Knock Correction Advance Primary Map Ratio* E116-Knock Correction Advance Primary Map Ratio
+E117 1 Map Ratio (Alternate)* E117-The ratio used to determine the portion of specific Alternate multiple maps which are combined to determine the target value.
+E118 1 Knock Correction Advance Max Primary* E118-Knock Correction Advance Max Primary
+E119 1 Knock Correction Advance Additive* E119-Knock Correction Advance Additive
+E121 1 Closed Loop Fueling Target (4-byte)* E121-This is the closed loop fueling lambda target which is used in determining short-term corrections (A/F Correction #1).
+E123 1 Final Fueling Base (4-byte)* E123-This is the final fueling multiplier after corrections are applied but before per injector compensation.
+P2 0 Coolant Temperature P2
+P3 0 A/F Correction #1 P3
+P4 0 A/F Learning #1 P4
+P7 0 Manifold Absolute Pressure P7-Pressure value calculated from the manifold absolute pressure sensor (absolute value)
+P8 0 Engine Speed P8
+P9 0 Vehicle Speed P9
+P10 0 Ignition Total Timing P10
+P11 0 Intake Air Temperature P11
+P12 0 Mass Airflow P12
+P13 0 Throttle Opening Angle P13-Engine throttle opening angle.
+P15 0 Rear O2 Sensor P15
+P17 0 Battery Voltage P17
+P18 0 Mass Airflow Sensor Voltage P18
+P21 0 Fuel Injector #1 Pulse Width P21-This parameter includes injector latency.
+P23 0 Knock Correction Advance P23-Retard amount when knocking has occurred. Partial learned value of the learned ignition timing.
+P24 0 Atmospheric Pressure P24
+P25 0 Manifold Relative Pressure P25-Manifold Absolute Pressure [P7] minus current Atmospheric Pressure [P24].
+P27 0 Fuel Tank Pressure P27
+P30 0 Accelerator Pedal Angle P30-Accelerator pedal angle.
+P31 0 Fuel Temperature P31
+P35 0 Fuel Level P35
+P36 0 Primary Wastegate Duty Cycle P36-Trubo Control Valve Duty Cycle
+P38 0 CPC Valve Duty Ratio P38
+P39 0 Tumble Valve Position Sensor Right P39
+P40 0 Tumble Valve Position Sensor Left P40
+P47 0 Fuel Pump Duty P47
+P48 0 Intake VVT Advance Angle Right P48
+P49 0 Intake VVT Advance Angle Left P49
+P50 0 Intake OCV Duty Right P50
+P51 0 Intake OCV Duty Left P51
+P52 0 Intake OCV Current Right P52
+P53 0 Intake OCV Current Left P53
+P54 0 A/F Sensor #1 Current P54
+P56 0 A/F Sensor #1 Resistance P56
+P58 0 A/F Sensor #1 P58
+P63 0 Roughness Monitor Cylinder #1 P63
+P64 0 Roughness Monitor Cylinder #2 P64
+P65 0 A/F Correction #3 (16-bit ECU) P65
+P69 0 Roughness Monitor Cylinder #3 P69
+P70 0 Roughness Monitor Cylinder #4 P70
+P71 0 Throttle Motor Duty P71
+P72 0 Throttle Motor Voltage P72
+P73 0 Sub Throttle Sensor P73
+P74 0 Main Throttle Sensor P74
+P75 0 Sub Accelerator Sensor P75
+P76 0 Main Accelerator Sensor P76
+P82 0 Memorised Cruise Speed P82
+P89 0 A/F Correction #3 (32-bit ECU) P89
+P120 0 Estimated odometer P120-Estimated odometer - increments every 2km
+P200 3 Engine Load (Calculated) P200-Engine load as calculated from MAF and RPM.
+P201 3 Injector Duty Cycle P201-IDC as calculated from RPM and injector PW.
+P202 3 Manifold Relative Pressure (Corrected) P202-Difference between Manifold Absolute Pressure and Atmospheric Pressure.
+P203 3 Fuel Consumption (Est.) P203-Estimated fuel consumption based on MAF, AFR and vehicle speed.
+P239 0 Global Timing User Adjustment Value P239-This is the fixed amount of timing removed globally - set by the user
+P240 0 Engine Idle Speed User Adjustment (A/C off) P240-This is the fixed amount of idle speed adjustmnet while the A/C is off - set by the user
+P241 0 Engine Idle Speed User Adjustment (A/C on) P241-This is the fixed amount of idle speed adjustmnet while the A/C is on - set by the user
+S1 2 AT Vehicle ID S1
+S2 2 Test Mode Signal S2
+S4 2 Neutral Position Switch S4
+S5 2 Idle Switch S5
+S7 2 Ignition Switch S7
+S8 2 Power Steering Switch S8
+S9 2 Air Conditioning Switch S9
+S11 2 Starter Switch S11
+S13 2 Rear O2 Sensor Rich Signal S13
+S15 2 Knocking Signal #1 S15
+S18 2 Crankshaft Position Signal S18
+S19 2 Camshaft Position Signal S19
+S20 2 Rear Defogger Switch S20
+S21 2 Blower Fan Switch S21
+S22 2 Light Switch S22
+S26 2 Air Conditioning Compressor Signal S26
+S28 2 Radiator Fan Relay #1 S28
+S29 2 Radiator Fan Relay #2 S29
+S33 2 Blow-By Leak Connector S33
+S34 2 Positive Crankcase Ventilation (PCV) Solenoid Valve S34
+S35 2 Tumble Generator Valve (TGV) Output S35
+S36 2 Tumble Generator Valve (TGV) Drive S36
+S39 2 Ventilation Solenoid Valve S39
+S42 2 Tank Sensor Control Valve S42
+S62 2 Electronic Throttle Control (ETC) Motor Relay S62
+S63 2 Clutch Switch S63
+S64 2 Stop Light Switch S64
+S65 2 Cruise Control Set/Coast Switch S65
+S66 2 Cruise Control Resume/Accelerate Switch S66
+S67 2 Brake Switch S67
+S68 2 Cruise Control Main Toggle Switch S68
+S133 2 Cruise Control System Status S133
+S157 2 Oil Level Switch S157

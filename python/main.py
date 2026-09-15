@@ -82,6 +82,24 @@ def get_temp_from_resistance(r_measured):
             return temp
     return None
 
+def voltage_to_psi_150(voltage):
+    """
+    Calculates PSIg from sensor voltage for AEM 30-2130-150 (0-150 PSIg).
+    
+    Formula derived from AEM datasheet:
+    0.5V = 0 PSI
+    4.5V = 150 PSI
+    Slope = 150 / 4.0 = 37.5 PSI/Volt
+    
+    Args:
+        voltage (float): Sensor output voltage (typically 0.5V to 4.5V)
+        
+    Returns:
+        float: Pressure in PSIg
+    """
+    # Linear transfer function: PSI = (Voltage - 0.5) * (150 / 4.0)
+    return (voltage - 0.5) * 37.5
+
 
 try:
     ADC = ADS1263.ADS1263()
@@ -96,40 +114,45 @@ try:
     # ADC.ADS1263_DAC_Test(0, 1)      # Open IN7
     
     if(TEST_ADC1):       # ADC1 Test
-        channelList = [0]  # The channel must be less than 10
+        channelList = [1]  # The channel must be less than 10
         while(1):
             #print("before ADC_Value")
-            ADC_Value = ADC.ADS1263_GetChannalValue(0)    # get ADC1 value
-            #print(f"ADC_Value {ADC_Value}")
             for i in channelList:
+                ADC_Value = ADC.ADS1263_GetChannalValue(i)    # get ADC1 value
                 if(ADC_Value>>31 ==1):
                     print("0 ADC1 IN%d = -%lf" %(i, (REF*2 - ADC_Value[i] * REF / 0x80000000)))  
                 else:
-                     # Convert bits to Voltage if necessary (e.g. value * 3.3 / 0x7FFFFFFF)
-                    V_out = ADC_Value * (V_SOURCE / 0x7fffffff) 
-                    V_out5 = ADC_Value * (REF / 0x7fffffff) 
-                    #print(f"V_out {V_out} {V_out5}")
+                    if i == 0:
+                        # Convert bits to Voltage if necessary (e.g. value * 3.3 / 0x7FFFFFFF)
+                        V_out = ADC_Value * (V_SOURCE / 0x7fffffff) 
+                        V_out5 = ADC_Value * (REF / 0x7fffffff) 
+                        #print(f"V_out {V_out} {V_out5}")
 
-                    # 2. Safety Check (Open Circuit / Unplugged)
-                    # if V_out >= (V_SOURCE - 0.05):
-                        # return "Sensor Unplugged"
+                        # 2. Safety Check (Open Circuit / Unplugged)
+                        # if V_out >= (V_SOURCE - 0.05):
+                            # return "Sensor Unplugged"
 
-                    # 3. Calculate Resistance using Voltage Divider Law
-                    # R_sensor = (R_pullup * V_out) / (V_source - V_out)
-                    new_var = (V_SOURCE - V_out)
-                    if new_var <= 0:
-                        print(new_var)
-                        continue
-                    r_sensor = (R_PULLUP * V_out) / new_var
-                    r_sensor5 = (R_PULLUP * V_out5) / (REF - V_out5)
-                    #print(f"r_sensor {r_sensor} {r_sensor5}")
+                        # 3. Calculate Resistance using Voltage Divider Law
+                        # R_sensor = (R_pullup * V_out) / (V_source - V_out)
+                        new_var = (V_SOURCE - V_out)
+                        if new_var <= 0:
+                            print(new_var)
+                            continue
+                        r_sensor = (R_PULLUP * V_out) / new_var
+                        r_sensor5 = (R_PULLUP * V_out5) / (REF - V_out5)
+                        #print(f"r_sensor {r_sensor} {r_sensor5}")
 
 
-                    # 4. Get Temperature
-                    temp_c = get_temp_from_resistance(r_sensor)
-                    temp_c5 = get_temp_from_resistance(r_sensor5)
+                        # 4. Get Temperature
+                        temp_c = get_temp_from_resistance(r_sensor)
+                        temp_c5 = get_temp_from_resistance(r_sensor5)
 
-                    print("1 ADC1 IN%d = %.3f  %.3f %d %d %.3f C %.3f C" %(i, V_out, V_out5, int(r_sensor), int(r_sensor5), temp_c, temp_c5))   # 32bit
+                        print("1 ADC1 IN%d = %.3f  %.3f %d %d %.3f C %.3f C" %(i, V_out, V_out5, int(r_sensor), int(r_sensor5), temp_c, temp_c5))   # 32bit
+                    if i == 1:
+                        V_out5 = ADC_Value * (REF / 0x7fffffff)
+                        psi = voltage_to_psi_150(V_out5)
+                        kPa = psi * 6.89475729
+                        print("2 ADC1 IN%d =  %.3f V %.3f PSI, %.3f kPa"%(i, V_out5, psi, kPa))   
             # for i in channelList:
                 # print("\33[2A")
         

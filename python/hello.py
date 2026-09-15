@@ -4,6 +4,10 @@ import time
 import struct
 import asyncio
 import threading
+import os
+import glob
+from typing import List, Iterator
+from struct import pack
 # --- BLE Imports ---
 from bluezero import adapter
 from bluezero import peripheral
@@ -24,8 +28,14 @@ TEMP_CHAR_UUID = '2A6E'
 NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E'
 NUS_RX_CHAR_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E' # Write (App to Pi)
 NUS_TX_CHAR_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E' # Notify (Pi to App)
+
+# H.264 Video Stream Service UUIDs
+H264_STREAM_CHAR_UUID = '6E400012-B5A3-F393-E0A9-E50E24DCCA9E' # Notify (Pi to App - Video packets)
+H264_CONTROL_CHAR_UUID = '6E400013-B5A3-F393-E0A9-E50E24DCCA9E' # Write (App to Pi - Control)
+
 ENABLE_MTU_PROBE = True  # Set True to run a one-time notification length probe
 NOTIF_PAYLOAD_LIMIT = 20  # Default safe data bytes per notification
+H264_PACKET_SIZE = 500  # Maximum H.264 packet size
 
 # --- Calibration Table from AEM 30-2012 Datasheet  ---
 # Format: {Resistance_Ohms: Temp_Celsius}
@@ -73,6 +83,123 @@ tpms_data = {
     'RL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
     'RR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0}
 }
+
+# --- H.264 Video Streaming State ---
+h264_streaming_active = True
+h264_current_frame = 0
+# h264_frame_files = []
+h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
+
+# --- H.264 Packetization (from h264_packetize.py) ---
+NAL_TYPE_FU_A = 28
+NAL_TYPE_STAP_A = 24
+NAL_HEADER_SIZE = 1
+FU_A_HEADER_SIZE = 2
+STAP_A_HEADER_SIZE = 1
+NAL_LENGTH_SIZE = 2
+
+def find_nal_units(buf: bytes) -> Iterator[bytes]:
+    """Find NAL units in H.264 bitstream."""
+    i = 0
+    while True:
+        i = buf.find(b"\x00\x00\x01", i)
+        if i == -1:
+            return
+        i += 3
+        nal_start = i
+        i = buf.find(b"\x00\x00\x01", i)
+        if i == -1:
+            yield buf[nal_start:len(buf)]
+            return
+        elif buf[i - 1] == 0:
+            yield buf[nal_start:i - 1]
+        else:
+            yield buf[nal_start:i]
+
+def packetize_nal(nal_unit: bytes, max_size: int = H264_PACKET_SIZE) -> List[bytes]:
+    """Packetize single NAL unit."""
+    packets = []
+    nal_size = len(nal_unit)
+    if nal_size == 0:
+        return packets
+    nal_type = nal_unit[0] & 0x1F
+    f_nri = nal_unit[0] & 0xE0
+    if nal_size <= max_size:
+        packets.append(nal_unit)
+    else:
+        fu_indicator = f_nri | NAL_TYPE_FU_A
+        payload_size = max_size - FU_A_HEADER_SIZE
+        nal_payload = nal_unit[NAL_HEADER_SIZE:]
+        num_fragments = (len(nal_payload) + payload_size - 1) // payload_size
+        for i in range(num_fragments):
+            start = i * payload_size
+            end = min(start + payload_size, len(nal_payload))
+            fu_header = nal_type
+            if i == 0:
+                fu_header |= 0x80
+            if i == num_fragments - 1:
+                fu_header |= 0x40
+            packet = bytes([fu_indicator, fu_header]) + nal_payload[start:end]
+            packets.append(packet)
+    return packets
+
+def create_stap_a_packet(nal_units: List[bytes], max_size: int = H264_PACKET_SIZE) -> bytes:
+    """Create STAP-A packet from multiple NAL units."""
+    if not nal_units:
+        return b''
+    f_nri = nal_units[0][0] & 0xE0
+    stap_header = f_nri | NAL_TYPE_STAP_A
+    packet = bytes([stap_header])
+    for nal_unit in nal_units:
+        nal_size = len(nal_unit)
+        packet += pack('>H', nal_size)
+        packet += nal_unit
+    return packet
+
+def packetize_frame(frame_data: bytes, max_size: int = H264_PACKET_SIZE) -> List[bytes]:
+    """Packetize complete H.264 frame."""
+    all_packets = []
+    nal_units = list(find_nal_units(frame_data))
+    aggregation_buffer = []
+    aggregation_size = STAP_A_HEADER_SIZE
+    for nal_unit in nal_units:
+        nal_size = len(nal_unit)
+        needed_size = NAL_LENGTH_SIZE + nal_size
+        needs_fragmentation = nal_size > max_size
+        if needs_fragmentation:
+            if aggregation_buffer:
+                if len(aggregation_buffer) > 1:
+                    stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
+                    all_packets.append(stap_packet)
+                elif len(aggregation_buffer) == 1:
+                    all_packets.append(aggregation_buffer[0])
+                aggregation_buffer = []
+                aggregation_size = STAP_A_HEADER_SIZE
+            packets = packetize_nal(nal_unit, max_size)
+            all_packets.extend(packets)
+        elif aggregation_size + needed_size <= max_size:
+            aggregation_buffer.append(nal_unit)
+            aggregation_size += needed_size
+        else:
+            if len(aggregation_buffer) > 1:
+                stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
+                all_packets.append(stap_packet)
+            elif len(aggregation_buffer) == 1:
+                all_packets.append(aggregation_buffer[0])
+            aggregation_buffer = [nal_unit]
+            aggregation_size = STAP_A_HEADER_SIZE + needed_size
+    if aggregation_buffer:
+        if len(aggregation_buffer) > 1:
+            stap_packet = create_stap_a_packet(aggregation_buffer, max_size)
+            all_packets.append(stap_packet)
+        elif len(aggregation_buffer) == 1:
+            all_packets.append(aggregation_buffer[0])
+    return all_packets
+
+def read_h264_frame(filepath: str) -> bytes:
+    """Read H.264 frame from file."""
+    with open(filepath, 'rb') as f:
+        return f.read()
 
 def decode_tpms(raw_bytes):
     """
@@ -442,6 +569,76 @@ def probe_notification_limit(characteristic):
     NOTIF_PAYLOAD_LIMIT = 16
     return 16
 
+# --- H.264 Streaming Functions ---
+def h264_control_callback(value, options, characteristic):
+    """Handle control commands for H.264 streaming."""
+    global h264_streaming_active, h264_current_frame, h264_frame_files
+    
+    if not value:
+        return
+    
+    cmd = bytes(value).decode('utf-8', errors='ignore').strip()
+    print(f"\nH.264 Control: {cmd}")
+    
+    if cmd == "START":
+        h264_streaming_active = True
+        h264_current_frame = 0
+        # Load frame files
+        h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
+        print(f"H.264: Starting stream ({len(h264_frame_files)} frames)")
+    elif cmd == "STOP":
+        h264_streaming_active = False
+        print("H.264: Stopping stream")
+    elif cmd == "RESET":
+        h264_current_frame = 0
+        print("H.264: Reset to frame 0")
+
+packets_sent = 0
+def stream_h264_frame(characteristic):
+    """Stream one H.264 frame as BLE notifications."""
+    global h264_streaming_active, h264_current_frame, h264_frame_files
+    global packets_sent
+    
+    if not h264_streaming_active or not h264_frame_files:
+        return True
+    
+    # Get current frame file
+    if h264_current_frame >= len(h264_frame_files):
+        h264_current_frame = 0  # Loop back
+    
+    frame_file = h264_frame_files[h264_current_frame]
+    
+    try:
+        # Read and packetize frame
+        frame_data = read_h264_frame(frame_file)
+        packets = packetize_frame(frame_data, H264_PACKET_SIZE)
+        
+        # Send each packet as notification
+        for packet in packets:
+            characteristic.set_value(list(packet))
+            time.sleep(0.001)  # Small delay between packets
+            packets_sent += 1
+        
+        print(f"\rH.264: Frame {h264_current_frame+1}/{len(h264_frame_files)} ({len(packets)} packets, {packets_sent} total packets sent)", end="")
+        h264_current_frame += 1
+        
+    except Exception as e:
+        print(f"\nH.264 Error: {e}")
+    
+    return True
+
+def h264_notify_callback(notifying, characteristic):
+    """Called when H.264 stream notifications are enabled/disabled."""
+    if notifying:
+        print("\nH.264 Client Connected! Ready to stream.")
+        print("Send 'START' to begin streaming")
+        # Start streaming loop (30 FPS = ~33ms per frame)
+        async_tools.add_timer_ms(80, stream_h264_frame, characteristic)
+    else:
+        print("\nH.264 Client Disconnected.")
+        global h264_streaming_active
+        h264_streaming_active = False
+
 # --- BLE Loop ---
 counter=0
 def send_can_frame(characteristic):
@@ -507,10 +704,10 @@ def main(adapter_address):
                                        local_name='STI_Diff_Sensor', 
                                        appearance=1344)
 
-    # Add Nordic UART Service
+    # Add Nordic UART Service (Service ID 1)
     tx_monitor.add_service(srv_id=1, uuid=NUS_SERVICE_UUID, primary=True)
 
-    # Add TX Characteristic (Notify)
+    # Add TX Characteristic (Notify) - RealDash CAN data
     tx_monitor.add_characteristic(srv_id=1, chr_id=1, uuid=NUS_TX_CHAR_UUID,
                                   value=[], notifying=False,
                                   flags=['notify'],
@@ -522,7 +719,19 @@ def main(adapter_address):
                                   flags=['write', 'write-without-response'],
                                   write_callback=None)
 
-    print("Advertising 'STI_Diff_Sensor' for RealDash...")
+    # Add H.264 Stream Characteristic (Notify) - Video packets
+    tx_monitor.add_characteristic(srv_id=1, chr_id=3, uuid=H264_STREAM_CHAR_UUID,
+                                  value=[], notifying=False,
+                                  flags=['notify'],
+                                  notify_callback=h264_notify_callback)
+    
+    # Add H.264 Control Characteristic (Write) - Stream control
+    tx_monitor.add_characteristic(srv_id=1, chr_id=4, uuid=H264_CONTROL_CHAR_UUID,
+                                  value=[], notifying=False,
+                                  flags=['write', 'write-without-response'],
+                                  write_callback=h264_control_callback)
+
+    print("Advertising 'STI_Diff_Sensor' with RealDash + H.264 Video Stream...")
     
     # Start TPMS scanner in background thread
     tpms_thread = threading.Thread(target=start_tpms_scanner, daemon=True)

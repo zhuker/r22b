@@ -390,7 +390,7 @@ async def main():
     
     # Choose H.264 source: file-based or camera
     # h264_source = H264FileStreamSource(frames_dir="h264SampleFrames")
-    h264_source = H264CameraStreamSource(device='/dev/video0', width=640, height=360, framerate=30, bitrate=200000)
+    h264_source = H264CameraStreamSource(device='/dev/video0', width=640, height=360, framerate=30, bitrate=300000)
     
     # Open transport
     async with await open_transport(TRANSPORT) as hci_transport:
