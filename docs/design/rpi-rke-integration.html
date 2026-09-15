@@ -61,10 +61,10 @@
 <body>
 
 <h1>Raspberry Pi ↔ OEM RKE integration — design details</h1>
-<p class="meta">Drafted 2026-09-13. Companion doc to <a href="dash22b-rpi-gateway.html">dash22b-rpi-gateway.html</a> (overall Pi gateway plan, Phase 1 = BLE door lock) and <a href="file:///Users/zhukov/Documents/22b/questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> (how the 2001 body harness is provisioned for factory keyless entry). This doc is the technical bridge between the two: how the Pi actually drives the door-lock circuit, given that the '01 body already has a factory-terminated RKE connector under the CEL/DLC bundle waiting to be used.</p>
+<p class="meta">Drafted 2026-09-13. Companion doc to <a href="dash22b-rpi-gateway.html">dash22b-rpi-gateway.html</a> (overall Pi gateway plan, Phase 1 = BLE door lock) and <a href="../../../questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> (how the 2001 body harness is provisioned for factory keyless entry). This doc is the technical bridge between the two: how the Pi actually drives the door-lock circuit, given that the '01 body already has a factory-terminated RKE connector under the CEL/DLC bundle waiting to be used.</p>
 
 <div class="callout ok">
-<strong>Updated 2026-09-13 after reading the FSM and checking the car.</strong> The first draft of this doc assumed an ACC pin, a keyless LED pin and an interior-lamp trigger pin on the connector. The FSM shows none of those. Everything below uses the verified pinout; the full derivation and schematic crops are in <a href="file:///Users/zhukov/Documents/22b/questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> section 3.
+<strong>Updated 2026-09-13 after reading the FSM and checking the car.</strong> The first draft of this doc assumed an ACC pin, a keyless LED pin and an interior-lamp trigger pin on the connector. The FSM shows none of those. Everything below uses the verified pinout; the full derivation and schematic crops are in <a href="../../../questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> section 3.
 </div>
 
 <h2>The connector: B176 and its dummy B241</h2>
