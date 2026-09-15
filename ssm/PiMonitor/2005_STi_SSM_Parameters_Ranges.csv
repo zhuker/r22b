@@ -1,0 +1,133 @@
+id,type,unit,name,desc,Idle Expected,Cruise Expected,WOT Expected,Accessport Monitor
+E31,Fixed Addr,multiplier,IAM (4-byte)*,E31-KCA = (KA (max) map value * IAM) + FBKC + FLKC. Total Timing = KCA + base timing + timing compensations,1.0 (Ideal),1.0,1.0,DAM
+E32,Fixed Addr,g/rev,Engine Load (4-Byte)*,E32-This is the current engine load (g/rev) as determined by the ECU.,0.15 - 0.40 g/rev,0.30 - 1.00 g/rev,2.0 - 3.5 g/rev,Calculated Load
+E33,Fixed Addr,status,CL/OL Fueling*,E33-Fuel system status. [8 = CL (normal)][10 = OL (normal)][7 = OL insufficient ECT][14 = OL due to system failure],8 (Closed Loop),8 (Closed Loop),10 (Open Loop),CL/OL Status
+E34,Fixed Addr,absolute %,Turbo Dynamics Integral (4-byte)*,E34-Current WG duty corr (ABS) applied by the Turbo Dynamics Integral tables to achieve target boost. Can be Cumulative,-,-,-,TD Integral
+E35,Fixed Addr,kPa,Boost Error*,E35-Difference between target boost (post-compensations) and actual boost (target boost - actual boost),N/A,N/A,~0 psi,Boost Error
+E36,Fixed Addr,kPa absolute,Target Boost (4-byte)*,"E36-Current boost target as determined by the Target Boost table(s). This includes any compensation, if applicable.",N/A,N/A,~14.5 psi (Stock),Target Boost
+E37,Fixed Addr,absolute %,Turbo Dynamics Proportional (4-byte)*,E37-Current WG duty correction (absolute) that is being applied by the Turbo Dynamics Proportional table.,-,-,-,TD Proportional
+E38,Fixed Addr,%,Throttle Plate Opening Angle (4-byte)*,E38-Actual throttle plate opening percentage. More accurate than the standard Throttle Opening Angle % SSM parameter.,0 - 5 %,10 - 40 %,100 %,Throttle Pos
+E39,Fixed Addr,degrees,Feedback Knock Correction (4-byte)*,E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Feedback Knock
+E40,Fixed Addr,degrees,Knock Correction Advance (IAM only)*,E40-Knock Correction Advance (IAM only),1.0 (Ideal),1.0,1.0,Knock Correction Advance
+E41,Fixed Addr,degrees,Fine Learning Knock Correction (4-byte)*,E41-Current learned correction that is being applied which is stored and applied across specific load and rpm ranges.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Fine Knock Learn
+E42,Fixed Addr,multiplier,Map Ratio (Primary)*,E42-The ratio used to determine the portion of specific multiple maps which are combined to determine the target value.,-,-,-,Map Ratio
+E44,Fixed Addr,%,A/F Learning #1 A (Stored)*,E44-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+E45,Fixed Addr,%,A/F Learning #1 B (Stored)*,E45-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+E46,Fixed Addr,%,A/F Learning #1 C (Stored)*,E46-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+E47,Fixed Addr,%,A/F Learning #1 D (Stored)*,E47-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+E48,Fixed Addr,%,A/F Learning #1 (4-byte)*,E48-Current A/F Learning being applied. Higher resolution then the standard SSM A/F Learning #1 parameter.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+E49,Fixed Addr,raw ecu value,Idle Speed Map Selection*,"E49-Current Idle Speed Target MAP being used. 3 table ROM->[1=A],[2=B],[4=C]. 4 table ROM->[1=A],[2=B],[3=C],[4=D]",-,-,-,Idle Speed Target
+E50,Fixed Addr,ms,Fuel Injector #1 Latency (4-byte)*,E50-Current injector latency as determined by the Injector Latency table.,-,-,-,Inj. Latency
+E51,Fixed Addr,kPa absolute,Manifold Absolute Pressure (4-byte)*,E51-MAP is limited to about 37 psi absolute (about 22 psig at sea level). This parameter has no effective limit.,30 - 50 kPa,40 - 90 kPa,200 - 230 kPa (Stock),Manifold Abs. Pressure
+E52,Fixed Addr,psi relative sea level,Manifold Relative Sea Level Pressure (4-byte)*,E52-Same as Manifold Absolute Pressure (Direct) except represented as relative pressure with the assumption of sea level.,-,-,-,Boost
+E53,Fixed Addr,degrees,Ignition Base Timing*,E53-Current base ignition timing as determined by the Base Timing tables.,-,-,-,Ignition Timing
+E54,Fixed Addr,%,Tip-in Throttle*,E54-This is the current throttle angle change % used as an input by the Throttle Tip-in Enrichment table.,-,-,-,Tip-in Throttle
+E55,Fixed Addr,raw ecu value,Tip-in Enrichment (Last Calculated)*,"E55-Current (or last) calculated tip-in enrichment value. The value is  not cleared, effectively shows the last calculated value.",-,-,-,Tip-in Enrichment
+E56,Fixed Addr,raw ecu value,Requested Torque*,E56-Current requested torque which is used as an input to the Target Throttle Plate Position (Requested Torque) table.,-,-,-,Requested Torque
+E57,Fixed Addr,%,Target Throttle Plate Position*,E57-Current target throttle plate position as determined by the Target Throttle Plate Position (Requested Torque) table.,-,-,-,Target Throttle
+E58,Fixed Addr,index position,Fine Learning Table Offset*,"E58-Current index position for the Fine Learning Knock Correction table being applied (and potentially adjusted), stored in ram.",-,-,-,Fine Learn Offset
+E59,Fixed Addr,position,Gear (Calculated)*,E59-Current manual transmission gear selection as estimated by the ECU based on vehicle speed and RPM.,-,-,-,Gear Position
+E60,Fixed Addr,ms,Fuel Injector #1 Pulse Width (4-byte)*,E60-Fuel Injector #1 PW with higher resolution. Note: This parameter does not include latency unlike the standard parameter.,-,-,-,Inj. Pulse Width
+E61,Fixed Addr,offset,A/F Learning Airflow Range (Current)*,E61-Current stored A/F Learning index position. A value of 1-4 corresponds to airflow ranges A-D respectively.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learn Range
+E70,Fixed Addr,%,Primary Wastegate Duty Maximum* (4-byte)*,E70-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty
+E77,Fixed Addr,%,Primary Wastegate Duty Maximum* (4-byte)*,E77-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty
+E81,Fixed Addr,%,A/F Correction #1 (4-byte)*,E81-A higher precision alternative to the standard SSM A/F Correction #1 parameter.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 1
+E84,Fixed Addr,estimated AFR,Primary Open Loop Map Enrichment (4-byte)*,E84-Primary enrichment value based on the Primary Open Loop Fueling table(s) Note: this value is NOT the final fueling target.,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final
+E91,Fixed Addr,estimated AFR,A/F Sensor #1 (4-byte)*,E91-A higher precision alternative to the standard SSM A/F Sensor #1 (AFR/lambda) parameter.,~14.7,~14.7,11.0 - 11.5,A/F Sens 1 Ratio
+E113,Fixed Addr,kPa relative,Manifold Relative Pressure (4-byte)*,E113-Actual relative boost pressure and therefore will match a boost gauge regardless of local atmospheric pressure. No limit.,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost
+E115,Fixed Addr,estimated AFR,Primary Enrichment Final (4-byte)*,E115-This is the Primary Open Loop Map Enrichment value with the minimum warm-up enrichment factors applied. Not Final.,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final
+E116,Fixed Addr,multiplier,Knock Correction Advance Primary Map Ratio*,E116-Knock Correction Advance Primary Map Ratio,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Pri Map Ratio
+E117,Fixed Addr,multiplier,Map Ratio (Alternate)*,E117-The ratio used to determine the portion of specific Alternate multiple maps which are combined to determine the target value.,-,-,-,Map Ratio Alt
+E118,Fixed Addr,degrees,Knock Correction Advance Max Primary*,E118-Knock Correction Advance Max Primary,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Max Pri
+E119,Fixed Addr,degrees,Knock Correction Advance Additive*,E119-Knock Correction Advance Additive,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Additive
+E121,Fixed Addr,estimated AFR,Closed Loop Fueling Target (4-byte)*,E121-This is the closed loop fueling lambda target which is used in determining short-term corrections (A/F Correction #1).,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final
+E123,Fixed Addr,lambda,Final Fueling Base (4-byte)*,E123-This is the final fueling multiplier after corrections are applied but before per injector compensation.,-,-,-,Final Fuel Base
+P2,Standard,C,Coolant Temperature,P2,80 - 96 C,80 - 96 C,80 - 96 C,Coolant Temp
+P3,Standard,%,A/F Correction #1,P3,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 1
+P4,Standard,%,A/F Learning #1,P4,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1
+P7,Standard,kPa,Manifold Absolute Pressure,P7-Pressure value calculated from the manifold absolute pressure sensor (absolute value),30 - 50 kPa,40 - 90 kPa,200 - 230 kPa (Stock),Manifold Abs. Pressure
+P8,Standard,rpm,Engine Speed,P8,700 - 800 rpm,2000 - 3500 rpm,Redline (~7000 rpm),RPM
+P9,Standard,km/h,Vehicle Speed,P9,0,Constant,Increasing,Vehicle Speed
+P10,Standard,degrees,Ignition Total Timing,P10,-,-,-,Ignition Timing
+P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp
+P12,Standard,g/s,Mass Airflow,P12,2 - 6 g/s,10 - 60 g/s,200+ g/s,Mass Airflow
+P13,Standard,%,Throttle Opening Angle,P13-Engine throttle opening angle.,0 - 5 %,10 - 40 %,100 %,Throttle Pos
+P15,Standard,V,Rear O2 Sensor,P15,-,-,-,Rear O2 Volts
+P17,Standard,V,Battery Voltage,P17,13.5 - 14.5 V,13.5 - 14.5 V,13.5 - 14.5 V,Battery Voltage
+P18,Standard,V,Mass Airflow Sensor Voltage,P18,1.0 - 1.4 V,1.5 - 2.5 V,4.0 - 4.7 V,MAF Volts
+P21,Standard,ms,Fuel Injector #1 Pulse Width,P21-This parameter includes injector latency.,-,-,-,Inj. Pulse Width
+P23,Standard,degrees,Knock Correction Advance,P23-Retard amount when knocking has occurred. Partial learned value of the learned ignition timing.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Knock Corr. Adv.
+P24,Standard,kPa,Atmospheric Pressure,P24,-,-,-,Barometric Pressure
+P25,Standard,kPa,Manifold Relative Pressure,P25-Manifold Absolute Pressure [P7] minus current Atmospheric Pressure [P24].,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost
+P27,Standard,kPa,Fuel Tank Pressure,P27,-,-,-,Fuel Tank Press
+P30,Standard,%,Accelerator Pedal Angle,P30-Accelerator pedal angle.,0 %,10 - 40 %,100 %,Accel Pedal Pos
+P31,Standard,C,Fuel Temperature,P31,-,-,-,Fuel Temp
+P35,Standard,V,Fuel Level,P35,-,-,-,Fuel Level
+P36,Standard,%,Primary Wastegate Duty Cycle,P36-Trubo Control Valve Duty Cycle,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty
+P38,Standard,%,CPC Valve Duty Ratio,P38,-,-,-,CPC Valve Duty
+P39,Standard,V,Tumble Valve Position Sensor Right,P39,Open,Open,Open,TGV Volt Right
+P40,Standard,V,Tumble Valve Position Sensor Left,P40,Open,Open,Open,TGV Volt Left
+P47,Standard,%,Fuel Pump Duty,P47,-,-,-,Fuel Pump Duty
+P48,Standard,degrees,Intake VVT Advance Angle Right,P48,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),AVCS In. Right
+P49,Standard,degrees,Intake VVT Advance Angle Left,P49,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),AVCS In. Left
+P50,Standard,%,Intake OCV Duty Right,P50,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Duty Right
+P51,Standard,%,Intake OCV Duty Left,P51,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Duty Left
+P52,Standard,mA,Intake OCV Current Right,P52,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Current Right
+P53,Standard,mA,Intake OCV Current Left,P53,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Current Left
+P54,Standard,mA,A/F Sensor #1 Current,P54,-,-,-,A/F Sens 1 Curr
+P56,Standard,ohm,A/F Sensor #1 Resistance,P56,-,-,-,A/F Sens 1 Res
+P58,Standard,Lambda,A/F Sensor #1,P58,-,-,-,A/F Sens 1 Ratio
+P63,Standard,misfire count,Roughness Monitor Cylinder #1,P63,0,0,0,Roughness Cyl 1
+P64,Standard,misfire count,Roughness Monitor Cylinder #2,P64,0,0,0,Roughness Cyl 2
+P65,Standard,%,A/F Correction #3 (16-bit ECU),P65,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 3
+P69,Standard,misfire count,Roughness Monitor Cylinder #3,P69,0,0,0,Roughness Cyl 3
+P70,Standard,misfire count,Roughness Monitor Cylinder #4,P70,0,0,0,Roughness Cyl 4
+P71,Standard,%,Throttle Motor Duty,P71,-,-,-,Throttle Motor Duty
+P72,Standard,V,Throttle Motor Voltage,P72,-,-,-,Throttle Motor Volt
+P73,Standard,V,Sub Throttle Sensor,P73,-,-,-,Sub Throttle Sens
+P74,Standard,V,Main Throttle Sensor,P74,-,-,-,Main Throttle Sens
+P75,Standard,V,Sub Accelerator Sensor,P75,0 %,10 - 40 %,100 %,Sub Accel Sens
+P76,Standard,V,Main Accelerator Sensor,P76,0 %,10 - 40 %,100 %,Main Accel Sens
+P82,Standard,km/h,Memorised Cruise Speed,P82,-,-,-,Cruise Set Speed
+P89,Standard,%,A/F Correction #3 (32-bit ECU),P89,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 3
+P120,Standard,km,Estimated odometer,P120-Estimated odometer - increments every 2km,-,-,-,Odometer
+P200,Calculated,g/rev,Engine Load (Calculated),P200-Engine load as calculated from MAF and RPM.,0.15 - 0.40 g/rev,0.30 - 1.00 g/rev,2.0 - 3.5 g/rev,Calculated Load
+P201,Calculated,%,Injector Duty Cycle,P201-IDC as calculated from RPM and injector PW.,1 - 2 %,5 - 15 %,< 90 % (Safe limit),Inj. Duty Cycle
+P202,Calculated,bar,Manifold Relative Pressure (Corrected),P202-Difference between Manifold Absolute Pressure and Atmospheric Pressure.,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost
+P203,Calculated,l/100km,Fuel Consumption (Est.),"P203-Estimated fuel consumption based on MAF, AFR and vehicle speed.",-,-,-,Fuel Economy
+P239,Standard,degrees,Global Timing User Adjustment Value,P239-This is the fixed amount of timing removed globally - set by the user,-,-,-,Global Timing Adj
+P240,Standard,rpm,Engine Idle Speed User Adjustment (A/C off),P240-This is the fixed amount of idle speed adjustmnet while the A/C is off - set by the user,-,-,-,Idle Adj AC Off
+P241,Standard,rpm,Engine Idle Speed User Adjustment (A/C on),P241-This is the fixed amount of idle speed adjustmnet while the A/C is on - set by the user,-,-,-,Idle Adj AC On
+S1,Switch,,AT Vehicle ID,S1,-,-,-,AT Vehicle ID
+S2,Switch,,Test Mode Signal,S2,State Dep.,State Dep.,State Dep.,Test Mode
+S4,Switch,,Neutral Position Switch,S4,1 (On),0 (Off),0 (Off),Neutral Pos Sw
+S5,Switch,,Idle Switch,S5,1 (On),0 (Off),0 (Off),Idle Switch
+S7,Switch,,Ignition Switch,S7,State Dep.,State Dep.,State Dep.,Ignition Switch
+S8,Switch,,Power Steering Switch,S8,State Dep.,State Dep.,State Dep.,Power Steering Sw
+S9,Switch,,Air Conditioning Switch,S9,User Def,User Def,0 (Often cuts at WOT),A/C Switch
+S11,Switch,,Starter Switch,S11,0,0,0,Starter Switch
+S13,Switch,,Rear O2 Sensor Rich Signal,S13,State Dep.,State Dep.,State Dep.,Rear O2 Rich Sig
+S15,Switch,,Knocking Signal #1,S15,State Dep.,State Dep.,State Dep.,Knock Signal 1
+S18,Switch,,Crankshaft Position Signal,S18,State Dep.,State Dep.,State Dep.,Crank Pos Sig
+S19,Switch,,Camshaft Position Signal,S19,State Dep.,State Dep.,State Dep.,Cam Pos Sig
+S20,Switch,,Rear Defogger Switch,S20,State Dep.,State Dep.,State Dep.,Rear Defog Sw
+S21,Switch,,Blower Fan Switch,S21,State Dep.,State Dep.,State Dep.,Blower Fan Sw
+S22,Switch,,Light Switch,S22,State Dep.,State Dep.,State Dep.,Light Switch
+S26,Switch,,Air Conditioning Compressor Signal,S26,User Def,User Def,0 (Often cuts at WOT),A/C Compressor Sig
+S28,Switch,,Radiator Fan Relay #1,S28,-,-,-,Rad Fan Relay 1
+S29,Switch,,Radiator Fan Relay #2,S29,-,-,-,Rad Fan Relay 2
+S33,Switch,,Blow-By Leak Connector,S33,-,-,-,Blow-by Leak Conn
+S34,Switch,,Positive Crankcase Ventilation (PCV) Solenoid Valve,S34,-,-,-,PCV Solenoid
+S35,Switch,,Tumble Generator Valve (TGV) Output,S35,Open,Open,Open,TGV Output
+S36,Switch,,Tumble Generator Valve (TGV) Drive,S36,Open,Open,Open,TGV Drive
+S39,Switch,,Ventilation Solenoid Valve,S39,-,-,-,Vent Solenoid
+S42,Switch,,Tank Sensor Control Valve,S42,-,-,-,Tank Sens Cntrl
+S62,Switch,,Electronic Throttle Control (ETC) Motor Relay,S62,-,-,-,ETC Motor Relay
+S63,Switch,,Clutch Switch,S63,State Dep.,State Dep.,State Dep.,Clutch Switch
+S64,Switch,,Stop Light Switch,S64,State Dep.,State Dep.,State Dep.,Stop Light Switch
+S65,Switch,,Cruise Control Set/Coast Switch,S65,State Dep.,State Dep.,State Dep.,Cruise Set Sw
+S66,Switch,,Cruise Control Resume/Accelerate Switch,S66,State Dep.,State Dep.,State Dep.,Cruise Res Sw
+S67,Switch,,Brake Switch,S67,State Dep.,State Dep.,State Dep.,Brake Switch
+S68,Switch,,Cruise Control Main Toggle Switch,S68,State Dep.,State Dep.,State Dep.,Cruise Main Sw
+S133,Switch,,Cruise Control System Status,S133,-,-,-,Cruise System Status
+S157,Switch,,Oil Level Switch,S157,State Dep.,State Dep.,State Dep.,Oil Level Switch

@@ -38,11 +38,11 @@ class PMConnection(object):
         if self._ser is not None:
             self._ser.close()
 
-    def init(self, target):
+    def init(self, target) -> PMPacket:
         request_packet = PMPacket(self.get_destination(target), 0xF0, [0xBF])
         return self.send_packet(request_packet)
 
-    def send_packet(self, packet):
+    def send_packet(self, packet) -> PMPacket:
         self._ser.write(packet.to_string())
         time.sleep(0.05)
 

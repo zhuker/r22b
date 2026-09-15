@@ -1,0 +1,587 @@
+Category,Realdash Name,Units,Target ID,id,type,unit,name,desc,Idle Expected,Cruise Expected,WOT Expected,Accessport Monitor,match_status,match_score,match_name,candidate_match_name,candidate_match_score
+ENGINE/ECU INPUTS,AFR 1,AFR,0,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.53
+ENGINE/ECU INPUTS,AFR 2,AFR,1,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.43
+ENGINE/ECU INPUTS,AFR Target 1,AFR,2,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.69
+ENGINE/ECU INPUTS,AFR Target 2,AFR,3,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.62
+ENGINE/ECU INPUTS,Accel Enrich,ms,4,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.64
+ENGINE/ECU INPUTS,Barometric Correction,%,10,,,,,,,,,,UNMATCHED,,,A/F Correction #1 (4-byte)*,0.73
+ENGINE/ECU INPUTS,Barometric Pressure,kPa,11,P24,Standard,kPa,Atmospheric Pressure,P24,-,-,-,Barometric Pressure,MATCHED,1.00,Atmospheric Pressure,Atmospheric Pressure,1.00
+ENGINE/ECU INPUTS,Battery Voltage,v,12,P17,Standard,V,Battery Voltage,P17,13.5 - 14.5 V,13.5 - 14.5 V,13.5 - 14.5 V,Battery Voltage,MATCHED,1.00,Battery Voltage,Battery Voltage,1.00
+ENGINE/ECU INPUTS,Boost Target (kPa),kPa,270,,,,,,,,,,UNMATCHED,,,Boost Error*,0.52
+ENGINE/ECU INPUTS,Check Engine Light,On/Off,65,,,,,,,,,,UNMATCHED,,,Intake VVT Advance Angle Right,0.56
+ENGINE/ECU INPUTS,Cold Advance,deg,13,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.50
+ENGINE/ECU INPUTS,Coolant Pressure,Bar,759,,,,,,,,,,UNMATCHED,,,Fuel Tank Pressure,0.75
+ENGINE/ECU INPUTS,Coolant Temperature,Celsius,14,P2,Standard,C,Coolant Temperature,P2,80 - 96 C,80 - 96 C,80 - 96 C,Coolant Temp,MATCHED,1.00,Coolant Temperature,Coolant Temperature,1.00
+ENGINE/ECU INPUTS,EGT1,Celsius,106,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.33
+ENGINE/ECU INPUTS,EGT10,Celsius,115,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.32
+ENGINE/ECU INPUTS,EGT11,Celsius,116,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.32
+ENGINE/ECU INPUTS,EGT12,Celsius,117,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.32
+ENGINE/ECU INPUTS,EGT2,Celsius,107,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT3,Celsius,108,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT4,Celsius,109,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT5,Celsius,110,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT6,Celsius,111,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT7,Celsius,112,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT8,Celsius,113,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,EGT9,Celsius,114,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.33
+ENGINE/ECU INPUTS,Engine Load,%,100,,,,,,,,,,UNMATCHED,,,Engine Load (4-Byte)*,0.76
+ENGINE/ECU INPUTS,Engine Oil Pressure,Bar,151,,,,,,,,,,UNMATCHED,,,Fuel Tank Pressure,0.65
+ENGINE/ECU INPUTS,Engine Oil Temperature,Celsius,152,P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp,MATCHED,0.83,Intake Air Temperature,Intake Air Temperature,0.83
+ENGINE/ECU INPUTS,Engine Runtime (sec),s,33,,,,,,,,,,UNMATCHED,,,Engine Speed,0.60
+ENGINE/ECU INPUTS,Enginebit: Antiflood,On/Off,393,,,,,,,,,,UNMATCHED,,,Engine Load (4-Byte)*,0.53
+ENGINE/ECU INPUTS,Enginebit: Closed Loop Active,On/Off,395,,,,,,,,,,UNMATCHED,,,Engine Load (Calculated),0.55
+ENGINE/ECU INPUTS,Enginebit: Cranking,On/Off,57,,,,,,,,,,UNMATCHED,,,Engine Speed,0.45
+ENGINE/ECU INPUTS,Enginebit: Fuel Cut Active,On/Off,406,,,,,,,,,,UNMATCHED,,,Engine Load (Calculated),0.54
+ENGINE/ECU INPUTS,Enginebit: Idle,On/Off,396,,,,,,,,,,UNMATCHED,,,Engine Speed,0.59
+ENGINE/ECU INPUTS,Enginebit: Launch Control,On/Off,394,,,,,,,,,,UNMATCHED,,,Engine Load (4-Byte)*,0.51
+ENGINE/ECU INPUTS,Enginebit: MAP accel active,On/Off,62,,,,,,,,,,UNMATCHED,,,Engine Speed,0.51
+ENGINE/ECU INPUTS,Enginebit: MAP deaccel active,On/Off,63,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.50
+ENGINE/ECU INPUTS,Enginebit: Overrun,On/Off,397,,,,,,,,,,UNMATCHED,,,Engine Speed,0.53
+ENGINE/ECU INPUTS,Enginebit: Running,On/Off,56,,,,,,,,,,UNMATCHED,,,Engine Speed,0.47
+ENGINE/ECU INPUTS,Enginebit: Startup Enrich,On/Off,58,,,,,,,,,,UNMATCHED,,,Engine Speed,0.54
+ENGINE/ECU INPUTS,Enginebit: TPS accel active,On/Off,60,,,,,,,,,,UNMATCHED,,,Engine Speed,0.51
+ENGINE/ECU INPUTS,Enginebit: TPS deaccel active,On/Off,61,,,,,,,,,,UNMATCHED,,,Electronic Throttle Control (ETC) Motor Relay,0.49
+ENGINE/ECU INPUTS,Enginebit: Warmup,On/Off,59,,,,,,,,,,UNMATCHED,,,Engine Speed,0.55
+ENGINE/ECU INPUTS,Flex Fuel Correction,%,20,,,,,,,,,,UNMATCHED,,,A/F Correction #1 (4-byte)*,0.75
+ENGINE/ECU INPUTS,Fuel Pressure,Bar,202,P27,Standard,kPa,Fuel Tank Pressure,P27,-,-,-,Fuel Tank Press,MATCHED,0.86,Fuel Tank Pressure,Fuel Tank Pressure,0.86
+ENGINE/ECU INPUTS,Fuel Temperature,Celsius,499,P31,Standard,C,Fuel Temperature,P31,-,-,-,Fuel Temp,MATCHED,1.00,Fuel Temperature,Fuel Temperature,1.00
+ENGINE/ECU INPUTS,Fuel Trim 1,%,17,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.52
+ENGINE/ECU INPUTS,Fuel Trim 2,%,18,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.52
+ENGINE/ECU INPUTS,Fuel flow,-,490,,,,,,,,,,UNMATCHED,,,Fuel Level,0.63
+ENGINE/ECU INPUTS,Ignition Dwell,-,26,,,,,,,,,,UNMATCHED,,,Ignition Switch,0.69
+ENGINE/ECU INPUTS,Intake Air Temperature,Celsius,27,P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp,MATCHED,1.00,Intake Air Temperature,Intake Air Temperature,1.00
+ENGINE/ECU INPUTS,Knock Advance Retard,deg,28,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Max Primary*,0.55
+ENGINE/ECU INPUTS,Knock Percentage,%,29,,,,,,,,,,UNMATCHED,,,Fine Learning Knock Correction (4-byte)*,0.56
+ENGINE/ECU INPUTS,Lambda 1,-,254,,,,,,,,,,UNMATCHED,,,Engine Idle Speed User Adjustment (A/C on),0.45
+ENGINE/ECU INPUTS,Lambda 2,-,255,,,,,,,,,,UNMATCHED,,,Engine Idle Speed User Adjustment (A/C on),0.45
+ENGINE/ECU INPUTS,Lambda Target 1,-,256,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.56
+ENGINE/ECU INPUTS,Lambda Target 2,-,257,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.56
+ENGINE/ECU INPUTS,Long Term Fuel Trim 1,%,102,,,,,,,,,,UNMATCHED,,,CL/OL Fueling*,0.47
+ENGINE/ECU INPUTS,Long Term Fuel Trim 2,%,104,,,,,,,,,,UNMATCHED,,,CL/OL Fueling*,0.47
+ENGINE/ECU INPUTS,MAF g/s,g/sec,30,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.62
+ENGINE/ECU INPUTS,Manifold Absolute Pressure,kPa,31,P7,Standard,kPa,Manifold Absolute Pressure,P7-Pressure value calculated from the manifold absolute pressure sensor (absolute value),30 - 50 kPa,40 - 90 kPa,200 - 230 kPa (Stock),Manifold Abs. Pressure,MATCHED,1.00,Manifold Absolute Pressure,Manifold Absolute Pressure,1.00
+ENGINE/ECU INPUTS,Manifold Absolute Pressure dot,-,32,P7,Standard,kPa,Manifold Absolute Pressure,P7-Pressure value calculated from the manifold absolute pressure sensor (absolute value),30 - 50 kPa,40 - 90 kPa,200 - 230 kPa (Stock),Manifold Abs. Pressure,MATCHED,0.95,Manifold Absolute Pressure,Manifold Absolute Pressure,0.95
+ENGINE/ECU INPUTS,Number of CEL codes,-,66,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.46
+ENGINE/ECU INPUTS,Pulse Width 1,ms,35,,,,,,,,,,UNMATCHED,,,Fuel Injector #1 Pulse Width (4-byte)*,0.65
+ENGINE/ECU INPUTS,Pulse Width 2,ms,36,,,,,,,,,,UNMATCHED,,,Fuel Injector #1 Pulse Width (4-byte)*,0.65
+ENGINE/ECU INPUTS,RPM,RPM,37,P8,Standard,rpm,Engine Speed,P8,700 - 800 rpm,2000 - 3500 rpm,Redline (~7000 rpm),RPM,MATCHED,1.00,Engine Speed,Engine Speed,1.00
+ENGINE/ECU INPUTS,Rotating Error Code,-,105,,,,,,,,,,UNMATCHED,,,Boost Error*,0.53
+ENGINE/ECU INPUTS,Spark Advance,deg,38,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.48
+ENGINE/ECU INPUTS,TPS dot,-,41,,,,,,,,,,UNMATCHED,,,Test Mode Signal,0.50
+ENGINE/ECU INPUTS,Throttle Position,%,42,E38,Fixed Addr,%,Throttle Plate Opening Angle (4-byte)*,E38-Actual throttle plate opening percentage. More accurate than the standard Throttle Opening Angle % SSM parameter.,0 - 5 %,10 - 40 %,100 %,Throttle Pos,MATCHED,0.83,Throttle Plate Opening Angle (4-byte)*,Throttle Plate Opening Angle (4-byte)*,0.83
+ENGINE/ECU INPUTS,Total Fuel Correction,-,43,,,,,,,,,,UNMATCHED,,,A/F Correction #1 (4-byte)*,0.78
+ENGINE/ECU INPUTS,VSS1,KPH,81,,,,,,,,,,UNMATCHED,,,A/F Sensor #1,0.33
+ENGINE/ECU INPUTS,VSS2,KPH,99,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #2,0.32
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Position 1,deg,493,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.55
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Position 2,deg,495,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.55
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Target Position,deg,497,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.53
+ENGINE/ECU INPUTS,VVT: Intake Cam Position 1,deg,492,,,,,,,,,,UNMATCHED,,,Camshaft Position Signal,0.52
+ENGINE/ECU INPUTS,VVT: Intake Cam Position 2,deg,494,,,,,,,,,,UNMATCHED,,,Camshaft Position Signal,0.52
+ENGINE/ECU INPUTS,VVT: Intake Cam Target Position,deg,496,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.55
+ENGINE/ECU INPUTS,Vehicle Max Speed,KPH,408,P9,Standard,km/h,Vehicle Speed,P9,0,Constant,Increasing,Vehicle Speed,MATCHED,0.87,Vehicle Speed,Vehicle Speed,0.87
+ENGINE/ECU INPUTS,Vehicle Speed,KPH,64,P9,Standard,km/h,Vehicle Speed,P9,0,Constant,Increasing,Vehicle Speed,MATCHED,1.00,Vehicle Speed,Vehicle Speed,1.00
+TRANSMISSION,2nd Gear Start indicator (Transmission),On/Off,148,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor Rich Signal,0.43
+TRANSMISSION,4WD Active,On/Off,149,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.55
+TRANSMISSION,4WD Low Range Active,On/Off,150,,,,,,,,,,UNMATCHED,,,A/F Learning Airflow Range (Current)*,0.48
+TRANSMISSION,Downshift indicator (Transmission),On/Off,145,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.39
+TRANSMISSION,Gear (Transmission),gear,139,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.60
+TRANSMISSION,Lockup Active (Transmission),On/Off,143,,,,,,,,,,UNMATCHED,,,Knock Correction Advance (IAM only)*,0.43
+TRANSMISSION,Low Range indicator (Transmission),On/Off,146,,,,,,,,,,UNMATCHED,,,Main Accelerator Sensor,0.42
+TRANSMISSION,Oil Temperature (Transmission),Celsius,138,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.69
+TRANSMISSION,Overdrive indicator (Transmission),On/Off,147,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.39
+TRANSMISSION,Selected Gear (Transmission),gear,140,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.46
+TRANSMISSION,Shifter Position (Transmission),gear,141,,,,,,,,,,UNMATCHED,,,Camshaft Position Signal,0.64
+TRANSMISSION,Throttle Position (Transmission),%,137,,,,,,,,,,UNMATCHED,,,Throttle Opening Angle,0.58
+TRANSMISSION,Tuning Map (Transmission),-,142,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.50
+TRANSMISSION,Upshift indicator (Transmission),On/Off,144,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.41
+TRANSMISSION,Vehicle Speed (Transmission),KPH,136,,,,,,,,,,UNMATCHED,,,Vehicle Speed,0.67
+BODY ELECTRONICS,ABS Warning,On/Off,273,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.60
+BODY ELECTRONICS,AC Active,On/Off,335,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.67
+BODY ELECTRONICS,AC Set Temperature (Zone 1),Celsius,175,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.73
+BODY ELECTRONICS,AC Set Temperature (Zone 2),Celsius,312,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.73
+BODY ELECTRONICS,AC Set Temperature (Zone 3),Celsius,313,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.73
+BODY ELECTRONICS,AC Set Temperature (Zone 4),Celsius,314,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.73
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 1),On/Off,315,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.47
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 2),On/Off,318,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.47
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 3),On/Off,321,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.47
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 4),On/Off,324,,,,,,,,,,UNMATCHED,,,Mass Airflow Sensor Voltage,0.47
+BODY ELECTRONICS,Air Flow Face Active (Zone 1),On/Off,317,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.51
+BODY ELECTRONICS,Air Flow Face Active (Zone 2),On/Off,320,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #2,0.51
+BODY ELECTRONICS,Air Flow Face Active (Zone 3),On/Off,323,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.47
+BODY ELECTRONICS,Air Flow Face Active (Zone 4),On/Off,326,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.47
+BODY ELECTRONICS,Air Flow Feet Active (Zone 1),On/Off,316,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+BODY ELECTRONICS,Air Flow Feet Active (Zone 2),On/Off,319,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #2,0.50
+BODY ELECTRONICS,Air Flow Feet Active (Zone 3),On/Off,322,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.46
+BODY ELECTRONICS,Air Flow Feet Active (Zone 4),On/Off,325,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.46
+BODY ELECTRONICS,Air Recirculation Active,On/Off,336,,,,,,,,,,UNMATCHED,,,Map Ratio (Alternate)*,0.54
+BODY ELECTRONICS,Airbag Warning,On/Off,272,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.57
+BODY ELECTRONICS,Ambient Temperature,Celsius,173,P2,Standard,C,Coolant Temperature,P2,80 - 96 C,80 - 96 C,80 - 96 C,Coolant Temp,MATCHED,0.85,Coolant Temperature,Coolant Temperature,0.85
+BODY ELECTRONICS,Brake Fluid Level,%,178,,,,,,,,,,UNMATCHED,,,Fuel Level,0.59
+BODY ELECTRONICS,Brake LF temperature,Celsius,244,P31,Standard,C,Fuel Temperature,P31,-,-,-,Fuel Temp,MATCHED,0.84,Fuel Temperature,Fuel Temperature,0.84
+BODY ELECTRONICS,Brake LR temperature,Celsius,246,P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp,MATCHED,0.86,Intake Air Temperature,Intake Air Temperature,0.86
+BODY ELECTRONICS,Brake RF temperature,Celsius,245,P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp,MATCHED,0.86,Intake Air Temperature,Intake Air Temperature,0.86
+BODY ELECTRONICS,Brake RR temperature,Celsius,247,P11,Standard,C,Intake Air Temperature,P11,Ambient + Heatsoak,~Ambient,~Ambient,Intake Temp,MATCHED,0.86,Intake Air Temperature,Intake Air Temperature,0.86
+BODY ELECTRONICS,Brake pedal position,%,230,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.69
+BODY ELECTRONICS,Clutch pedal position,%,231,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.67
+BODY ELECTRONICS,Coolant Level,%,177,,,,,,,,,,UNMATCHED,,,Coolant Temperature,0.62
+BODY ELECTRONICS,Cruise Control Accelerate,On/Off,735,,,,,,,,,,UNMATCHED,,,Cruise Control Resume/Accelerate Switch,0.78
+BODY ELECTRONICS,Cruise Control Active,On/Off,169,,,,,,,,,,UNMATCHED,,,Cruise Control System Status,0.69
+BODY ELECTRONICS,Cruise Control Autospeed Active,On/Off,737,,,,,,,,,,UNMATCHED,,,Cruise Control Main Toggle Switch,0.62
+BODY ELECTRONICS,Cruise Control Decelerate,On/Off,736,,,,,,,,,,UNMATCHED,,,Cruise Control Resume/Accelerate Switch,0.75
+BODY ELECTRONICS,Cruise Control Set Value,KPH,171,,,,,,,,,,UNMATCHED,,,Cruise Control System Status,0.77
+BODY ELECTRONICS,Distance to Obstacle,Kilometers,354,,,,,,,,,,UNMATCHED,,,Target Throttle Plate Position*,0.51
+BODY ELECTRONICS,Door 1 Open,On/Off,481,,,,,,,,,,UNMATCHED,,,A/F Sensor #1 Current,0.48
+BODY ELECTRONICS,Door 2 Open,On/Off,482,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Proportional (4-byte)*,0.46
+BODY ELECTRONICS,Door 3 Open,On/Off,483,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Proportional (4-byte)*,0.46
+BODY ELECTRONICS,Door 4 Open,On/Off,484,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Proportional (4-byte)*,0.46
+BODY ELECTRONICS,Door 5 Open,On/Off,485,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Proportional (4-byte)*,0.46
+BODY ELECTRONICS,Door 6 Open,On/Off,486,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Proportional (4-byte)*,0.46
+BODY ELECTRONICS,Door Ajar,On/Off,162,,,,,,,,,,UNMATCHED,,,Engine Idle Speed User Adjustment (A/C on),0.43
+BODY ELECTRONICS,EV: Battery Charge Time,-,341,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.58
+BODY ELECTRONICS,EV: Battery Charge Time Remaining,-,342,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.46
+BODY ELECTRONICS,EV: Battery Level 1,%,478,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.59
+BODY ELECTRONICS,EV: Battery Level 2,%,479,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.59
+BODY ELECTRONICS,EV: Battery Voltage,v,339,P17,Standard,V,Battery Voltage,P17,13.5 - 14.5 V,13.5 - 14.5 V,13.5 - 14.5 V,Battery Voltage,MATCHED,0.88,Battery Voltage,Battery Voltage,0.88
+BODY ELECTRONICS,EV: Charge Voltage,v,340,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.61
+BODY ELECTRONICS,EV: Energy Consumption (W/hr),-,337,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.58
+BODY ELECTRONICS,EV: Energy Consumption Average (Wh/distance),-,338,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.54
+BODY ELECTRONICS,Engine Cooling Fan,On/Off,153,,,,,,,,,,UNMATCHED,,,Engine Load (4-Byte)*,0.50
+BODY ELECTRONICS,Engine Oil Level,%,180,,,,,,,,,,UNMATCHED,,,Engine Speed,0.64
+BODY ELECTRONICS,Front Fog Lights,On/Off,392,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Right,0.49
+BODY ELECTRONICS,Fuel Level,%,170,P35,Standard,V,Fuel Level,P35,-,-,-,Fuel Level,MATCHED,1.00,Fuel Level,Fuel Level,1.00
+BODY ELECTRONICS,Fuel Pump 1,On/Off,182,P47,Standard,%,Fuel Pump Duty,P47,-,-,-,Fuel Pump Duty,MATCHED,0.80,Fuel Pump Duty,Fuel Pump Duty,0.80
+BODY ELECTRONICS,Fuel Pump 2,On/Off,183,P47,Standard,%,Fuel Pump Duty,P47,-,-,-,Fuel Pump Duty,MATCHED,0.80,Fuel Pump Duty,Fuel Pump Duty,0.80
+BODY ELECTRONICS,Fuel Pump 3,On/Off,184,P47,Standard,%,Fuel Pump Duty,P47,-,-,-,Fuel Pump Duty,MATCHED,0.80,Fuel Pump Duty,Fuel Pump Duty,0.80
+BODY ELECTRONICS,Fuel Pump 4,On/Off,185,P47,Standard,%,Fuel Pump Duty,P47,-,-,-,Fuel Pump Duty,MATCHED,0.80,Fuel Pump Duty,Fuel Pump Duty,0.80
+BODY ELECTRONICS,Gear,gear,200,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.47
+BODY ELECTRONICS,Hazard Switch,On/Off,166,,,,,,,,,,UNMATCHED,,,Air Conditioning Switch,0.70
+BODY ELECTRONICS,Heater Motor Level,-,172,,,,,,,,,,UNMATCHED,,,Electronic Throttle Control (ETC) Motor Relay,0.63
+BODY ELECTRONICS,High Beam,On/Off,157,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.41
+BODY ELECTRONICS,Hood Open,On/Off,487,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.47
+BODY ELECTRONICS,Horn,On/Off,165,,,,,,,,,,UNMATCHED,,,Blower Fan Switch,0.35
+BODY ELECTRONICS,Ignition On,On/Off,167,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.77
+BODY ELECTRONICS,Inside Temperature,°C,174,P31,Standard,C,Fuel Temperature,P31,-,-,-,Fuel Temp,MATCHED,0.83,Fuel Temperature,Fuel Temperature,0.83
+BODY ELECTRONICS,Instrument Light Dimmer,-,810,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.51
+BODY ELECTRONICS,Instrument Panel Lights,On/Off,186,,,,,,,,,,UNMATCHED,,,Intake VVT Advance Angle Right,0.57
+BODY ELECTRONICS,Interior Lights,On/Off,187,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.56
+BODY ELECTRONICS,Low Beam,On/Off,156,,,,,,,,,,UNMATCHED,,,Blow-By Leak Connector,0.48
+BODY ELECTRONICS,Neutral Safety Switch,On/Off,489,,,,,,,,,,UNMATCHED,,,Neutral Position Switch,0.77
+BODY ELECTRONICS,Odometer,Kilometers,310,P120,Standard,km,Estimated odometer,P120-Estimated odometer - increments every 2km,-,-,-,Odometer,MATCHED,1.00,Estimated odometer,Estimated odometer,1.00
+BODY ELECTRONICS,Parking Brake,On/Off,164,,,,,,,,,,UNMATCHED,,,A/F Learning #1 B (Stored)*,0.50
+BODY ELECTRONICS,Parking Lights,On/Off,155,,,,,,,,,,UNMATCHED,,,Intake VVT Advance Angle Right,0.57
+BODY ELECTRONICS,Rear Defrost Active,On/Off,808,,,,,,,,,,UNMATCHED,,,Rear Defogger Switch,0.62
+BODY ELECTRONICS,Rear Fog Lights,On/Off,158,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor,0.71
+BODY ELECTRONICS,Reverse Lights,On/Off,159,,,,,,,,,,UNMATCHED,,,Stop Light Switch,0.52
+BODY ELECTRONICS,Seat Belt Warning,On/Off,168,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.52
+BODY ELECTRONICS,Seat Cooler (Zone 1),-,331,,,,,,,,,,UNMATCHED,,,A/F Correction #1 (4-byte)*,0.50
+BODY ELECTRONICS,Seat Cooler (Zone 2),-,332,,,,,,,,,,UNMATCHED,,,AT Vehicle ID,0.45
+BODY ELECTRONICS,Seat Cooler (Zone 3),-,333,,,,,,,,,,UNMATCHED,,,A/F Correction #3 (16-bit ECU),0.50
+BODY ELECTRONICS,Seat Cooler (Zone 4),-,334,,,,,,,,,,UNMATCHED,,,AT Vehicle ID,0.45
+BODY ELECTRONICS,Seat Heater (Zone 1),-,327,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.48
+BODY ELECTRONICS,Seat Heater (Zone 2),-,328,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.48
+BODY ELECTRONICS,Seat Heater (Zone 3),-,329,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.48
+BODY ELECTRONICS,Seat Heater (Zone 4),-,330,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.48
+BODY ELECTRONICS,Starter Motor,On/Off,154,,,,,,,,,,UNMATCHED,,,Starter Switch,0.67
+BODY ELECTRONICS,Steering Wheel 1,On/Off,188,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel 2,On/Off,189,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel 3,On/Off,190,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel 4,On/Off,191,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel 5,On/Off,192,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel 6,On/Off,193,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.61
+BODY ELECTRONICS,Steering Wheel Angle (degrees),deg,229,,,,,,,,,,UNMATCHED,,,A/F Learning Airflow Range (Current)*,0.46
+BODY ELECTRONICS,Steering Wheel DPAD Back,On/Off,199,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.49
+BODY ELECTRONICS,Steering Wheel DPAD Down,On/Off,197,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.49
+BODY ELECTRONICS,Steering Wheel DPAD Left,On/Off,194,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.49
+BODY ELECTRONICS,Steering Wheel DPAD OK,On/Off,198,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.51
+BODY ELECTRONICS,Steering Wheel DPAD Right,On/Off,196,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.51
+BODY ELECTRONICS,Steering Wheel DPAD Up,On/Off,195,,,,,,,,,,UNMATCHED,,,Power Steering Switch,0.51
+BODY ELECTRONICS,Sunlight Sensor,-,811,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.63
+BODY ELECTRONICS,Tire Pressure Warning Limit,Bar,370,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.54
+BODY ELECTRONICS,Traction Control Percentage,%,179,,,,,,,,,,UNMATCHED,,,Cruise Control System Status,0.51
+BODY ELECTRONICS,Tripmeter A,Kilometers,311,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.55
+BODY ELECTRONICS,Tripmeter B,Kilometers,356,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.53
+BODY ELECTRONICS,Trunk Ajar,On/Off,163,,,,,,,,,,UNMATCHED,,,Fine Learning Knock Correction (4-byte)*,0.38
+BODY ELECTRONICS,Turn Signal Left,On/Off,160,,,,,,,,,,UNMATCHED,,,Knocking Signal #1,0.60
+BODY ELECTRONICS,Turn Signal Right,On/Off,161,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.58
+BODY ELECTRONICS,Tyre Front Left Battery Low,On/Off,743,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Left,0.45
+BODY ELECTRONICS,Tyre Front Left Leaking,On/Off,739,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Left,0.50
+BODY ELECTRONICS,Tyre Front Left Pressure,Bar,240,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.61
+BODY ELECTRONICS,Tyre Front Left Sensor Connected,On/Off,747,,,,,,,,,,UNMATCHED,,,Sub Throttle Sensor,0.55
+BODY ELECTRONICS,Tyre Front Left Temperature,Celsius,232,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.74
+BODY ELECTRONICS,Tyre Front Left Wear,-,236,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Left,0.55
+BODY ELECTRONICS,Tyre Front Right Battery Low,On/Off,744,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.48
+BODY ELECTRONICS,Tyre Front Right Leaking,On/Off,740,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.53
+BODY ELECTRONICS,Tyre Front Right Pressure,Bar,241,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.68
+BODY ELECTRONICS,Tyre Front Right Sensor Connected,On/Off,748,,,,,,,,,,UNMATCHED,,,Tank Sensor Control Valve,0.52
+BODY ELECTRONICS,Tyre Front Right Temperature,Celsius,233,,,,,,,,,,UNMATCHED,,,Coolant Temperature,0.72
+BODY ELECTRONICS,Tyre Front Right Wear,-,237,,,,,,,,,,UNMATCHED,,,Tumble Valve Position Sensor Right,0.57
+BODY ELECTRONICS,Tyre Rear Left Battery Low,On/Off,745,,,,,,,,,,UNMATCHED,,,Rear Defogger Switch,0.48
+BODY ELECTRONICS,Tyre Rear Left Leaking,On/Off,741,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.50
+BODY ELECTRONICS,Tyre Rear Left Pressure,Bar,242,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.67
+BODY ELECTRONICS,Tyre Rear Left Sensor Connected,On/Off,749,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor,0.57
+BODY ELECTRONICS,Tyre Rear Left Temperature,Celsius,234,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.75
+BODY ELECTRONICS,Tyre Rear Left Wear,-,238,,,,,,,,,,UNMATCHED,,,Rear Defogger Switch,0.56
+BODY ELECTRONICS,Tyre Rear Right Battery Low,On/Off,746,,,,,,,,,,UNMATCHED,,,Target Boost (4-byte)*,0.43
+BODY ELECTRONICS,Tyre Rear Right Leaking,On/Off,742,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.44
+BODY ELECTRONICS,Tyre Rear Right Pressure,Bar,243,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.65
+BODY ELECTRONICS,Tyre Rear Right Sensor Connected,On/Off,758,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor,0.56
+BODY ELECTRONICS,Tyre Rear Right Temperature,Celsius,235,,,,,,,,,,UNMATCHED,,,Intake Air Temperature,0.73
+BODY ELECTRONICS,Tyre Rear Right Wear,-,239,,,,,,,,,,UNMATCHED,,,Rear Defogger Switch,0.48
+BODY ELECTRONICS,Washer Fluid Level,%,176,,,,,,,,,,UNMATCHED,,,Fuel Level,0.57
+BODY ELECTRONICS,Windshield Defrost Active,On/Off,809,,,,,,,,,,UNMATCHED,,,Tip-in Enrichment (Last Calculated)*,0.41
+BODY ELECTRONICS,Windshield Washer Active,On/Off,181,,,,,,,,,,UNMATCHED,,,Final Fueling Base (4-byte)*,0.45
+DEVICE,Acceleration (ABS),g,5,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.64
+DEVICE,Acceleration X,g,6,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.59
+DEVICE,Acceleration X (RAW),g,264,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.57
+DEVICE,Acceleration Y,g,7,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.59
+DEVICE,Acceleration Y (RAW),g,265,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.57
+DEVICE,Acceleration Z,g,8,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.59
+DEVICE,Acceleration Z (RAW),g,266,,,,,,,,,,UNMATCHED,,,Sub Accelerator Sensor,0.57
+DEVICE,Audio Volume,-,275,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor,0.48
+DEVICE,Battery Charging,On/Off,343,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.65
+DEVICE,Battery Level,%,253,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.71
+DEVICE,Bluetooth Active,-,276,,,,,,,,,,UNMATCHED,,,Electronic Throttle Control (ETC) Motor Relay,0.56
+DEVICE,Connected Device Count,-,365,,,,,,,,,,UNMATCHED,,,Knock Correction Advance (IAM only)*,0.43
+DEVICE,Date,Text,211,,,,,,,,,,UNMATCHED,,,IAM (4-byte)*,0.57
+DEVICE,GPS Altitude,Meters,21,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.48
+DEVICE,GPS Connected,On/Off,252,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.50
+DEVICE,GPS Date,Text,358,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.47
+DEVICE,GPS Heading,deg,209,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.48
+DEVICE,GPS Latitude,lat,22,,,,,,,,,,UNMATCHED,,,Map Ratio (Alternate)*,0.48
+DEVICE,GPS Longitude,lon,23,,,,,,,,,,UNMATCHED,,,Positive Crankcase Ventilation (PCV) Solenoid Valve,0.48
+DEVICE,GPS Speed,KPH,24,,,,,,,,,,UNMATCHED,,,Engine Speed,0.67
+DEVICE,GPS Time,Text,357,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.48
+DEVICE,Heart Rate,-,250,,,,,,,,,,UNMATCHED,,,Target Throttle Plate Position*,0.56
+DEVICE,Keyboard Status,-,498,,,,,,,,,,UNMATCHED,,,CL/OL Fueling*,0.59
+DEVICE,Navigation: Active,On/Off,344,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.56
+DEVICE,Navigation: Distance to Destination,Kilometers,346,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.47
+DEVICE,Navigation: Distance to next Waypoint,Kilometers,347,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.46
+DEVICE,Navigation: ETA,Text,350,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.53
+DEVICE,Navigation: Instruction Current,Text,348,,,,,,,,,,UNMATCHED,,,A/F Sensor #1 Current,0.53
+DEVICE,Navigation: Instruction Next,Text,349,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.45
+DEVICE,Navigation: Maneuver Current,Text,351,,,,,,,,,,UNMATCHED,,,Primary Open Loop Map Enrichment (4-byte)*,0.48
+DEVICE,Navigation: Maneuver Next 1,Text,352,,,,,,,,,,UNMATCHED,,,Primary Open Loop Map Enrichment (4-byte)*,0.49
+DEVICE,Navigation: Maneuver Next 2,Text,353,,,,,,,,,,UNMATCHED,,,Primary Open Loop Map Enrichment (4-byte)*,0.49
+DEVICE,Navigation: Time to Destination,-,345,,,,,,,,,,UNMATCHED,,,Ignition Base Timing*,0.52
+DEVICE,Night Mode,-,309,,,,,,,,,,UNMATCHED,,,Test Mode Signal,0.63
+DEVICE,Screen Brightness,%,274,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.59
+DEVICE,Screen Capture Active,On/Off,491,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.48
+DEVICE,System Notification,Text,248,,,,,,,,,,UNMATCHED,,,Cruise Control System Status,0.51
+DEVICE,Time (ISO-8601),Text,118,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.39
+DEVICE,Time (Local),Text,210,,,,,,,,,,UNMATCHED,,,Engine Load (Calculated),0.50
+DEVICE,Weekday,Text,359,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.48
+DEVICE,WiFi Active,-,277,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.52
+DEVICE,WiFi Hotspot Active,On/Off,776,,,,,,,,,,UNMATCHED,,,Electronic Throttle Control (ETC) Motor Relay,0.51
+CALCULATED,0 to 100 kph (0 to 62 mph) (Seconds),Seconds,208,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.39
+CALCULATED,1/4 Mile time,Seconds,401,,,,,,,,,,UNMATCHED,,,AT Vehicle ID,0.46
+CALCULATED,1/8 Mile time,Seconds,400,,,,,,,,,,UNMATCHED,,,AT Vehicle ID,0.46
+CALCULATED,100 to 200 kph (62 to 124 mph) (Seconds),Seconds,738,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.37
+CALCULATED,60 Feet time,Seconds,399,,,,,,,,,,UNMATCHED,,,Test Mode Signal,0.48
+CALCULATED,Acceleration (g from speed changes),-,267,,,,,,,,,,UNMATCHED,,,Accelerator Pedal Angle,0.68
+CALCULATED,App Uptime (sec),-,91,,,,,,,,,,UNMATCHED,,,Final Fueling Base (4-byte)*,0.48
+CALCULATED,Boost (Bar/Psi),Bar,83,,,,,,,,,,UNMATCHED,,,Boost Error*,0.58
+CALCULATED,Boost (Psi),psi,84,,,,,,,,,,UNMATCHED,,,Manifold Relative Sea Level Pressure (4-byte)*,0.71
+CALCULATED,City Name,Text,268,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.45
+CALCULATED,Current Gear Ratio,-,409,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.59
+CALCULATED,Current Speed Limit,On/Off,67,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.57
+CALCULATED,Current Trip: Average Fuel Consumption,l/100km,259,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.54
+CALCULATED,Current Trip: Average Speed,KPH,260,,,,,,,,,,UNMATCHED,,,Engine Speed,0.51
+CALCULATED,Current Trip: Cost,-,262,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.63
+CALCULATED,Current Trip: Elevation Change,Meters,363,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.48
+CALCULATED,Current Trip: Fuel Consumed,-,258,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.50
+CALCULATED,Current Trip: Max Speed,KPH,261,,,,,,,,,,UNMATCHED,,,Engine Speed,0.51
+CALCULATED,Current Trip: Runtime,-,263,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.58
+CALCULATED,Current Trip: Session Distance,Kilometers,251,,,,,,,,,,UNMATCHED,,,Knock Correction Advance (IAM only)*,0.50
+CALCULATED,Data update rate (values/s),update/s,82,,,,,,,,,,UNMATCHED,,,Intake Air Temperature,0.48
+CALCULATED,Datalogging active,On/Off,80,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Additive*,0.47
+CALCULATED,Distance to nearest speed camera,Meters,430,,,,,,,,,,UNMATCHED,,,Memorised Cruise Speed,0.50
+CALCULATED,Distance until next Service,Kilometers,364,,,,,,,,,,UNMATCHED,,,Cruise Control Set/Coast Switch,0.48
+CALCULATED,Duty Cycle 1 (,%?,119,,,,,,,,,,UNMATCHED,,,Injector Duty Cycle,0.61
+CALCULATED,Duty Cycle 2 (,%?,120,,,,,,,,,,UNMATCHED,,,Injector Duty Cycle,0.61
+CALCULATED,Engine Vacuum,mm/hq,249,,,,,,,,,,UNMATCHED,,,Engine Load (Calculated),0.57
+CALCULATED,Engine runtime total (hrs),-,92,,,,,,,,,,UNMATCHED,,,Ignition Total Timing,0.49
+CALCULATED,FPS,fps,19,,,,,,,,,,UNMATCHED,,,Engine Speed,0.33
+CALCULATED,Fuel Amount (Calculated),liters,222,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.70
+CALCULATED,Fuel Consumption (Instant),l/100km,203,P203,Calculated,l/100km,Fuel Consumption (Est.),"P203-Estimated fuel consumption based on MAF, AFR and vehicle speed.",-,-,-,Fuel Economy,MATCHED,0.84,Fuel Consumption (Est.),Fuel Consumption (Est.),0.84
+CALCULATED,Fuel Consumption (Liters or Gallons per hour),-,407,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.56
+CALCULATED,Fuel Level (Calculated),%,223,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.67
+CALCULATED,Gear (Master Speed RPM Gear Ratio),gear,25,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.50
+CALCULATED,Hours until Service,-,775,,,,,,,,,,UNMATCHED,,,Blower Fan Switch,0.44
+CALCULATED,Internet Connection Available,On/Off,68,,,,,,,,,,UNMATCHED,,,Knock Correction Advance (IAM only)*,0.54
+CALCULATED,Is Daytime,-,389,,,,,,,,,,UNMATCHED,,,IAM (4-byte)*,0.50
+CALCULATED,LapTimer: Best Lap,Text,213,,,,,,,,,,UNMATCHED,,,Global Timing User Adjustment Value,0.45
+CALCULATED,LapTimer: Current Lap,Text,212,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.55
+CALCULATED,LapTimer: Current Lap Number,-,227,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.51
+CALCULATED,LapTimer: Diff to Best,-,219,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.41
+CALCULATED,LapTimer: Distance to nearest track,KPH,221,,,,,,,,,,UNMATCHED,,,Cruise Control Set/Coast Switch,0.45
+CALCULATED,LapTimer: Last Lap,Text,225,,,,,,,,,,UNMATCHED,,,Global Timing User Adjustment Value,0.49
+CALCULATED,LapTimer: Nearest Track Name,Text,220,,,,,,,,,,UNMATCHED,,,Rear O2 Sensor Rich Signal,0.43
+CALCULATED,LapTimer: Number of Laps,-,226,,,,,,,,,,UNMATCHED,,,Global Timing User Adjustment Value,0.41
+CALCULATED,LapTimer: Previous Lap (1),Text,214,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.44
+CALCULATED,LapTimer: Previous Lap (2),Text,215,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.44
+CALCULATED,LapTimer: Previous Lap (3),Text,216,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.44
+CALCULATED,LapTimer: Previous Lap (4),Text,217,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.44
+CALCULATED,LapTimer: Previous Lap (5),Text,218,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.44
+CALCULATED,LapTimer: Total Laps,-,228,,,,,,,,,,UNMATCHED,,,Throttle Plate Opening Angle (4-byte)*,0.50
+CALCULATED,MAF (g/stroke),g/stroke,85,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.48
+CALCULATED,MAX RPM,-,271,,,,,,,,,,UNMATCHED,,,Engine Speed,0.60
+CALCULATED,My RealDash Status,Text,480,,,,,,,,,,UNMATCHED,,,CL/OL Fueling*,0.53
+CALCULATED,Odometer (Calculated),Kilometers,78,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.76
+CALCULATED,Oil Pressure (Simulated),Bar,391,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.60
+CALCULATED,Power,-,206,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.46
+CALCULATED,RPM (Calculated),-,429,E59,Fixed Addr,position,Gear (Calculated)*,E59-Current manual transmission gear selection as estimated by the ECU based on vehicle speed and RPM.,-,-,-,Gear Position,MATCHED,0.83,Gear (Calculated)*,Gear (Calculated)*,0.83
+CALCULATED,Range (Calculated),Kilometers,224,E59,Fixed Addr,position,Gear (Calculated)*,E59-Current manual transmission gear selection as estimated by the ECU based on vehicle speed and RPM.,-,-,-,Gear Position,MATCHED,0.84,Gear (Calculated)*,Gear (Calculated)*,0.84
+CALCULATED,Serial parsing error count,-,398,,,,,,,,,,UNMATCHED,,,A/F Sensor #1 Current,0.46
+CALCULATED,Speed (Gear Indicator & Ratio RPM),KPH,39,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.49
+CALCULATED,Speed at 1/4 Mile,KPH,403,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.49
+CALCULATED,Speed at 1/8 Mile,KPH,402,,,,,,,,,,UNMATCHED,,,Idle Speed Map Selection*,0.49
+CALCULATED,Street Name,Text,69,,,,,,,,,,UNMATCHED,,,Target Throttle Plate Position*,0.46
+CALCULATED,Tire revolutions per minute,-,734,,,,,,,,,,UNMATCHED,,,Map Ratio (Alternate)*,0.48
+CALCULATED,Torque,nm,207,,,,,,,,,,UNMATCHED,,,Requested Torque*,0.55
+CALCULATED,Trip A: Average Fuel Consumption,l/100km,204,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.60
+CALCULATED,Trip A: Average Speed,KPH,205,,,,,,,,,,UNMATCHED,,,Vehicle Speed,0.53
+CALCULATED,Trip A: Cost,-,373,,,,,,,,,,UNMATCHED,,,Target Boost (4-byte)*,0.50
+CALCULATED,Trip A: Elevation Change,Meters,375,,,,,,,,,,UNMATCHED,,,A/F Learning Airflow Range (Current)*,0.51
+CALCULATED,Trip A: Fuel Consumed,-,371,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.57
+CALCULATED,Trip A: Max Speed,KPH,372,,,,,,,,,,UNMATCHED,,,Knock Correction Advance Max Primary*,0.50
+CALCULATED,Trip A: Runtime,-,374,,,,,,,,,,UNMATCHED,,,Tip-in Throttle*,0.47
+CALCULATED,Trip A: Tripmeter,Kilometers,79,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.46
+CALCULATED,Trip B: Average Fuel Consumption,l/100km,761,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.60
+CALCULATED,Trip B: Average Speed,KPH,762,,,,,,,,,,UNMATCHED,,,Vehicle Speed,0.53
+CALCULATED,Trip B: Cost,-,764,,,,,,,,,,UNMATCHED,,,Target Boost (4-byte)*,0.58
+CALCULATED,Trip B: Elevation Change,Meters,774,,,,,,,,,,UNMATCHED,,,A/F Learning Airflow Range (Current)*,0.51
+CALCULATED,Trip B: Fuel Consumed,-,760,,,,,,,,,,UNMATCHED,,,Fuel Consumption (Est.),0.57
+CALCULATED,Trip B: Max Speed,KPH,763,,,,,,,,,,UNMATCHED,,,Engine Speed,0.48
+CALCULATED,Trip B: Runtime,-,765,,,,,,,,,,UNMATCHED,,,Tip-in Throttle*,0.47
+CALCULATED,Trip B: Tripmeter,Kilometers,355,,,,,,,,,,UNMATCHED,,,Estimated odometer,0.46
+CALCULATED,Weather: Cloud cover (Net),-,386,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.43
+CALCULATED,Weather: Country (Net),Text,377,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.53
+CALCULATED,Weather: Description (Net),Text,380,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.54
+CALCULATED,Weather: Feels like temperature (Net),Celsius,381,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.68
+CALCULATED,Weather: Humidity (Net),-,385,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.51
+CALCULATED,Weather: Place (Net),Text,379,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.48
+CALCULATED,Weather: Pressure (Net),Bar,384,,,,,,,,,,UNMATCHED,,,Atmospheric Pressure,0.72
+CALCULATED,Weather: Region (Net),Text,378,,,,,,,,,,UNMATCHED,,,Blow-By Leak Connector,0.44
+CALCULATED,Weather: Temperature (Net),Celsius,269,,,,,,,,,,UNMATCHED,,,Fuel Temperature,0.74
+CALCULATED,Weather: UV Index (Net),-,387,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.46
+CALCULATED,Weather: Visibility (Net),-,388,,,,,,,,,,UNMATCHED,,,Battery Voltage,0.47
+CALCULATED,Weather: Wind heading (Net),-,383,,,,,,,,,,UNMATCHED,,,Throttle Opening Angle,0.47
+CALCULATED,Weather: Wind heading Text (Net),Text,390,,,,,,,,,,UNMATCHED,,,Fine Learning Table Offset*,0.46
+CALCULATED,Weather: Wind speed (Net),KPH,382,,,,,,,,,,UNMATCHED,,,Engine Speed,0.51
+OTHER,App Shutdown,On/Off,87,,,,,,,,,,UNMATCHED,,,Gear (Calculated)*,0.48
+OTHER,App Started,-,86,,,,,,,,,,UNMATCHED,,,Primary Wastegate Duty Maximum* (4-byte)*,0.56
+OTHER,Color Brightness Slider,-,376,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #1,0.51
+OTHER,Color Slider 1,-,366,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #1,0.52
+OTHER,Color Slider 2,-,367,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #2,0.52
+OTHER,Color Slider 3,-,368,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #3,0.52
+OTHER,Color Slider 4,-,369,,,,,,,,,,UNMATCHED,,,Roughness Monitor Cylinder #4,0.52
+OTHER,Current dash page,-,404,,,,,,,,,,UNMATCHED,,,Intake OCV Current Left,0.55
+OTHER,Currently Playing Album,Text,89,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.50
+OTHER,Currently Playing Artist,Text,88,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.54
+OTHER,Currently Playing Duration,-,278,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.51
+OTHER,Currently Playing Folder,Text,488,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.49
+OTHER,Currently Playing Position,-,279,,,,,,,,,,UNMATCHED,,,Target Throttle Plate Position*,0.61
+OTHER,Currently Playing Title,Text,90,,,,,,,,,,UNMATCHED,,,Intake OCV Current Right,0.55
+OTHER,Dash Data 01,-,788,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 02,-,789,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #2,0.50
+OTHER,Dash Data 03,-,790,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 04,-,791,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 05,-,792,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 06,-,793,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 07,-,794,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 08,-,795,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 09,-,796,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.44
+OTHER,Dash Data 10,-,797,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 11,-,798,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 12,-,799,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 13,-,800,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 14,-,801,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 15,-,802,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 16,-,803,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 17,-,804,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 18,-,805,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 19,-,806,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #1,0.50
+OTHER,Dash Data 20,-,807,,,,,,,,,,UNMATCHED,,,Radiator Fan Relay #2,0.50
+OTHER,Dummy 01,-,93,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 02,-,94,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 03,-,95,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 04,-,96,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 05,-,97,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 06,-,121,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 07,-,122,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 08,-,123,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 09,-,124,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 10,-,125,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 11,-,126,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 12,-,127,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 13,-,128,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 14,-,129,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 15,-,130,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 16,-,131,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 17,-,132,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 18,-,133,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 19,-,134,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 20,-,135,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 21,-,281,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 22,-,282,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 23,-,283,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 24,-,284,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 25,-,285,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 26,-,286,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 27,-,287,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 28,-,288,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 29,-,289,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 30,-,290,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 31,-,291,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 32,-,292,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 33,-,293,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 34,-,294,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 35,-,295,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 36,-,296,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 37,-,297,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 38,-,298,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 39,-,299,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 40,-,301,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 41,-,777,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 42,-,778,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 43,-,779,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 44,-,781,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 45,-,782,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 46,-,783,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 47,-,784,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 48,-,785,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 49,-,786,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy 50,-,787,,,,,,,,,,UNMATCHED,,,Intake OCV Duty Left,0.38
+OTHER,Dummy timer 01,-,34,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 02,-,47,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 03,-,48,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 04,-,49,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 05,-,98,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 06,-,302,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 07,-,303,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 08,-,304,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 09,-,305,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Dummy timer 10,-,306,,,,,,,,,,UNMATCHED,,,Turbo Dynamics Integral (4-byte)*,0.40
+OTHER,Heading as text,Text,362,,,,,,,,,,UNMATCHED,,,A/F Learning #1 A (Stored)*,0.53
+OTHER,Map Center Latitude,-,307,,,,,,,,,,UNMATCHED,,,Map Ratio (Primary)*,0.57
+OTHER,Map Center Longitude,-,308,,,,,,,,,,UNMATCHED,,,Map Ratio (Alternate)*,0.51
+OTHER,Map Zoom Level (,-,280,,,,,,,,,,UNMATCHED,,,Map Ratio (Alternate)*,0.53
+OTHER,RealDash language code,Text,361,,,,,,,,,,UNMATCHED,,,Intake VVT Advance Angle Left,0.43
+OTHER,Song Playing,-,360,,,,,,,,,,UNMATCHED,,,CL/OL Fueling*,0.48
+,,,,E31,Fixed Addr,multiplier,IAM (4-byte)*,E31-KCA = (KA (max) map value * IAM) + FBKC + FLKC. Total Timing = KCA + base timing + timing compensations,1.0 (Ideal),1.0,1.0,DAM,UNMATCHED_STI_SOURCE,,,,
+,,,,E32,Fixed Addr,g/rev,Engine Load (4-Byte)*,E32-This is the current engine load (g/rev) as determined by the ECU.,0.15 - 0.40 g/rev,0.30 - 1.00 g/rev,2.0 - 3.5 g/rev,Calculated Load,UNMATCHED_STI_SOURCE,,,,
+,,,,E33,Fixed Addr,status,CL/OL Fueling*,E33-Fuel system status. [8 = CL (normal)][10 = OL (normal)][7 = OL insufficient ECT][14 = OL due to system failure],8 (Closed Loop),8 (Closed Loop),10 (Open Loop),CL/OL Status,UNMATCHED_STI_SOURCE,,,,
+,,,,E34,Fixed Addr,absolute %,Turbo Dynamics Integral (4-byte)*,E34-Current WG duty corr (ABS) applied by the Turbo Dynamics Integral tables to achieve target boost. Can be Cumulative,-,-,-,TD Integral,UNMATCHED_STI_SOURCE,,,,
+,,,,E35,Fixed Addr,kPa,Boost Error*,E35-Difference between target boost (post-compensations) and actual boost (target boost - actual boost),N/A,N/A,~0 psi,Boost Error,UNMATCHED_STI_SOURCE,,,,
+,,,,E36,Fixed Addr,kPa absolute,Target Boost (4-byte)*,"E36-Current boost target as determined by the Target Boost table(s). This includes any compensation, if applicable.",N/A,N/A,~14.5 psi (Stock),Target Boost,UNMATCHED_STI_SOURCE,,,,
+,,,,E37,Fixed Addr,absolute %,Turbo Dynamics Proportional (4-byte)*,E37-Current WG duty correction (absolute) that is being applied by the Turbo Dynamics Proportional table.,-,-,-,TD Proportional,UNMATCHED_STI_SOURCE,,,,
+,,,,E39,Fixed Addr,degrees,Feedback Knock Correction (4-byte)*,E39-This is the temporary negative correction to timing advance in response to what the ECU perceives as knock.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Feedback Knock,UNMATCHED_STI_SOURCE,,,,
+,,,,E40,Fixed Addr,degrees,Knock Correction Advance (IAM only)*,E40-Knock Correction Advance (IAM only),1.0 (Ideal),1.0,1.0,Knock Correction Advance,UNMATCHED_STI_SOURCE,,,,
+,,,,E41,Fixed Addr,degrees,Fine Learning Knock Correction (4-byte)*,E41-Current learned correction that is being applied which is stored and applied across specific load and rpm ranges.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Fine Knock Learn,UNMATCHED_STI_SOURCE,,,,
+,,,,E42,Fixed Addr,multiplier,Map Ratio (Primary)*,E42-The ratio used to determine the portion of specific multiple maps which are combined to determine the target value.,-,-,-,Map Ratio,UNMATCHED_STI_SOURCE,,,,
+,,,,E44,Fixed Addr,%,A/F Learning #1 A (Stored)*,E44-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E45,Fixed Addr,%,A/F Learning #1 B (Stored)*,E45-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E46,Fixed Addr,%,A/F Learning #1 C (Stored)*,E46-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E47,Fixed Addr,%,A/F Learning #1 D (Stored)*,E47-A/F learned correction to CL and OL fueling across specific air flow ranges based on short-term A/F Correction witin range.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E48,Fixed Addr,%,A/F Learning #1 (4-byte)*,E48-Current A/F Learning being applied. Higher resolution then the standard SSM A/F Learning #1 parameter.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E49,Fixed Addr,raw ecu value,Idle Speed Map Selection*,"E49-Current Idle Speed Target MAP being used. 3 table ROM->[1=A],[2=B],[4=C]. 4 table ROM->[1=A],[2=B],[3=C],[4=D]",-,-,-,Idle Speed Target,UNMATCHED_STI_SOURCE,,,,
+,,,,E50,Fixed Addr,ms,Fuel Injector #1 Latency (4-byte)*,E50-Current injector latency as determined by the Injector Latency table.,-,-,-,Inj. Latency,UNMATCHED_STI_SOURCE,,,,
+,,,,E51,Fixed Addr,kPa absolute,Manifold Absolute Pressure (4-byte)*,E51-MAP is limited to about 37 psi absolute (about 22 psig at sea level). This parameter has no effective limit.,30 - 50 kPa,40 - 90 kPa,200 - 230 kPa (Stock),Manifold Abs. Pressure,UNMATCHED_STI_SOURCE,,,,
+,,,,E52,Fixed Addr,psi relative sea level,Manifold Relative Sea Level Pressure (4-byte)*,E52-Same as Manifold Absolute Pressure (Direct) except represented as relative pressure with the assumption of sea level.,-,-,-,Boost,UNMATCHED_STI_SOURCE,,,,
+,,,,E53,Fixed Addr,degrees,Ignition Base Timing*,E53-Current base ignition timing as determined by the Base Timing tables.,-,-,-,Ignition Timing,UNMATCHED_STI_SOURCE,,,,
+,,,,E54,Fixed Addr,%,Tip-in Throttle*,E54-This is the current throttle angle change % used as an input by the Throttle Tip-in Enrichment table.,-,-,-,Tip-in Throttle,UNMATCHED_STI_SOURCE,,,,
+,,,,E55,Fixed Addr,raw ecu value,Tip-in Enrichment (Last Calculated)*,"E55-Current (or last) calculated tip-in enrichment value. The value is  not cleared, effectively shows the last calculated value.",-,-,-,Tip-in Enrichment,UNMATCHED_STI_SOURCE,,,,
+,,,,E56,Fixed Addr,raw ecu value,Requested Torque*,E56-Current requested torque which is used as an input to the Target Throttle Plate Position (Requested Torque) table.,-,-,-,Requested Torque,UNMATCHED_STI_SOURCE,,,,
+,,,,E57,Fixed Addr,%,Target Throttle Plate Position*,E57-Current target throttle plate position as determined by the Target Throttle Plate Position (Requested Torque) table.,-,-,-,Target Throttle,UNMATCHED_STI_SOURCE,,,,
+,,,,E58,Fixed Addr,index position,Fine Learning Table Offset*,"E58-Current index position for the Fine Learning Knock Correction table being applied (and potentially adjusted), stored in ram.",-,-,-,Fine Learn Offset,UNMATCHED_STI_SOURCE,,,,
+,,,,E60,Fixed Addr,ms,Fuel Injector #1 Pulse Width (4-byte)*,E60-Fuel Injector #1 PW with higher resolution. Note: This parameter does not include latency unlike the standard parameter.,-,-,-,Inj. Pulse Width,UNMATCHED_STI_SOURCE,,,,
+,,,,E61,Fixed Addr,offset,A/F Learning Airflow Range (Current)*,E61-Current stored A/F Learning index position. A value of 1-4 corresponds to airflow ranges A-D respectively.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learn Range,UNMATCHED_STI_SOURCE,,,,
+,,,,E70,Fixed Addr,%,Primary Wastegate Duty Maximum* (4-byte)*,E70-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty,UNMATCHED_STI_SOURCE,,,,
+,,,,E77,Fixed Addr,%,Primary Wastegate Duty Maximum* (4-byte)*,E77-Current max WG duty as determined by the Max Wastegate Duty table(s) with all WG compensations applied.,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty,UNMATCHED_STI_SOURCE,,,,
+,,,,E81,Fixed Addr,%,A/F Correction #1 (4-byte)*,E81-A higher precision alternative to the standard SSM A/F Correction #1 parameter.,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 1,UNMATCHED_STI_SOURCE,,,,
+,,,,E84,Fixed Addr,estimated AFR,Primary Open Loop Map Enrichment (4-byte)*,E84-Primary enrichment value based on the Primary Open Loop Fueling table(s) Note: this value is NOT the final fueling target.,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final,UNMATCHED_STI_SOURCE,,,,
+,,,,E91,Fixed Addr,estimated AFR,A/F Sensor #1 (4-byte)*,E91-A higher precision alternative to the standard SSM A/F Sensor #1 (AFR/lambda) parameter.,~14.7,~14.7,11.0 - 11.5,A/F Sens 1 Ratio,UNMATCHED_STI_SOURCE,,,,
+,,,,E113,Fixed Addr,kPa relative,Manifold Relative Pressure (4-byte)*,E113-Actual relative boost pressure and therefore will match a boost gauge regardless of local atmospheric pressure. No limit.,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost,UNMATCHED_STI_SOURCE,,,,
+,,,,E115,Fixed Addr,estimated AFR,Primary Enrichment Final (4-byte)*,E115-This is the Primary Open Loop Map Enrichment value with the minimum warm-up enrichment factors applied. Not Final.,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final,UNMATCHED_STI_SOURCE,,,,
+,,,,E116,Fixed Addr,multiplier,Knock Correction Advance Primary Map Ratio*,E116-Knock Correction Advance Primary Map Ratio,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Pri Map Ratio,UNMATCHED_STI_SOURCE,,,,
+,,,,E117,Fixed Addr,multiplier,Map Ratio (Alternate)*,E117-The ratio used to determine the portion of specific Alternate multiple maps which are combined to determine the target value.,-,-,-,Map Ratio Alt,UNMATCHED_STI_SOURCE,,,,
+,,,,E118,Fixed Addr,degrees,Knock Correction Advance Max Primary*,E118-Knock Correction Advance Max Primary,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Max Pri,UNMATCHED_STI_SOURCE,,,,
+,,,,E119,Fixed Addr,degrees,Knock Correction Advance Additive*,E119-Knock Correction Advance Additive,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),KCA Additive,UNMATCHED_STI_SOURCE,,,,
+,,,,E121,Fixed Addr,estimated AFR,Closed Loop Fueling Target (4-byte)*,E121-This is the closed loop fueling lambda target which is used in determining short-term corrections (A/F Correction #1).,~14.7,~14.7,11.0 - 11.5,Commanded Fuel Final,UNMATCHED_STI_SOURCE,,,,
+,,,,E123,Fixed Addr,lambda,Final Fueling Base (4-byte)*,E123-This is the final fueling multiplier after corrections are applied but before per injector compensation.,-,-,-,Final Fuel Base,UNMATCHED_STI_SOURCE,,,,
+,,,,P3,Standard,%,A/F Correction #1,P3,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 1,UNMATCHED_STI_SOURCE,,,,
+,,,,P4,Standard,%,A/F Learning #1,P4,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Learning 1,UNMATCHED_STI_SOURCE,,,,
+,,,,P10,Standard,degrees,Ignition Total Timing,P10,-,-,-,Ignition Timing,UNMATCHED_STI_SOURCE,,,,
+,,,,P12,Standard,g/s,Mass Airflow,P12,2 - 6 g/s,10 - 60 g/s,200+ g/s,Mass Airflow,UNMATCHED_STI_SOURCE,,,,
+,,,,P13,Standard,%,Throttle Opening Angle,P13-Engine throttle opening angle.,0 - 5 %,10 - 40 %,100 %,Throttle Pos,UNMATCHED_STI_SOURCE,,,,
+,,,,P15,Standard,V,Rear O2 Sensor,P15,-,-,-,Rear O2 Volts,UNMATCHED_STI_SOURCE,,,,
+,,,,P18,Standard,V,Mass Airflow Sensor Voltage,P18,1.0 - 1.4 V,1.5 - 2.5 V,4.0 - 4.7 V,MAF Volts,UNMATCHED_STI_SOURCE,,,,
+,,,,P21,Standard,ms,Fuel Injector #1 Pulse Width,P21-This parameter includes injector latency.,-,-,-,Inj. Pulse Width,UNMATCHED_STI_SOURCE,,,,
+,,,,P23,Standard,degrees,Knock Correction Advance,P23-Retard amount when knocking has occurred. Partial learned value of the learned ignition timing.,0 deg,0 deg (occasional -1.4 normal),0 deg (<-2.8 is bad),Knock Corr. Adv.,UNMATCHED_STI_SOURCE,,,,
+,,,,P25,Standard,kPa,Manifold Relative Pressure,P25-Manifold Absolute Pressure [P7] minus current Atmospheric Pressure [P24].,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost,UNMATCHED_STI_SOURCE,,,,
+,,,,P30,Standard,%,Accelerator Pedal Angle,P30-Accelerator pedal angle.,0 %,10 - 40 %,100 %,Accel Pedal Pos,UNMATCHED_STI_SOURCE,,,,
+,,,,P36,Standard,%,Primary Wastegate Duty Cycle,P36-Trubo Control Valve Duty Cycle,0 %,0 - 10 %,40 - 70 % (Map dep),Wastegate Duty,UNMATCHED_STI_SOURCE,,,,
+,,,,P38,Standard,%,CPC Valve Duty Ratio,P38,-,-,-,CPC Valve Duty,UNMATCHED_STI_SOURCE,,,,
+,,,,P39,Standard,V,Tumble Valve Position Sensor Right,P39,Open,Open,Open,TGV Volt Right,UNMATCHED_STI_SOURCE,,,,
+,,,,P40,Standard,V,Tumble Valve Position Sensor Left,P40,Open,Open,Open,TGV Volt Left,UNMATCHED_STI_SOURCE,,,,
+,,,,P48,Standard,degrees,Intake VVT Advance Angle Right,P48,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),AVCS In. Right,UNMATCHED_STI_SOURCE,,,,
+,,,,P49,Standard,degrees,Intake VVT Advance Angle Left,P49,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),AVCS In. Left,UNMATCHED_STI_SOURCE,,,,
+,,,,P50,Standard,%,Intake OCV Duty Right,P50,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Duty Right,UNMATCHED_STI_SOURCE,,,,
+,,,,P51,Standard,%,Intake OCV Duty Left,P51,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Duty Left,UNMATCHED_STI_SOURCE,,,,
+,,,,P52,Standard,mA,Intake OCV Current Right,P52,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Current Right,UNMATCHED_STI_SOURCE,,,,
+,,,,P53,Standard,mA,Intake OCV Current Left,P53,0 deg,0 - 20 deg (Load dep),High Advance (RPM dep),OCV Current Left,UNMATCHED_STI_SOURCE,,,,
+,,,,P54,Standard,mA,A/F Sensor #1 Current,P54,-,-,-,A/F Sens 1 Curr,UNMATCHED_STI_SOURCE,,,,
+,,,,P56,Standard,ohm,A/F Sensor #1 Resistance,P56,-,-,-,A/F Sens 1 Res,UNMATCHED_STI_SOURCE,,,,
+,,,,P58,Standard,Lambda,A/F Sensor #1,P58,-,-,-,A/F Sens 1 Ratio,UNMATCHED_STI_SOURCE,,,,
+,,,,P63,Standard,misfire count,Roughness Monitor Cylinder #1,P63,0,0,0,Roughness Cyl 1,UNMATCHED_STI_SOURCE,,,,
+,,,,P64,Standard,misfire count,Roughness Monitor Cylinder #2,P64,0,0,0,Roughness Cyl 2,UNMATCHED_STI_SOURCE,,,,
+,,,,P65,Standard,%,A/F Correction #3 (16-bit ECU),P65,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 3,UNMATCHED_STI_SOURCE,,,,
+,,,,P69,Standard,misfire count,Roughness Monitor Cylinder #3,P69,0,0,0,Roughness Cyl 3,UNMATCHED_STI_SOURCE,,,,
+,,,,P70,Standard,misfire count,Roughness Monitor Cylinder #4,P70,0,0,0,Roughness Cyl 4,UNMATCHED_STI_SOURCE,,,,
+,,,,P71,Standard,%,Throttle Motor Duty,P71,-,-,-,Throttle Motor Duty,UNMATCHED_STI_SOURCE,,,,
+,,,,P72,Standard,V,Throttle Motor Voltage,P72,-,-,-,Throttle Motor Volt,UNMATCHED_STI_SOURCE,,,,
+,,,,P73,Standard,V,Sub Throttle Sensor,P73,-,-,-,Sub Throttle Sens,UNMATCHED_STI_SOURCE,,,,
+,,,,P74,Standard,V,Main Throttle Sensor,P74,-,-,-,Main Throttle Sens,UNMATCHED_STI_SOURCE,,,,
+,,,,P75,Standard,V,Sub Accelerator Sensor,P75,0 %,10 - 40 %,100 %,Sub Accel Sens,UNMATCHED_STI_SOURCE,,,,
+,,,,P76,Standard,V,Main Accelerator Sensor,P76,0 %,10 - 40 %,100 %,Main Accel Sens,UNMATCHED_STI_SOURCE,,,,
+,,,,P82,Standard,km/h,Memorised Cruise Speed,P82,-,-,-,Cruise Set Speed,UNMATCHED_STI_SOURCE,,,,
+,,,,P89,Standard,%,A/F Correction #3 (32-bit ECU),P89,+/- 10%,+/- 10%,0% (Correction) / +/-5% (Learning),A/F Correction 3,UNMATCHED_STI_SOURCE,,,,
+,,,,P200,Calculated,g/rev,Engine Load (Calculated),P200-Engine load as calculated from MAF and RPM.,0.15 - 0.40 g/rev,0.30 - 1.00 g/rev,2.0 - 3.5 g/rev,Calculated Load,UNMATCHED_STI_SOURCE,,,,
+,,,,P201,Calculated,%,Injector Duty Cycle,P201-IDC as calculated from RPM and injector PW.,1 - 2 %,5 - 15 %,< 90 % (Safe limit),Inj. Duty Cycle,UNMATCHED_STI_SOURCE,,,,
+,,,,P202,Calculated,bar,Manifold Relative Pressure (Corrected),P202-Difference between Manifold Absolute Pressure and Atmospheric Pressure.,-9 to -8 psi (Vacuum),Vacuum (< 0 psi),~14.5 psi (Peak),Boost,UNMATCHED_STI_SOURCE,,,,
+,,,,P239,Standard,degrees,Global Timing User Adjustment Value,P239-This is the fixed amount of timing removed globally - set by the user,-,-,-,Global Timing Adj,UNMATCHED_STI_SOURCE,,,,
+,,,,P240,Standard,rpm,Engine Idle Speed User Adjustment (A/C off),P240-This is the fixed amount of idle speed adjustmnet while the A/C is off - set by the user,-,-,-,Idle Adj AC Off,UNMATCHED_STI_SOURCE,,,,
+,,,,P241,Standard,rpm,Engine Idle Speed User Adjustment (A/C on),P241-This is the fixed amount of idle speed adjustmnet while the A/C is on - set by the user,-,-,-,Idle Adj AC On,UNMATCHED_STI_SOURCE,,,,
+,,,,S1,Switch,,AT Vehicle ID,S1,-,-,-,AT Vehicle ID,UNMATCHED_STI_SOURCE,,,,
+,,,,S2,Switch,,Test Mode Signal,S2,State Dep.,State Dep.,State Dep.,Test Mode,UNMATCHED_STI_SOURCE,,,,
+,,,,S4,Switch,,Neutral Position Switch,S4,1 (On),0 (Off),0 (Off),Neutral Pos Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S5,Switch,,Idle Switch,S5,1 (On),0 (Off),0 (Off),Idle Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S7,Switch,,Ignition Switch,S7,State Dep.,State Dep.,State Dep.,Ignition Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S8,Switch,,Power Steering Switch,S8,State Dep.,State Dep.,State Dep.,Power Steering Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S9,Switch,,Air Conditioning Switch,S9,User Def,User Def,0 (Often cuts at WOT),A/C Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S11,Switch,,Starter Switch,S11,0,0,0,Starter Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S13,Switch,,Rear O2 Sensor Rich Signal,S13,State Dep.,State Dep.,State Dep.,Rear O2 Rich Sig,UNMATCHED_STI_SOURCE,,,,
+,,,,S15,Switch,,Knocking Signal #1,S15,State Dep.,State Dep.,State Dep.,Knock Signal 1,UNMATCHED_STI_SOURCE,,,,
+,,,,S18,Switch,,Crankshaft Position Signal,S18,State Dep.,State Dep.,State Dep.,Crank Pos Sig,UNMATCHED_STI_SOURCE,,,,
+,,,,S19,Switch,,Camshaft Position Signal,S19,State Dep.,State Dep.,State Dep.,Cam Pos Sig,UNMATCHED_STI_SOURCE,,,,
+,,,,S20,Switch,,Rear Defogger Switch,S20,State Dep.,State Dep.,State Dep.,Rear Defog Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S21,Switch,,Blower Fan Switch,S21,State Dep.,State Dep.,State Dep.,Blower Fan Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S22,Switch,,Light Switch,S22,State Dep.,State Dep.,State Dep.,Light Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S26,Switch,,Air Conditioning Compressor Signal,S26,User Def,User Def,0 (Often cuts at WOT),A/C Compressor Sig,UNMATCHED_STI_SOURCE,,,,
+,,,,S28,Switch,,Radiator Fan Relay #1,S28,-,-,-,Rad Fan Relay 1,UNMATCHED_STI_SOURCE,,,,
+,,,,S29,Switch,,Radiator Fan Relay #2,S29,-,-,-,Rad Fan Relay 2,UNMATCHED_STI_SOURCE,,,,
+,,,,S33,Switch,,Blow-By Leak Connector,S33,-,-,-,Blow-by Leak Conn,UNMATCHED_STI_SOURCE,,,,
+,,,,S34,Switch,,Positive Crankcase Ventilation (PCV) Solenoid Valve,S34,-,-,-,PCV Solenoid,UNMATCHED_STI_SOURCE,,,,
+,,,,S35,Switch,,Tumble Generator Valve (TGV) Output,S35,Open,Open,Open,TGV Output,UNMATCHED_STI_SOURCE,,,,
+,,,,S36,Switch,,Tumble Generator Valve (TGV) Drive,S36,Open,Open,Open,TGV Drive,UNMATCHED_STI_SOURCE,,,,
+,,,,S39,Switch,,Ventilation Solenoid Valve,S39,-,-,-,Vent Solenoid,UNMATCHED_STI_SOURCE,,,,
+,,,,S42,Switch,,Tank Sensor Control Valve,S42,-,-,-,Tank Sens Cntrl,UNMATCHED_STI_SOURCE,,,,
+,,,,S62,Switch,,Electronic Throttle Control (ETC) Motor Relay,S62,-,-,-,ETC Motor Relay,UNMATCHED_STI_SOURCE,,,,
+,,,,S63,Switch,,Clutch Switch,S63,State Dep.,State Dep.,State Dep.,Clutch Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S64,Switch,,Stop Light Switch,S64,State Dep.,State Dep.,State Dep.,Stop Light Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S65,Switch,,Cruise Control Set/Coast Switch,S65,State Dep.,State Dep.,State Dep.,Cruise Set Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S66,Switch,,Cruise Control Resume/Accelerate Switch,S66,State Dep.,State Dep.,State Dep.,Cruise Res Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S67,Switch,,Brake Switch,S67,State Dep.,State Dep.,State Dep.,Brake Switch,UNMATCHED_STI_SOURCE,,,,
+,,,,S68,Switch,,Cruise Control Main Toggle Switch,S68,State Dep.,State Dep.,State Dep.,Cruise Main Sw,UNMATCHED_STI_SOURCE,,,,
+,,,,S133,Switch,,Cruise Control System Status,S133,-,-,-,Cruise System Status,UNMATCHED_STI_SOURCE,,,,
+,,,,S157,Switch,,Oil Level Switch,S157,State Dep.,State Dep.,State Dep.,Oil Level Switch,UNMATCHED_STI_SOURCE,,,,

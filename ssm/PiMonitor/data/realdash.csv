@@ -1,0 +1,470 @@
+Category,Realdash Name,Units,Target ID
+ENGINE/ECU INPUTS,AFR 1,AFR,0
+ENGINE/ECU INPUTS,AFR 2,AFR,1
+ENGINE/ECU INPUTS,AFR Target 1,AFR,2
+ENGINE/ECU INPUTS,AFR Target 2,AFR,3
+ENGINE/ECU INPUTS,Accel Enrich,ms,4
+ENGINE/ECU INPUTS,Barometric Correction,%,10
+ENGINE/ECU INPUTS,Barometric Pressure,kPa,11
+ENGINE/ECU INPUTS,Battery Voltage,v,12
+ENGINE/ECU INPUTS,Boost Target (kPa),kPa,270
+ENGINE/ECU INPUTS,Check Engine Light,On/Off,65
+ENGINE/ECU INPUTS,Cold Advance,deg,13
+ENGINE/ECU INPUTS,Coolant Pressure,Bar,759
+ENGINE/ECU INPUTS,Coolant Temperature,Celsius,14
+ENGINE/ECU INPUTS,EGT1,Celsius,106
+ENGINE/ECU INPUTS,EGT10,Celsius,115
+ENGINE/ECU INPUTS,EGT11,Celsius,116
+ENGINE/ECU INPUTS,EGT12,Celsius,117
+ENGINE/ECU INPUTS,EGT2,Celsius,107
+ENGINE/ECU INPUTS,EGT3,Celsius,108
+ENGINE/ECU INPUTS,EGT4,Celsius,109
+ENGINE/ECU INPUTS,EGT5,Celsius,110
+ENGINE/ECU INPUTS,EGT6,Celsius,111
+ENGINE/ECU INPUTS,EGT7,Celsius,112
+ENGINE/ECU INPUTS,EGT8,Celsius,113
+ENGINE/ECU INPUTS,EGT9,Celsius,114
+ENGINE/ECU INPUTS,Engine Load,%,100
+ENGINE/ECU INPUTS,Engine Oil Pressure,Bar,151
+ENGINE/ECU INPUTS,Engine Oil Temperature,Celsius,152
+ENGINE/ECU INPUTS,Engine Runtime (sec),s,33
+ENGINE/ECU INPUTS,Enginebit: Antiflood,On/Off,393
+ENGINE/ECU INPUTS,Enginebit: Closed Loop Active,On/Off,395
+ENGINE/ECU INPUTS,Enginebit: Cranking,On/Off,57
+ENGINE/ECU INPUTS,Enginebit: Fuel Cut Active,On/Off,406
+ENGINE/ECU INPUTS,Enginebit: Idle,On/Off,396
+ENGINE/ECU INPUTS,Enginebit: Launch Control,On/Off,394
+ENGINE/ECU INPUTS,Enginebit: MAP accel active,On/Off,62
+ENGINE/ECU INPUTS,Enginebit: MAP deaccel active,On/Off,63
+ENGINE/ECU INPUTS,Enginebit: Overrun,On/Off,397
+ENGINE/ECU INPUTS,Enginebit: Running,On/Off,56
+ENGINE/ECU INPUTS,Enginebit: Startup Enrich,On/Off,58
+ENGINE/ECU INPUTS,Enginebit: TPS accel active,On/Off,60
+ENGINE/ECU INPUTS,Enginebit: TPS deaccel active,On/Off,61
+ENGINE/ECU INPUTS,Enginebit: Warmup,On/Off,59
+ENGINE/ECU INPUTS,Flex Fuel Correction,%,20
+ENGINE/ECU INPUTS,Fuel Pressure,Bar,202
+ENGINE/ECU INPUTS,Fuel Temperature,Celsius,499
+ENGINE/ECU INPUTS,Fuel Trim 1,%,17
+ENGINE/ECU INPUTS,Fuel Trim 2,%,18
+ENGINE/ECU INPUTS,Fuel flow,-,490
+ENGINE/ECU INPUTS,Ignition Dwell,-,26
+ENGINE/ECU INPUTS,Intake Air Temperature,Celsius,27
+ENGINE/ECU INPUTS,Knock Advance Retard,deg,28
+ENGINE/ECU INPUTS,Knock Percentage,%,29
+ENGINE/ECU INPUTS,Lambda 1,-,254
+ENGINE/ECU INPUTS,Lambda 2,-,255
+ENGINE/ECU INPUTS,Lambda Target 1,-,256
+ENGINE/ECU INPUTS,Lambda Target 2,-,257
+ENGINE/ECU INPUTS,Long Term Fuel Trim 1,%,102
+ENGINE/ECU INPUTS,Long Term Fuel Trim 2,%,104
+ENGINE/ECU INPUTS,MAF g/s,g/sec,30
+ENGINE/ECU INPUTS,Manifold Absolute Pressure,kPa,31
+ENGINE/ECU INPUTS,Manifold Absolute Pressure dot,-,32
+ENGINE/ECU INPUTS,Number of CEL codes,-,66
+ENGINE/ECU INPUTS,Pulse Width 1,ms,35
+ENGINE/ECU INPUTS,Pulse Width 2,ms,36
+ENGINE/ECU INPUTS,RPM,RPM,37
+ENGINE/ECU INPUTS,Rotating Error Code,-,105
+ENGINE/ECU INPUTS,Spark Advance,deg,38
+ENGINE/ECU INPUTS,TPS dot,-,41
+ENGINE/ECU INPUTS,Throttle Position,%,42
+ENGINE/ECU INPUTS,Total Fuel Correction,-,43
+ENGINE/ECU INPUTS,VSS1,KPH,81
+ENGINE/ECU INPUTS,VSS2,KPH,99
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Position 1,deg,493
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Position 2,deg,495
+ENGINE/ECU INPUTS,VVT: Exhaust Cam Target Position,deg,497
+ENGINE/ECU INPUTS,VVT: Intake Cam Position 1,deg,492
+ENGINE/ECU INPUTS,VVT: Intake Cam Position 2,deg,494
+ENGINE/ECU INPUTS,VVT: Intake Cam Target Position,deg,496
+ENGINE/ECU INPUTS,Vehicle Max Speed,KPH,408
+ENGINE/ECU INPUTS,Vehicle Speed,KPH,64
+TRANSMISSION,2nd Gear Start indicator (Transmission),On/Off,148
+TRANSMISSION,4WD Active,On/Off,149
+TRANSMISSION,4WD Low Range Active,On/Off,150
+TRANSMISSION,Downshift indicator (Transmission),On/Off,145
+TRANSMISSION,Gear (Transmission),gear,139
+TRANSMISSION,Lockup Active (Transmission),On/Off,143
+TRANSMISSION,Low Range indicator (Transmission),On/Off,146
+TRANSMISSION,Oil Temperature (Transmission),Celsius,138
+TRANSMISSION,Overdrive indicator (Transmission),On/Off,147
+TRANSMISSION,Selected Gear (Transmission),gear,140
+TRANSMISSION,Shifter Position (Transmission),gear,141
+TRANSMISSION,Throttle Position (Transmission),%,137
+TRANSMISSION,Tuning Map (Transmission),-,142
+TRANSMISSION,Upshift indicator (Transmission),On/Off,144
+TRANSMISSION,Vehicle Speed (Transmission),KPH,136
+BODY ELECTRONICS,ABS Warning,On/Off,273
+BODY ELECTRONICS,AC Active,On/Off,335
+BODY ELECTRONICS,AC Set Temperature (Zone 1),Celsius,175
+BODY ELECTRONICS,AC Set Temperature (Zone 2),Celsius,312
+BODY ELECTRONICS,AC Set Temperature (Zone 3),Celsius,313
+BODY ELECTRONICS,AC Set Temperature (Zone 4),Celsius,314
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 1),On/Off,315
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 2),On/Off,318
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 3),On/Off,321
+BODY ELECTRONICS,Air Flow Defrost Active (Zone 4),On/Off,324
+BODY ELECTRONICS,Air Flow Face Active (Zone 1),On/Off,317
+BODY ELECTRONICS,Air Flow Face Active (Zone 2),On/Off,320
+BODY ELECTRONICS,Air Flow Face Active (Zone 3),On/Off,323
+BODY ELECTRONICS,Air Flow Face Active (Zone 4),On/Off,326
+BODY ELECTRONICS,Air Flow Feet Active (Zone 1),On/Off,316
+BODY ELECTRONICS,Air Flow Feet Active (Zone 2),On/Off,319
+BODY ELECTRONICS,Air Flow Feet Active (Zone 3),On/Off,322
+BODY ELECTRONICS,Air Flow Feet Active (Zone 4),On/Off,325
+BODY ELECTRONICS,Air Recirculation Active,On/Off,336
+BODY ELECTRONICS,Airbag Warning,On/Off,272
+BODY ELECTRONICS,Ambient Temperature,Celsius,173
+BODY ELECTRONICS,Brake Fluid Level,%,178
+BODY ELECTRONICS,Brake LF temperature,Celsius,244
+BODY ELECTRONICS,Brake LR temperature,Celsius,246
+BODY ELECTRONICS,Brake RF temperature,Celsius,245
+BODY ELECTRONICS,Brake RR temperature,Celsius,247
+BODY ELECTRONICS,Brake pedal position,%,230
+BODY ELECTRONICS,Clutch pedal position,%,231
+BODY ELECTRONICS,Coolant Level,%,177
+BODY ELECTRONICS,Cruise Control Accelerate,On/Off,735
+BODY ELECTRONICS,Cruise Control Active,On/Off,169
+BODY ELECTRONICS,Cruise Control Autospeed Active,On/Off,737
+BODY ELECTRONICS,Cruise Control Decelerate,On/Off,736
+BODY ELECTRONICS,Cruise Control Set Value,KPH,171
+BODY ELECTRONICS,Distance to Obstacle,Kilometers,354
+BODY ELECTRONICS,Door 1 Open,On/Off,481
+BODY ELECTRONICS,Door 2 Open,On/Off,482
+BODY ELECTRONICS,Door 3 Open,On/Off,483
+BODY ELECTRONICS,Door 4 Open,On/Off,484
+BODY ELECTRONICS,Door 5 Open,On/Off,485
+BODY ELECTRONICS,Door 6 Open,On/Off,486
+BODY ELECTRONICS,Door Ajar,On/Off,162
+BODY ELECTRONICS,EV: Battery Charge Time,-,341
+BODY ELECTRONICS,EV: Battery Charge Time Remaining,-,342
+BODY ELECTRONICS,EV: Battery Level 1,%,478
+BODY ELECTRONICS,EV: Battery Level 2,%,479
+BODY ELECTRONICS,EV: Battery Voltage,v,339
+BODY ELECTRONICS,EV: Charge Voltage,v,340
+BODY ELECTRONICS,EV: Energy Consumption (W/hr),-,337
+BODY ELECTRONICS,EV: Energy Consumption Average (Wh/distance),-,338
+BODY ELECTRONICS,Engine Cooling Fan,On/Off,153
+BODY ELECTRONICS,Engine Oil Level,%,180
+BODY ELECTRONICS,Front Fog Lights,On/Off,392
+BODY ELECTRONICS,Fuel Level,%,170
+BODY ELECTRONICS,Fuel Pump 1,On/Off,182
+BODY ELECTRONICS,Fuel Pump 2,On/Off,183
+BODY ELECTRONICS,Fuel Pump 3,On/Off,184
+BODY ELECTRONICS,Fuel Pump 4,On/Off,185
+BODY ELECTRONICS,Gear,gear,200
+BODY ELECTRONICS,Hazard Switch,On/Off,166
+BODY ELECTRONICS,Heater Motor Level,-,172
+BODY ELECTRONICS,High Beam,On/Off,157
+BODY ELECTRONICS,Hood Open,On/Off,487
+BODY ELECTRONICS,Horn,On/Off,165
+BODY ELECTRONICS,Ignition On,On/Off,167
+BODY ELECTRONICS,Inside Temperature,°C,174
+BODY ELECTRONICS,Instrument Light Dimmer,-,810
+BODY ELECTRONICS,Instrument Panel Lights,On/Off,186
+BODY ELECTRONICS,Interior Lights,On/Off,187
+BODY ELECTRONICS,Low Beam,On/Off,156
+BODY ELECTRONICS,Neutral Safety Switch,On/Off,489
+BODY ELECTRONICS,Odometer,Kilometers,310
+BODY ELECTRONICS,Parking Brake,On/Off,164
+BODY ELECTRONICS,Parking Lights,On/Off,155
+BODY ELECTRONICS,Rear Defrost Active,On/Off,808
+BODY ELECTRONICS,Rear Fog Lights,On/Off,158
+BODY ELECTRONICS,Reverse Lights,On/Off,159
+BODY ELECTRONICS,Seat Belt Warning,On/Off,168
+BODY ELECTRONICS,Seat Cooler (Zone 1),-,331
+BODY ELECTRONICS,Seat Cooler (Zone 2),-,332
+BODY ELECTRONICS,Seat Cooler (Zone 3),-,333
+BODY ELECTRONICS,Seat Cooler (Zone 4),-,334
+BODY ELECTRONICS,Seat Heater (Zone 1),-,327
+BODY ELECTRONICS,Seat Heater (Zone 2),-,328
+BODY ELECTRONICS,Seat Heater (Zone 3),-,329
+BODY ELECTRONICS,Seat Heater (Zone 4),-,330
+BODY ELECTRONICS,Starter Motor,On/Off,154
+BODY ELECTRONICS,Steering Wheel 1,On/Off,188
+BODY ELECTRONICS,Steering Wheel 2,On/Off,189
+BODY ELECTRONICS,Steering Wheel 3,On/Off,190
+BODY ELECTRONICS,Steering Wheel 4,On/Off,191
+BODY ELECTRONICS,Steering Wheel 5,On/Off,192
+BODY ELECTRONICS,Steering Wheel 6,On/Off,193
+BODY ELECTRONICS,Steering Wheel Angle (degrees),deg,229
+BODY ELECTRONICS,Steering Wheel DPAD Back,On/Off,199
+BODY ELECTRONICS,Steering Wheel DPAD Down,On/Off,197
+BODY ELECTRONICS,Steering Wheel DPAD Left,On/Off,194
+BODY ELECTRONICS,Steering Wheel DPAD OK,On/Off,198
+BODY ELECTRONICS,Steering Wheel DPAD Right,On/Off,196
+BODY ELECTRONICS,Steering Wheel DPAD Up,On/Off,195
+BODY ELECTRONICS,Sunlight Sensor,-,811
+BODY ELECTRONICS,Tire Pressure Warning Limit,Bar,370
+BODY ELECTRONICS,Traction Control Percentage,%,179
+BODY ELECTRONICS,Tripmeter A,Kilometers,311
+BODY ELECTRONICS,Tripmeter B,Kilometers,356
+BODY ELECTRONICS,Trunk Ajar,On/Off,163
+BODY ELECTRONICS,Turn Signal Left,On/Off,160
+BODY ELECTRONICS,Turn Signal Right,On/Off,161
+BODY ELECTRONICS,Tyre Front Left Battery Low,On/Off,743
+BODY ELECTRONICS,Tyre Front Left Leaking,On/Off,739
+BODY ELECTRONICS,Tyre Front Left Pressure,Bar,240
+BODY ELECTRONICS,Tyre Front Left Sensor Connected,On/Off,747
+BODY ELECTRONICS,Tyre Front Left Temperature,Celsius,232
+BODY ELECTRONICS,Tyre Front Left Wear,-,236
+BODY ELECTRONICS,Tyre Front Right Battery Low,On/Off,744
+BODY ELECTRONICS,Tyre Front Right Leaking,On/Off,740
+BODY ELECTRONICS,Tyre Front Right Pressure,Bar,241
+BODY ELECTRONICS,Tyre Front Right Sensor Connected,On/Off,748
+BODY ELECTRONICS,Tyre Front Right Temperature,Celsius,233
+BODY ELECTRONICS,Tyre Front Right Wear,-,237
+BODY ELECTRONICS,Tyre Rear Left Battery Low,On/Off,745
+BODY ELECTRONICS,Tyre Rear Left Leaking,On/Off,741
+BODY ELECTRONICS,Tyre Rear Left Pressure,Bar,242
+BODY ELECTRONICS,Tyre Rear Left Sensor Connected,On/Off,749
+BODY ELECTRONICS,Tyre Rear Left Temperature,Celsius,234
+BODY ELECTRONICS,Tyre Rear Left Wear,-,238
+BODY ELECTRONICS,Tyre Rear Right Battery Low,On/Off,746
+BODY ELECTRONICS,Tyre Rear Right Leaking,On/Off,742
+BODY ELECTRONICS,Tyre Rear Right Pressure,Bar,243
+BODY ELECTRONICS,Tyre Rear Right Sensor Connected,On/Off,758
+BODY ELECTRONICS,Tyre Rear Right Temperature,Celsius,235
+BODY ELECTRONICS,Tyre Rear Right Wear,-,239
+BODY ELECTRONICS,Washer Fluid Level,%,176
+BODY ELECTRONICS,Windshield Defrost Active,On/Off,809
+BODY ELECTRONICS,Windshield Washer Active,On/Off,181
+DEVICE,Acceleration (ABS),g,5
+DEVICE,Acceleration X,g,6
+DEVICE,Acceleration X (RAW),g,264
+DEVICE,Acceleration Y,g,7
+DEVICE,Acceleration Y (RAW),g,265
+DEVICE,Acceleration Z,g,8
+DEVICE,Acceleration Z (RAW),g,266
+DEVICE,Audio Volume,-,275
+DEVICE,Battery Charging,On/Off,343
+DEVICE,Battery Level,%,253
+DEVICE,Bluetooth Active,-,276
+DEVICE,Connected Device Count,-,365
+DEVICE,Date,Text,211
+DEVICE,GPS Altitude,Meters,21
+DEVICE,GPS Connected,On/Off,252
+DEVICE,GPS Date,Text,358
+DEVICE,GPS Heading,deg,209
+DEVICE,GPS Latitude,lat,22
+DEVICE,GPS Longitude,lon,23
+DEVICE,GPS Speed,KPH,24
+DEVICE,GPS Time,Text,357
+DEVICE,Heart Rate,-,250
+DEVICE,Keyboard Status,-,498
+DEVICE,Navigation: Active,On/Off,344
+DEVICE,Navigation: Distance to Destination,Kilometers,346
+DEVICE,Navigation: Distance to next Waypoint,Kilometers,347
+DEVICE,Navigation: ETA,Text,350
+DEVICE,Navigation: Instruction Current,Text,348
+DEVICE,Navigation: Instruction Next,Text,349
+DEVICE,Navigation: Maneuver Current,Text,351
+DEVICE,Navigation: Maneuver Next 1,Text,352
+DEVICE,Navigation: Maneuver Next 2,Text,353
+DEVICE,Navigation: Time to Destination,-,345
+DEVICE,Night Mode,-,309
+DEVICE,Screen Brightness,%,274
+DEVICE,Screen Capture Active,On/Off,491
+DEVICE,System Notification,Text,248
+DEVICE,Time (ISO-8601),Text,118
+DEVICE,Time (Local),Text,210
+DEVICE,Weekday,Text,359
+DEVICE,WiFi Active,-,277
+DEVICE,WiFi Hotspot Active,On/Off,776
+CALCULATED,0 to 100 kph (0 to 62 mph) (Seconds),Seconds,208
+CALCULATED,1/4 Mile time,Seconds,401
+CALCULATED,1/8 Mile time,Seconds,400
+CALCULATED,100 to 200 kph (62 to 124 mph) (Seconds),Seconds,738
+CALCULATED,60 Feet time,Seconds,399
+CALCULATED,Acceleration (g from speed changes),-,267
+CALCULATED,App Uptime (sec),-,91
+CALCULATED,Boost (Bar/Psi),Bar,83
+CALCULATED,Boost (Psi),psi,84
+CALCULATED,City Name,Text,268
+CALCULATED,Current Gear Ratio,-,409
+CALCULATED,Current Speed Limit,On/Off,67
+CALCULATED,Current Trip: Average Fuel Consumption,l/100km,259
+CALCULATED,Current Trip: Average Speed,KPH,260
+CALCULATED,Current Trip: Cost,-,262
+CALCULATED,Current Trip: Elevation Change,Meters,363
+CALCULATED,Current Trip: Fuel Consumed,-,258
+CALCULATED,Current Trip: Max Speed,KPH,261
+CALCULATED,Current Trip: Runtime,-,263
+CALCULATED,Current Trip: Session Distance,Kilometers,251
+CALCULATED,Data update rate (values/s),update/s,82
+CALCULATED,Datalogging active,On/Off,80
+CALCULATED,Distance to nearest speed camera,Meters,430
+CALCULATED,Distance until next Service,Kilometers,364
+CALCULATED,Duty Cycle 1 (,%?,119
+CALCULATED,Duty Cycle 2 (,%?,120
+CALCULATED,Engine Vacuum,mm/hq,249
+CALCULATED,Engine runtime total (hrs),-,92
+CALCULATED,FPS,fps,19
+CALCULATED,Fuel Amount (Calculated),liters,222
+CALCULATED,Fuel Consumption (Instant),l/100km,203
+CALCULATED,Fuel Consumption (Liters or Gallons per hour),-,407
+CALCULATED,Fuel Level (Calculated),%,223
+CALCULATED,Gear (Master Speed RPM Gear Ratio),gear,25
+CALCULATED,Hours until Service,-,775
+CALCULATED,Internet Connection Available,On/Off,68
+CALCULATED,Is Daytime,-,389
+CALCULATED,LapTimer: Best Lap,Text,213
+CALCULATED,LapTimer: Current Lap,Text,212
+CALCULATED,LapTimer: Current Lap Number,-,227
+CALCULATED,LapTimer: Diff to Best,-,219
+CALCULATED,LapTimer: Distance to nearest track,KPH,221
+CALCULATED,LapTimer: Last Lap,Text,225
+CALCULATED,LapTimer: Nearest Track Name,Text,220
+CALCULATED,LapTimer: Number of Laps,-,226
+CALCULATED,LapTimer: Previous Lap (1),Text,214
+CALCULATED,LapTimer: Previous Lap (2),Text,215
+CALCULATED,LapTimer: Previous Lap (3),Text,216
+CALCULATED,LapTimer: Previous Lap (4),Text,217
+CALCULATED,LapTimer: Previous Lap (5),Text,218
+CALCULATED,LapTimer: Total Laps,-,228
+CALCULATED,MAF (g/stroke),g/stroke,85
+CALCULATED,MAX RPM,-,271
+CALCULATED,My RealDash Status,Text,480
+CALCULATED,Odometer (Calculated),Kilometers,78
+CALCULATED,Oil Pressure (Simulated),Bar,391
+CALCULATED,Power,-,206
+CALCULATED,RPM (Calculated),-,429
+CALCULATED,Range (Calculated),Kilometers,224
+CALCULATED,Serial parsing error count,-,398
+CALCULATED,Speed (Gear Indicator & Ratio RPM),KPH,39
+CALCULATED,Speed at 1/4 Mile,KPH,403
+CALCULATED,Speed at 1/8 Mile,KPH,402
+CALCULATED,Street Name,Text,69
+CALCULATED,Tire revolutions per minute,-,734
+CALCULATED,Torque,nm,207
+CALCULATED,Trip A: Average Fuel Consumption,l/100km,204
+CALCULATED,Trip A: Average Speed,KPH,205
+CALCULATED,Trip A: Cost,-,373
+CALCULATED,Trip A: Elevation Change,Meters,375
+CALCULATED,Trip A: Fuel Consumed,-,371
+CALCULATED,Trip A: Max Speed,KPH,372
+CALCULATED,Trip A: Runtime,-,374
+CALCULATED,Trip A: Tripmeter,Kilometers,79
+CALCULATED,Trip B: Average Fuel Consumption,l/100km,761
+CALCULATED,Trip B: Average Speed,KPH,762
+CALCULATED,Trip B: Cost,-,764
+CALCULATED,Trip B: Elevation Change,Meters,774
+CALCULATED,Trip B: Fuel Consumed,-,760
+CALCULATED,Trip B: Max Speed,KPH,763
+CALCULATED,Trip B: Runtime,-,765
+CALCULATED,Trip B: Tripmeter,Kilometers,355
+CALCULATED,Weather: Cloud cover (Net),-,386
+CALCULATED,Weather: Country (Net),Text,377
+CALCULATED,Weather: Description (Net),Text,380
+CALCULATED,Weather: Feels like temperature (Net),Celsius,381
+CALCULATED,Weather: Humidity (Net),-,385
+CALCULATED,Weather: Place (Net),Text,379
+CALCULATED,Weather: Pressure (Net),Bar,384
+CALCULATED,Weather: Region (Net),Text,378
+CALCULATED,Weather: Temperature (Net),Celsius,269
+CALCULATED,Weather: UV Index (Net),-,387
+CALCULATED,Weather: Visibility (Net),-,388
+CALCULATED,Weather: Wind heading (Net),-,383
+CALCULATED,Weather: Wind heading Text (Net),Text,390
+CALCULATED,Weather: Wind speed (Net),KPH,382
+OTHER,App Shutdown,On/Off,87
+OTHER,App Started,-,86
+OTHER,Color Brightness Slider,-,376
+OTHER,Color Slider 1,-,366
+OTHER,Color Slider 2,-,367
+OTHER,Color Slider 3,-,368
+OTHER,Color Slider 4,-,369
+OTHER,Current dash page,-,404
+OTHER,Currently Playing Album,Text,89
+OTHER,Currently Playing Artist,Text,88
+OTHER,Currently Playing Duration,-,278
+OTHER,Currently Playing Folder,Text,488
+OTHER,Currently Playing Position,-,279
+OTHER,Currently Playing Title,Text,90
+OTHER,Dash Data 01,-,788
+OTHER,Dash Data 02,-,789
+OTHER,Dash Data 03,-,790
+OTHER,Dash Data 04,-,791
+OTHER,Dash Data 05,-,792
+OTHER,Dash Data 06,-,793
+OTHER,Dash Data 07,-,794
+OTHER,Dash Data 08,-,795
+OTHER,Dash Data 09,-,796
+OTHER,Dash Data 10,-,797
+OTHER,Dash Data 11,-,798
+OTHER,Dash Data 12,-,799
+OTHER,Dash Data 13,-,800
+OTHER,Dash Data 14,-,801
+OTHER,Dash Data 15,-,802
+OTHER,Dash Data 16,-,803
+OTHER,Dash Data 17,-,804
+OTHER,Dash Data 18,-,805
+OTHER,Dash Data 19,-,806
+OTHER,Dash Data 20,-,807
+OTHER,Dummy 01,-,93
+OTHER,Dummy 02,-,94
+OTHER,Dummy 03,-,95
+OTHER,Dummy 04,-,96
+OTHER,Dummy 05,-,97
+OTHER,Dummy 06,-,121
+OTHER,Dummy 07,-,122
+OTHER,Dummy 08,-,123
+OTHER,Dummy 09,-,124
+OTHER,Dummy 10,-,125
+OTHER,Dummy 11,-,126
+OTHER,Dummy 12,-,127
+OTHER,Dummy 13,-,128
+OTHER,Dummy 14,-,129
+OTHER,Dummy 15,-,130
+OTHER,Dummy 16,-,131
+OTHER,Dummy 17,-,132
+OTHER,Dummy 18,-,133
+OTHER,Dummy 19,-,134
+OTHER,Dummy 20,-,135
+OTHER,Dummy 21,-,281
+OTHER,Dummy 22,-,282
+OTHER,Dummy 23,-,283
+OTHER,Dummy 24,-,284
+OTHER,Dummy 25,-,285
+OTHER,Dummy 26,-,286
+OTHER,Dummy 27,-,287
+OTHER,Dummy 28,-,288
+OTHER,Dummy 29,-,289
+OTHER,Dummy 30,-,290
+OTHER,Dummy 31,-,291
+OTHER,Dummy 32,-,292
+OTHER,Dummy 33,-,293
+OTHER,Dummy 34,-,294
+OTHER,Dummy 35,-,295
+OTHER,Dummy 36,-,296
+OTHER,Dummy 37,-,297
+OTHER,Dummy 38,-,298
+OTHER,Dummy 39,-,299
+OTHER,Dummy 40,-,301
+OTHER,Dummy 41,-,777
+OTHER,Dummy 42,-,778
+OTHER,Dummy 43,-,779
+OTHER,Dummy 44,-,781
+OTHER,Dummy 45,-,782
+OTHER,Dummy 46,-,783
+OTHER,Dummy 47,-,784
+OTHER,Dummy 48,-,785
+OTHER,Dummy 49,-,786
+OTHER,Dummy 50,-,787
+OTHER,Dummy timer 01,-,34
+OTHER,Dummy timer 02,-,47
+OTHER,Dummy timer 03,-,48
+OTHER,Dummy timer 04,-,49
+OTHER,Dummy timer 05,-,98
+OTHER,Dummy timer 06,-,302
+OTHER,Dummy timer 07,-,303
+OTHER,Dummy timer 08,-,304
+OTHER,Dummy timer 09,-,305
+OTHER,Dummy timer 10,-,306
+OTHER,Heading as text,Text,362
+OTHER,Map Center Latitude,-,307
+OTHER,Map Center Longitude,-,308
+OTHER,Map Zoom Level (,-,280
+OTHER,RealDash language code,Text,361
+OTHER,Song Playing,-,360
