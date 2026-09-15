@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dash22b ↔ Raspberry Pi in-car gateway — design sketch</title>
+<style>
+  :root { color-scheme: light dark; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font: 16px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; color: #222; background: #fafafa;
+         overflow-wrap: break-word; word-wrap: break-word; }
+  h1 { font-size: 1.7rem; margin-top: 0; line-height: 1.25; }
+  h2 { font-size: 1.3rem; margin-top: 2.2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.3rem; line-height: 1.3; }
+  h3 { font-size: 1.1rem; margin-top: 1.6rem; line-height: 1.3; }
+  h4 { font-size: 1rem; margin-top: 1.2rem; }
+  code { font-family: 'SF Mono', Monaco, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 0.92em;
+         background: #eef; padding: 0 0.3em; border-radius: 3px; word-break: break-word; }
+  table { border-collapse: collapse; margin: 0.8rem 0; width: 100%; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  th, td { border: 1px solid #ccc; padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: #ececec; font-weight: 600; }
+  .callout { background: #fff8e0; border-left: 4px solid #e6b800; padding: 0.5rem 0.9rem; margin: 1rem 0; }
+  .callout.warn { background: #fce8e6; border-left-color: #cc3333; }
+  .callout.ok { background: #e7f5e7; border-left-color: #4caf50; }
+  .callout.info { background: #e7f0ff; border-left-color: #4a86e8; }
+  .phase { background: #f5efff; border: 1px solid #d5c5f5; border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.4rem 0; }
+  .phase h3 { margin-top: 0; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: 0.2rem 0; }
+  .meta { color: #666; font-size: 0.9em; margin-bottom: 1.4rem; }
+  @media (max-width: 640px) {
+    body { margin: 1rem auto; padding: 0 0.9rem; font-size: 15px; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+    h3 { font-size: 1rem; margin-top: 1.2rem; }
+    h4 { font-size: 0.95rem; }
+    ul, ol { padding-left: 1.1rem; }
+    th, td { padding: 0.35rem 0.5rem; }
+    .callout, .phase { padding: 0.5rem 0.75rem; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #ddd; background: #1a1a1a; }
+    code { background: #2a3350; }
+    th { background: #2a2a2a; }
+    th, td { border-color: #444; }
+    .callout { background: #3a2f0e; border-left-color: #d5aa20; }
+    .callout.warn { background: #3a1a1a; border-left-color: #cc3333; }
+    .callout.ok { background: #163016; border-left-color: #4caf50; }
+    .callout.info { background: #1a2540; border-left-color: #4a86e8; }
+    .phase { background: #2a2440; border-color: #453e70; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Dash22b ↔ Raspberry Pi in-car gateway — design sketch</h1>
+<p class="meta">Drafted 2026-09-13 from a chat exploration. Not a decision, not a plan — a design sketch to come back to when the Pi-side work is next on the bench. All Pi-related plans for the car live in this one file.</p>
+
+<h2>Goal</h2>
+<p>Move data collection off the phone and onto an always-on Raspberry Pi 4 in the glove box. Over time the Pi becomes the car's compute node: SSM polling against the 2005-STI ECU, BLE TPMS collection, rear-view camera, and BLE-based phone-as-key with walkaway auto-lock. Preserve the current "plug in, dash22b auto-launches" ergonomic. The dash22b Android app stays as the driver-facing display and control surface.</p>
+
+<h2>Phasing</h2>
+<p>Rolled up in dependency order. Each phase is deliberately self-contained so it can ship without waiting on the next.</p>
+
+<div class="phase">
+  <h3>Phase 1 — BLE door lock (isolated slice)</h3>
+  <p>BLE-only, door-lock-only. Does not touch SSM, USB-serial, or camera. Ships as a fully independent feature.</p>
+  <ul>
+    <li>Pi acts as a BLE peripheral, exposing one GATT vehicle-access service.</li>
+    <li>Phone app (dash22b module) locks/unlocks over BLE after crypto handshake.</li>
+    <li>Existing K-line USB-serial path to the phone remains untouched.</li>
+  </ul>
+</div>
+
+<div class="phase">
+  <h3>Phase 1.5 — Walkaway auto-lock</h3>
+  <p>Additive on top of Phase 1 once the manual command path is proven reliable in all real-world states.</p>
+</div>
+
+<div class="phase">
+  <h3>Phase 2 — Pi-mediated SSM/TPMS over USB-Ethernet</h3>
+  <p>K-line USB cable moves off the phone and onto a Pi USB-A port. Pi owns the ECU link; phone talks to the Pi over TCP via a USB-C ↔ USB-Ethernet dongle through the existing PD Y-adapter.</p>
+</div>
+
+<div class="phase">
+  <h3>Phase 3 — Rear-view camera</h3>
+  <p>UVC camera on a Pi USB-A port, restreamed as MJPEG/H.264 over the same Ethernet link. Kept separate from the SSM transport code.</p>
+</div>
+
+<div class="phase">
+  <h3>Phase 4 — Wi-Fi as a third transport</h3>
+  <p>Pi joins home Wi-Fi in the garage or runs its own AP. Same socket code as Phase 2, different route. Enables pulling logs from inside the house and a cable-free fallback for the SSM stream.</p>
+</div>
+
+<hr>
+
+<h2>Phase 1 — BLE door lock (v1 scope)</h2>
+<p>Deliberately small. Ships as its own feature without any refactor of the existing dash22b USB-serial pipeline.</p>
+
+<h3>What the Pi runs</h3>
+<ul>
+  <li>Pi 4's onboard <strong>Cypress CYW43455</strong> combo chip supports BT 5.0 + BLE. BlueZ 5 + <code>bluetoothd</code> handle peripheral mode natively on Raspberry Pi OS.</li>
+  <li>Userspace GATT server in Python (<code>bluezero</code> or <code>dbus-next</code>), Go (<code>tinygo.org/x/bluetooth</code>), or Rust (<code>bluer</code>) — all fine.</li>
+  <li>Range: onboard antenna is OK inside the cabin, marginal outside 10 m through metal roof + heated windshield. An external USB BT dongle with a real antenna extends useful walkaway range if Phase 1.5 needs it — Phase 1 (manual command) doesn't.</li>
+</ul>
+
+<h3>GATT surface — one service, four characteristics</h3>
+<table>
+  <tr><th>Characteristic</th><th>Access</th><th>Purpose</th></tr>
+  <tr><td><code>lock-state</code></td><td>read + notify</td><td>Reports "locked / unlocked" and last-changed timestamp.</td></tr>
+  <tr><td><code>auth-challenge</code></td><td>read + notify</td><td>Pi issues a fresh nonce.</td></tr>
+  <tr><td><code>auth-response</code></td><td>write</td><td>Phone signs the nonce with its per-vehicle key; Pi verifies.</td></tr>
+  <tr><td><code>command</code></td><td>write</td><td>Accepts <code>lock</code> / <code>unlock</code> after a valid auth-response.</td></tr>
+</table>
+
+<h3>Phone side (dash22b module)</h3>
+<ul>
+  <li>Small BLE client + unlock UI. No SSM/USB-serial code involved.</li>
+  <li>Per-vehicle signing key stored in <strong>Android Keystore</strong> (hardware-backed on modern phones), gated by biometric before signing.</li>
+  <li>v1a can be manual-only: tap unlock in the app or a persistent notification action. No RSSI heuristics yet.</li>
+</ul>
+
+<h3>Hardware — the load-bearing half</h3>
+<div class="callout warn">
+  The BLE + crypto is a weekend of code. The door-lock wiring is what has to be right the first time.
+</div>
+<ul>
+  <li><strong>Tap point on the '01 body:</strong> drive the same control lines the OEM RKE receiver drives, not the door actuators directly — the factory timer handles pulse duration and current. FSM <code>WIRING SYSTEM SECTION</code> has the door-lock timer + keyless entry receiver pinout.</li>
+  <li><strong>Relay board with hardware watchdog:</strong> an enable line the Pi must refresh every N ms or the outputs go safe. Guards against Pi crash / hang / malicious input holding an output stuck.</li>
+  <li><strong>Fuse</strong> on the relay coil supply, on its own circuit that doesn't take out anything else if it pops.</li>
+  <li><strong>OEM key still works.</strong> The DIY path is additive, never the sole entry method.</li>
+</ul>
+
+<h3>Security bar for v1</h3>
+<ul>
+  <li><strong>Bonded pairing</strong> with an out-of-band first-pair step (a code shown on the phone that gets typed into a Pi-side web UI, or vice versa). Reject unbonded peers on the vehicle-access service.</li>
+  <li><strong>Rolling challenge-response</strong> on every unlock. Nonce from Pi, Ed25519 signature from phone, Pi verifies with the paired public key. Do not rely on "the connection is encrypted, that's enough" — it isn't, especially against relay attacks.</li>
+  <li><strong>Biometric-gated signing</strong> on the phone side, so a stolen unlocked phone still won't unlock the car unless the attacker also authenticates.</li>
+  <li><strong>Rate-limit failed responses</strong> (3 fails in a minute → 5 min backoff).</li>
+  <li><strong>Known residual risk:</strong> BLE relay attacks. Real mitigation is UWB or accelerometer-aided distance bounding — a future-phase problem, not v1.</li>
+</ul>
+
+<h2>Phase 1.5 — Walkaway auto-lock</h2>
+<p>Tesla's phone-key uses BLE RSSI + a proximity model (and on newer cars, UWB ranging), not just "connected or not." The car estimates distance from the phone by watching signal strength over time; walkaway triggers when estimated distance crosses a threshold for a sustained window.</p>
+
+<h3>Two implementation paths</h3>
+<ul>
+  <li><strong>Pi as peripheral, phone connects and holds:</strong> Pi tracks connection state + RSSI. When RSSI drops below a threshold for N seconds <em>and</em> the phone was previously "inside range" for M seconds, trigger lock. When the phone comes back into strong range and passes auth, unlock. Cheap; RSSI is noisy so tuning is real.</li>
+  <li><strong>Phone as advertiser (iBeacon/Eddystone), Pi scans:</strong> phone advertises a stable UUID, Pi estimates distance from ad RSSI. Better for phone battery, matches how commercial phone-as-key systems work. Android handles background BLE ads fine (dash22b is Android-only, so no iOS quirks to work around).</li>
+  <li><strong>Optional second antenna:</strong> an ESP32 with a real antenna on the rear bumper gives two spatially-separated RSSI readings; a Kalman filter over both makes "inside vs. outside the car" much more reliable without UWB.</li>
+</ul>
+<p>Recommend deferring this until Phase 1 has been proven reliable on manual command in every real-world state (parked-uphill, cold-soak, low-battery, etc.).</p>
+
+<h2>Phase 2 — SSM/TPMS over USB-Ethernet</h2>
+
+<h3>Today's baseline</h3>
+<ul>
+  <li>Phone (dash22b) ↔ USB serial K-line cable (FTDI/CH340/CP210x) directly to the car's diagnostic port.</li>
+  <li>Android auto-launches dash22b on <code>USB_DEVICE_ATTACHED</code> matching the cable's VID/PID in <code>device_filter.xml</code>.</li>
+  <li><code>usb-serial-for-android</code> handles the wire protocol.</li>
+  <li><strong>Existing PD Y-adapter</strong> (Amazon order <code>112-4102290-8091436</code>, delivered 2026-01-19, ~$10): "2-in-1 USB C OTG Adapter and Charger" with 60W PD passthrough. Phone charges + data-USB works simultaneously through one physical port.</li>
+</ul>
+
+<h3>Chosen architecture</h3>
+<p><strong>Phone → PD Y-adapter → USB Ethernet dongle → RJ45 → Pi 4 built-in gigabit port.</strong> The Y-adapter is reused unchanged. The K-line USB cable moves off the phone and onto one of the Pi's USB-A ports.</p>
+
+<h4>Why this shape</h4>
+<ul>
+  <li><strong>Pi 4 stays 100% normal.</strong> All four USB-A ports free for K-line cable, rear-view camera, GPS, USB storage. USB-C port is power-in only. No <code>dwc2</code> / configfs gadget config, no RNDIS quirks, no composite-device gymnastics.</li>
+  <li><strong>Pi 4 has real gigabit Ethernet</strong> on its own PCIe-attached MAC (not USB-shared like the Pi 3). Independent of everything USB.</li>
+  <li><strong>The RJ45 on the Pi is still free for dev</strong> while the phone is connected via the dongle — sit in the driveway with a laptop on the Ethernet jack, SSH in, tail logs.</li>
+  <li><strong>Auto-launch works the same way as today.</strong> Android fires <code>USB_DEVICE_ATTACHED</code> for USB Ethernet dongles (the phone sees the dongle's VID/PID before the kernel claims it as a network interface). Pin a dongle chipset (RTL8153 = <code>0bda:8153</code>, or AX88179 = <code>0b95:1790</code>), add that VID/PID to <code>device_filter.xml</code>, and plugging the cable in wakes dash22b exactly like the FTDI cable does today.</li>
+  <li><strong>Charging is already solved</strong> by the existing Y-adapter — the "phone port is busy, so it can't charge" problem doesn't apply.</li>
+</ul>
+
+<h4>Not chosen (and why)</h4>
+<ul>
+  <li><strong>Pi 4 in USB gadget mode</strong> (RNDIS/CDC-NCM composite over USB-C). Works, but means running the Pi off GPIO 5V (USB-C is busy talking to the phone) and doing configfs setup. Dongle path is strictly simpler.</li>
+  <li><strong>CDC-ACM serial gadget</strong> with dash22b learning <code>CdcAcmSerialDriver</code>. Preserves auto-launch without a network stack, but forces every future data type through a single stream-oriented pipe. Networking gives multi-port for free.</li>
+  <li><strong>USB-serial protocol emulation</strong> (Pi pretending to be FTDI/CH340). Doable via <code>raw-gadget</code> + shim, but purely to preserve the existing on-phone driver stack. Not worth it once dash22b is going to change anyway.</li>
+</ul>
+
+<h3>Protocol on the Ethernet link</h3>
+<p>Phone gets DHCP from <code>dnsmasq</code> on the Pi (Pi = <code>10.55.0.1</code>, phone = <code>10.55.0.2</code>). dash22b opens sockets to the Pi. Choice of application protocol is not load-bearing — three reasonable options:</p>
+<ul>
+  <li><strong>WebSocket + JSON/CBOR</strong> — trivial to debug from a laptop with <code>wscat</code>.</li>
+  <li><strong>MQTT</strong> (Mosquitto on Pi, Paho on Android) — nice topic structure (<code>car/rpm</code>, <code>car/tpms/FL</code>, <code>car/dtc/...</code>), easy fan-out to other logging tools.</li>
+  <li><strong>gRPC bidirectional streams</strong> — typed schemas, best for bidirectional RPCs (dash22b requesting a Mode $06 pull, Pi streaming SSM back).</li>
+</ul>
+
+<h4>SSM data model</h4>
+<p>Pi owns the K-line, keeps a rolling cache of last-value + timestamp for every subscribed PID. dash22b subscribes to a set of PIDs at a rate; Pi streams updates. Phone never waits on the K-line, and the Pi can log at its native poll rate independent of what the dash is displaying.</p>
+
+<h3>Auto-launch details</h3>
+<p>Android does <em>not</em> fire an app-launch intent for "USB ethernet interface came up." So:</p>
+<ol>
+  <li><strong><code>USB_DEVICE_ATTACHED</code> intent filter</strong> matching the specific dongle's VID/PID. Dash22b receives the broadcast, ignores the <code>UsbDevice</code> handle, and opens its TCP socket to <code>10.55.0.1</code>. Cold-launch trigger.</li>
+  <li><strong><code>ConnectivityManager.NetworkCallback</code></strong> watching for a <code>TRANSPORT_ETHERNET</code> interface to come up — covers the "app already running, cable was just replugged" case.</li>
+</ol>
+
+<h3>Open questions before building</h3>
+<div class="callout warn">
+  <strong>Smoke test to run first.</strong> Does the existing Y-adapter cleanly pass a USB Ethernet dongle on its data leg while PD input is active? Cheap 2-in-1 OTG adapters are hit-or-miss — some forward a simple FTDI/CH340 fine but choke on higher-power devices. Plug an RTL8153 or AX88179 dongle into the data leg with PD input powered, confirm Android enumerates it as <code>usb0</code>. If this fails, the whole Phase 2 plan needs a rethink.
+</div>
+<ul>
+  <li><strong>Which dongle chipset</strong> — RTL8153 (gigabit), RTL8156 (2.5 GbE, headroom), AX88179A. All mainline-supported in Android. Prefer known-good over cheapest no-name.</li>
+  <li><strong>Pi boot vs. phone DHCP race</strong> — Pi must be up with <code>dnsmasq</code> listening before phone tries to DHCP, or phone gets <code>169.254.x.x</code> until next renewal. Fix: Pi boots off ignition-switched 12V a few seconds before the cable is expected to be plugged; dash22b retries the socket connect on a short interval (want this anyway).</li>
+  <li><strong>dash22b transport interface</strong> — new <code>RpiTransport</code> alongside the existing serial one, behind the current datasource interface. Existing on-phone SSM code path stays as a fallback for when the Pi isn't present.</li>
+</ul>
+
+<h2>Phase 3 — Rear-view camera</h2>
+<p>UVC camera on a Pi USB-A port. Two options:</p>
+<ol>
+  <li><strong>Restream over the same Ethernet link</strong> as MJPEG or H.264 (<code>ustreamer</code>, <code>gstreamer</code>) — dash22b renders in a <code>SurfaceView</code> / <code>ExoPlayer</code>. Flexible, works over Wi-Fi too, easy to record on the Pi.</li>
+  <li><strong>Advertise <code>f_uvc</code> on a Pi gadget port</strong> — Android sees a webcam directly. Lower latency but locks to USB and re-introduces the gadget-mode complexity avoided in Phase 2.</li>
+</ol>
+<p>Option 1 is the default. BLE cannot carry the camera stream (~1–5 Mbps at low latency, out of budget) — the Ethernet link is what unlocks this.</p>
+
+<h2>Phase 4 — Wi-Fi as a third transport</h2>
+<ul>
+  <li>Same socket code as Phase 2, different route. Pi joins home Wi-Fi in the garage → pull logs from inside the house. Cable falls out → the app can fall back to Wi-Fi for SSM (camera would still need the cable due to bandwidth).</li>
+  <li>Alternatively, Pi runs an AP that the phone joins when cable's unplugged. Purely a bonus once the Ethernet path is stable.</li>
+</ul>
+
+<h2>Physical install sketch (end state)</h2>
+<ul>
+  <li>Pi 4 in the glove box, powered from switched-12V glove-box tap via GPIO 5V pins through a proper buck converter (or a car USB-PD PSU into the Pi's USB-C).</li>
+  <li>Pi USB-A → K-line USB cable → OBD2 port.</li>
+  <li>Pi USB-A → rear-view camera (UVC).</li>
+  <li>Pi RJ45 → USB Ethernet dongle → phone Y-adapter data leg.</li>
+  <li>Car 12V → USB-PD supply → phone Y-adapter PD input.</li>
+  <li>Pi GPIO → relay board with hardware watchdog → door-lock control lines (spliced parallel to OEM RKE receiver outputs).</li>
+  <li>Onboard BLE + Wi-Fi handle door-lock service and Wi-Fi transport respectively.</li>
+</ul>
+
+</body>
+</html>

@@ -10,8 +10,11 @@ Extracted and reorganized on 2026-09-14 from the untidy checkout on the Pi
 HAT demo). The full history is kept: Waveshare's commits, Alex's Dec 2025
 commits, then a snapshot commit of the uncommitted work before the reorg.
 
-Design context lives in the 22b build docs: `questions/dash22b-rpi-gateway.html`
-and `questions/rpi-rke-integration.html`.
+Design docs: [docs/design/dash22b-rpi-gateway.html](docs/design/dash22b-rpi-gateway.html)
+(overall Pi gateway plan) and [docs/design/rpi-rke-integration.html](docs/design/rpi-rke-integration.html)
+(BLE door lock via the B176 connector). Car-side wiring facts, such as the OEM
+keyless retrofit and B176 pinout, stay in the 22b build repo
+(`~/Documents/22b/questions/oem-rke-retrofit.html`).
 
 ## Status (as of the last work on the Pi, Jan 3 2026)
 
@@ -43,7 +46,7 @@ ssm/                ECU work: vendored PiMonitor (+ Python 3 port, RealDash
                     mapping), supported-parameter lists for this ECU
 data/               TPMS scan capture, 50 sample H.264 frames, RealDash XML
 system/             customized Pi config files (boot, networkd, journald)
-docs/               ble.md, pi-system.md
+docs/               ble.md, pi-system.md; design/ has the gateway and door-lock plans
 tests/              offline tests, no hardware needed
 ```
 

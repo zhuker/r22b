@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Raspberry Pi ↔ OEM RKE integration — design details</title>
+<style>
+  :root { color-scheme: light dark; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { font: 16px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         max-width: 1100px; margin: 2rem auto; padding: 0 1.5rem; color: #222; background: #fafafa;
+         overflow-wrap: break-word; word-wrap: break-word; }
+  h1 { font-size: 1.7rem; margin-top: 0; line-height: 1.25; }
+  h2 { font-size: 1.3rem; margin-top: 2.2rem; border-bottom: 1px solid #ddd; padding-bottom: 0.3rem; line-height: 1.3; }
+  h3 { font-size: 1.1rem; margin-top: 1.6rem; line-height: 1.3; }
+  h4 { font-size: 1rem; margin-top: 1.2rem; }
+  code, .pn { font-family: 'SF Mono', Monaco, 'Cascadia Mono', Menlo, Consolas, monospace; font-size: 0.92em; word-break: break-word; }
+  .pn { background: #eef; padding: 0 0.3em; border-radius: 3px; }
+  a.pn-link { text-decoration: none; }
+  a.pn-link:hover .pn { background: #dde; }
+  table { border-collapse: collapse; margin: 0.8rem 0; width: 100%; display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  th, td { border: 1px solid #ccc; padding: 0.45rem 0.7rem; text-align: left; vertical-align: top; }
+  th { background: #ececec; font-weight: 600; }
+  .callout { background: #fff8e0; border-left: 4px solid #e6b800; padding: 0.5rem 0.9rem; margin: 1rem 0; }
+  .callout.warn { background: #fce8e6; border-left-color: #cc3333; }
+  .callout.ok { background: #e7f5e7; border-left-color: #4caf50; }
+  .callout.info { background: #e7f0ff; border-left-color: #4a86e8; }
+  .topology { background: #f5efff; border: 1px solid #d5c5f5; border-radius: 6px; padding: 0.9rem 1.1rem; margin: 1.4rem 0; }
+  .topology h3 { margin-top: 0; }
+  .spec { font-style: italic; color: #b26; }
+  ul, ol { padding-left: 1.4rem; }
+  li { margin: 0.2rem 0; }
+  .meta { color: #666; font-size: 0.9em; margin-bottom: 1.4rem; }
+  pre { background: #f0f0f0; border: 1px solid #ddd; padding: 0.6rem 0.9rem; overflow-x: auto; font-size: 0.9em; }
+  @media (max-width: 640px) {
+    body { margin: 1rem auto; padding: 0 0.9rem; font-size: 15px; }
+    h1 { font-size: 1.4rem; }
+    h2 { font-size: 1.15rem; margin-top: 1.6rem; }
+    h3 { font-size: 1rem; margin-top: 1.2rem; }
+    h4 { font-size: 0.95rem; }
+    ul, ol { padding-left: 1.1rem; }
+    th, td { padding: 0.35rem 0.5rem; font-size: 0.92em; }
+    .callout, .topology { padding: 0.5rem 0.75rem; }
+    pre { font-size: 0.85em; }
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #ddd; background: #1a1a1a; }
+    .pn { background: #2a3350; }
+    th { background: #2a2a2a; }
+    th, td { border-color: #444; }
+    .callout { background: #3a2f0e; border-left-color: #d5aa20; }
+    .callout.warn { background: #3a1a1a; border-left-color: #cc3333; }
+    .callout.ok { background: #163016; border-left-color: #4caf50; }
+    .callout.info { background: #1a2540; border-left-color: #4a86e8; }
+    .topology { background: #2a2440; border-color: #453e70; }
+    .spec { color: #f9a; }
+    pre { background: #232323; border-color: #444; color: #ddd; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Raspberry Pi ↔ OEM RKE integration — design details</h1>
+<p class="meta">Drafted 2026-09-13. Companion doc to <a href="dash22b-rpi-gateway.html">dash22b-rpi-gateway.html</a> (overall Pi gateway plan, Phase 1 = BLE door lock) and <a href="file:///Users/zhukov/Documents/22b/questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> (how the 2001 body harness is provisioned for factory keyless entry). This doc is the technical bridge between the two: how the Pi actually drives the door-lock circuit, given that the '01 body already has a factory-terminated RKE connector under the CEL/DLC bundle waiting to be used.</p>
+
+<div class="callout ok">
+<strong>Updated 2026-09-13 after reading the FSM and checking the car.</strong> The first draft of this doc assumed an ACC pin, a keyless LED pin and an interior-lamp trigger pin on the connector. The FSM shows none of those. Everything below uses the verified pinout; the full derivation and schematic crops are in <a href="file:///Users/zhukov/Documents/22b/questions/oem-rke-retrofit.html">oem-rke-retrofit.html</a> section 3.
+</div>
+
+<h2>The connector: B176 and its dummy B241</h2>
+<p>On this car there is a 10-pin connector taped next to the OBD-II connector. The FSM calls it <strong>B176</strong>; on non-keyless cars it gets factory dummy plug <strong>B241</strong>, drawn on WI-34 as one red/blue (RL) jumper across <strong>pins 6 and 10</strong>. This car has a <strong>hand-made plain wire jumper</strong> instead of the factory plug, on the same two pins: blue-white (LW) and red-green (RG).</p>
+
+<table>
+  <tr><th>Pin</th><th>Wire</th><th>Role (FSM WI-45, WI-34, WI-14/15)</th><th>Use in the Pi design</th></tr>
+  <tr><td>1</td><td>WB</td><td>+12&thinsp;V constant, M/B fuse 5 (15&thinsp;A), shared with the door lock timer</td><td>Available, but see the power section</td></tr>
+  <tr><td>2</td><td>GB</td><td>+12&thinsp;V ignition (key ON), F/B fuse 18 (15&thinsp;A)</td><td><strong>Car-on sense</strong> (divider/opto into a GPIO)</td></tr>
+  <tr><td>3</td><td>W</td><td>+12&thinsp;V constant, M/B fuse 7 (20&thinsp;A)</td><td>Available, but see the power section</td></tr>
+  <tr><td>4</td><td>WY</td><td>+12&thinsp;V with parking/headlights on, F/B fuse 12 (10&thinsp;A)</td><td>Optional lights-on sense; otherwise unused</td></tr>
+  <tr><td>5</td><td>Y</td><td>Door switch line</td><td>Unused</td></tr>
+  <tr><td>6</td><td>LW</td><td>Door switch / combination meter line</td><td><strong>Must stay bridged to pin 10</strong></td></tr>
+  <tr><td>7</td><td>LG</td><td>Door lock timer input B92-5 (shared with door lock switch wiring)</td><td><strong>Lock request, active-low</strong> (measured 2026-09-13: 12&thinsp;V at rest, 0&thinsp;V while the door lock switch is held at lock; blue wire on this car)</td></tr>
+  <tr><td>8</td><td>B</td><td>Ground</td><td>Ground reference</td></tr>
+  <tr><td>9</td><td>YR</td><td>Door lock timer input B92-1 (shared with door lock switch wiring)</td><td><strong>Unlock request, active-low</strong> (measured 2026-09-13: 12&thinsp;V at rest, 0&thinsp;V while the door lock switch is held at unlock)</td></tr>
+  <tr><td>10</td><td>RG</td><td>Door lock timer B92-4</td><td><strong>Must stay bridged to pin 6.</strong> 0&thinsp;V at rest; pulses ~12&thinsp;V during unlock (1.5&thinsp;V on lock). Optional <strong>unlock-event input</strong> through an optocoupler.</td></tr>
+</table>
+
+<div class="callout warn">
+<strong>Measured so far:</strong> pin 9 (YR) is the unlock request and is active-low: 12&thinsp;V at rest, pulled to ground while the door lock switch is held at unlock. <strong>Proven on the car:</strong> a direct ~0.5&thinsp;s jumper from YR to ground unlocked the doors; a 2.2&thinsp;k&Omega; jumper did not, so the output must be a low-resistance switch to ground (a MOSFET or SSR in the ohms, not a weak pull). Pin 7 (LG) measured the same way for lock, and a ~0.5&thinsp;s jumper from LG to ground locked the doors. <strong>Both Pi actions are proven by hand on the car.</strong> Pin 10 has no static lock state, but pulses to 11.7&thinsp;V on unlock (1.5&thinsp;V on lock). <strong>Still to confirm:</strong> LgB mirroring RG on lock, the minimum pulse length the timer accepts.
+</div>
+
+<h2>Three integration topologies</h2>
+
+<div class="topology">
+<h3>Topology A — Layered: OEM receiver + Pi tap in parallel <em>(recommended)</em></h3>
+
+<p>Install the OEM keyless retrofit first (~$50–$80 used <code class="pn">H7110AS011</code> module + <code>GOH-M24</code> fobs off eBay, plug-in install, reversible). The Pi comes later and taps the <em>same</em> lock/unlock lines the OEM module drives (B176 pins 7 and 9), running in parallel to the OEM circuit rather than replacing it.</p>
+
+<h4>Why this is the default choice</h4>
+<ul>
+  <li><strong>Immediate ergonomic win.</strong> OEM retrofit ships this weekend for lunch money and closes the "no keyless" gap while the Pi work spans months.</li>
+  <li><strong>Independent fallback.</strong> Pi crashed, BLE stack wedged after a firmware update, phone battery dead → the OEM fob still works because it runs on a completely independent Subaru circuit that the Pi can't take down.</li>
+  <li><strong>Pi acquires a natural staging point.</strong> Bench-testing the Pi's relay board is trivial: hook a scope to the OEM receiver's LOCK/UNLOCK outputs, capture what a real fob press looks like, replicate exactly on the Pi.</li>
+  <li><strong>Two independent auth paths.</strong> The car has two things that can unlock it: an RF fob (proximity-limited, no crypto, but simple) and a BLE-paired phone (crypto-authenticated, walkaway-capable). Different threat models, different failure modes — good defense in depth.</li>
+</ul>
+
+<h4>Physical arrangement</h4>
+<ul>
+  <li>OEM <code class="pn">H7110AS011</code> module on its factory stud behind the fuse block, connected to the factory harness the OEM way.</li>
+  <li>Pi hardware in the glovebox with the rest of the Pi (see <a href="dash22b-rpi-gateway.html">gateway doc</a>). Pi's relay board has two output lines, wired to the same LOCK / UNLOCK command wires between the OEM receiver and the door-lock timer.</li>
+  <li>Two mounting options for the parallel tap:
+    <ul>
+      <li><strong>Y-harness (preferred).</strong> Fabricate a small pigtail: a B176-mating shell on one end, a module-side shell on the other, all 10 pins passed straight through (so pins 6 and 10 keep going through the OEM module as designed). Break out pins 7, 9, 2, 8 to a Molex or Deutsch connector going to the Pi. Fully reversible — pull the harness and the car is stock.</li>
+      <li><strong>T-tap pins 7 and 9</strong> near B176. Simpler but not as clean.</li>
+    </ul>
+  </li>
+</ul>
+
+<h4>Contention model</h4>
+<p>Three things share timer inputs B92-1 and B92-5: the door lock switches, the OEM module (pins 9 and 7) and the Pi. The unlock input measured active-low with 12&thinsp;V at rest, so every source just pulls the line to ground. The lock input measured the same. <span class="spec">Several sources pulling low at once should therefore be harmless: the timer sees one longer request and runs one cycle.</span></p>
+</div>
+
+<div class="topology">
+<h3>Topology B — Pi-only: Pi is the receiver, no OEM fob</h3>
+
+<p>Fabricate a B176-mating shell, wire it to the Pi's output board. Unplug dummy B241, plug in the Pi shell. No OEM module purchased.</p>
+<div class="callout warn">
+<strong>The Pi shell must bridge pins 6 and 10</strong>, exactly like the factory dummy (and the hand-made jumper now on the car). What breaks without it isn't documented, so treat the bridge as mandatory.
+</div>
+
+<h4>Pros</h4>
+<ul>
+  <li>Nothing to buy on the OEM side.</li>
+  <li>Tidier install — one custom harness, no OEM module on its factory stud.</li>
+  <li>Slightly better BOM cost.</li>
+</ul>
+
+<h4>Cons</h4>
+<ul>
+  <li><strong>No independent fallback.</strong> Phone dead / Pi crashed → you're back to unlocking with the physical key. Not the end of the world (mechanical key always works), but keyless is unavailable.</li>
+  <li><strong>All eggs in the Pi basket.</strong> Any Pi kernel panic, SD card corruption, BLE stack regression, or watchdog misconfiguration takes out keyless entry. With Topology A the OEM fob keeps working through all of those.</li>
+  <li><strong>No OEM fob behavior to copy.</strong> The driver's door lock switch drives the same timer inputs, so you can still characterize lock/unlock requests without a module. What you lose is the fob-specific behavior (e.g. the single-press driver-only unlock), which lives in the module, not the timer.</li>
+</ul>
+
+<h4>When it makes sense</h4>
+<p>Only if OEM part sourcing dries up entirely (H7110AS011 is discontinued at Subaru; used market is currently healthy but that changes over time) or if the reversibility/reference-scope arguments don't apply to how you plan to develop.</p>
+</div>
+
+<div class="topology">
+<h3>Topology C — Pi upstream: Pi mimics fob RF <em>(do not build)</em></h3>
+
+<p>Pi transmits a rolling-code RF signal on the OEM receiver's operating frequency (315 or 433 MHz depending on region). OEM receiver decodes it as if a normal fob had been pressed.</p>
+
+<p>Skip this. Three reasons:</p>
+<ul>
+  <li><strong>RF Subaru keyless is relay-attackable</strong> — well-documented weakness. Adding another Pi-side transmitter to the mix doesn't improve the security bar; you get exactly the phishing-target properties of the existing OEM fob without any of the crypto benefits of BLE peer auth.</li>
+  <li><strong>Re-implementing rolling-code correctly is a project unto itself.</strong> Every fob rollover, every desync, every replay-guard is your problem to reverse-engineer from a live receiver.</li>
+  <li><strong>You've already built a better auth channel</strong> in BLE (Ed25519 challenge-response, biometric-gated, hardware-backed key in Android Keystore). Route the phone through that, not through a worse imitation of the OEM fob.</li>
+</ul>
+</div>
+
+<h2>Signaling — what the Pi actually emits</h2>
+
+<p>Whichever topology you build, the Pi's job on the door-lock side is to <strong>briefly activate B176 pin 7 (LG) or pin 9 (YR)</strong>, which land on door lock timer <a class="pn-link" href="https://parts.subaru.com/p/88201FC030.html" target="_blank" rel="noopener"><code class="pn">88201FC030</code></a> inputs B92-5 and B92-1. Those are the same inputs the door lock switches use, so a Pi request should look to the timer like someone operating the lock switch. The timer then drives the actuators. The Pi never touches actuator wiring.</p>
+
+<h4>What to measure before writing firmware</h4>
+<ul>
+  <li><strong>Mapping:</strong> which of pins 7/9 changes when the driver's door lock switch goes to LOCK, and which on UNLOCK.</li>
+  <li><strong>Active level:</strong> idle voltage and active voltage on each (expected: ~12&thinsp;V or ~5&thinsp;V idle, pulled to ground when active &mdash; <span class="spec">unconfirmed</span>).</li>
+  <li><strong>Minimum pulse:</strong> the shortest request the timer reliably acts on. Start with ~200&thinsp;ms and shorten until it stops working, then double the last working value.</li>
+  <li><strong>Lock state:</strong> no static signal exists on B176. Three ways to track it, cheapest first:
+    <ol>
+      <li><strong>Remember commands</strong> and passively watch pins 7 and 9 (isolated, high-impedance) for door lock button presses.</li>
+      <li><strong>Watch the motor drive pulses.</strong> Pin 10 (RG) measured ~12&thinsp;V during every unlock and 1.5&thinsp;V on lock. <span class="spec">The other motor wire, LgB (timer B92-3, not on B176), should do the reverse on lock; not yet measured.</span> Reading both through optocouplers catches every powered lock and unlock (button or Pi).</li>
+      <li><strong>Door sensors</strong> (reed switch or microswitch on each door's lock rod) for true position. This is the only option that sees the <strong>mechanical key</strong> and hand-moved knobs: measured on the car, the key cylinder locks/unlocks only its own door and produces no pulse on RG. Since the key can leave the two doors in different states, full "car locked" status needs a sensor in <strong>both</strong> doors.</li>
+    </ol>
+  </li>
+</ul>
+
+<p><span class="spec">The fob behaviors the forum describes (single-press unlocks the driver's door, hold for all doors) are probably implemented inside the OEM module, not the timer.</span> If the Pi wants the same split, it may need to reproduce the module's request pattern. Scope pins 7/9 during fob presses once an OEM module is installed (Topology A) to see what it actually sends.</p>
+
+<h2>Pi-side hardware</h2>
+
+<h4>Output stage — MOSFETs, not relays</h4>
+<p>Small logic-level N-channel MOSFETs (e.g. AO3400, or a pre-built breakout board) driven from two Pi GPIO pins. Reasons to prefer MOSFETs over mechanical relays:</p>
+<ul>
+  <li>Silent — no coil-click in the glovebox when the phone approaches.</li>
+  <li>Fast — pulse rise/fall in µs, no relay-actuator latency to worry about.</li>
+  <li>No EMI from coil-crash on release.</li>
+  <li>Lower current draw when idle.</li>
+</ul>
+<p>The lock/unlock requests are signal-level inputs to the timer, not actuator power &mdash; nothing about them needs a relay's contact rating. Low-side switching is confirmed correct: both lock (LG) and unlock (YR) measured active-low. An opto-isolated solid-state relay is a good alternative, since it also isolates the Pi's ground from the car's.</p>
+
+<h4>Hardware watchdog on the enable line</h4>
+<div class="callout warn">
+<strong>Non-negotiable.</strong> A malicious BLE input, a Pi kernel panic, or a buggy service that holds a GPIO high can otherwise leave a lock or unlock request asserted indefinitely. <span class="spec">How the timer reacts to a held input isn't documented: it may re-fire, hold the actuators, or ignore the manual switch until the input releases.</span> None of those are acceptable, so the output must be forced off in hardware.
+</div>
+<p>Wire the MOSFET gates through an AND gate with an "enable" line that the Pi must refresh every &lt;200 ms or it goes safe (both gates forced low). A dedicated small MCU (an ATtiny or one of the RP2040 boards) acts as the watchdog, monitoring a GPIO heartbeat from the Pi. If the heartbeat stops, the MCU pulls the enable low and holds it low until the Pi's watchdog service explicitly re-asserts the heartbeat. This gives you three lines of defense against a stuck output:</p>
+<ol>
+  <li>Pi user-space is misbehaving → the watchdog service on the Pi kills any command that runs longer than 3 s.</li>
+  <li>Pi kernel is misbehaving → the external MCU stops seeing heartbeats and disables the outputs.</li>
+  <li>External MCU is misbehaving → a hardware timeout on the enable line itself (an RC + comparator, or a re-triggerable monostable) opens the outputs anyway.</li>
+</ol>
+<p>Belt, suspenders, and a piece of duct tape.</p>
+
+<h4>Power</h4>
+<table>
+  <tr><th>Line</th><th>Source</th><th>Used for</th></tr>
+  <tr><td>Pi power</td><td><strong>Separate fused tap</strong> (recommended), or B176 pin 3 (W, M/B fuse 7, 20&thinsp;A)</td><td>Buck converter to 5&thinsp;V. See below for why not pin 1.</td></tr>
+  <tr><td>Ignition ON sense</td><td>B176 pin 2 (GB, F/B fuse 18)</td><td>Resistor divider or opto into a GPIO. State-machine input only (car on vs off), never a power source. <em>There is no ACC pin on B176.</em></td></tr>
+  <tr><td>Ground</td><td>B176 pin 8 (B)</td><td>Common reference for the output stage, so requests share the timer's 0&thinsp;V.</td></tr>
+</table>
+
+<p><strong>Why not power the Pi from pin 1.</strong> Pin 1 (WB) is on M/B fuse 5, the same fuse that feeds the door lock timer. A fault on the Pi side that pops that fuse would take out the power locks entirely, including the manual switch. Pin 3 (W) is on M/B fuse 7 (20&thinsp;A), which also feeds the tail &amp; illumination relay, so a fault there costs you tail lights instead. A dedicated fused tap keeps Pi faults away from both. Current is not the issue: a Pi 4 is roughly 200&ndash;400&thinsp;mA at 12&thinsp;V, well inside either fuse.</p>
+
+<div class="callout info">
+<strong>Parked power: the Pi gets its own lithium battery</strong> (Alex, 2026-09-13), so the Pi's draw while parked doesn't come out of the car's starting battery. Charge that pack only while pin 2 shows ignition ON. That way the car battery is never drained, and pin 3 (or the separate tap) only has to carry charging current.
+</div>
+
+<h2>Fail-safe modes</h2>
+
+<p>Enumerate every way the Pi side can break and what happens to the car:</p>
+
+<table>
+  <tr><th>Failure mode</th><th>Symptom</th><th>What the car does</th></tr>
+  <tr><td>Pi kernel panic</td><td>Heartbeat stops</td><td>External watchdog disables outputs. Car keeps normal factory door-lock behavior (manual switch, OEM fob in Topology A, key cylinder in both).</td></tr>
+  <tr><td>BLE stack wedged</td><td>Phone can't connect</td><td>No BLE lock/unlock. OEM fob still works in Topology A. Physical key always works.</td></tr>
+  <tr><td>Phone dead / off</td><td>Nothing to auth against</td><td>Same as above.</td></tr>
+  <tr><td>Buggy service pulls GPIO high indefinitely</td><td>Would stick a lock or unlock line</td><td>Pi-side watchdog service kills the command after 3 s. External MCU also disables on stale heartbeat. Hardware RC caps the worst case.</td></tr>
+  <tr><td>Malicious BLE peer replays commands</td><td>Attempts to unlock</td><td>Ed25519 challenge-response rejects (rolling nonce, bonded pairing). Rate-limit backoff after 3 fails.</td></tr>
+  <tr><td>Pi power drops (fuse blown, battery dead)</td><td>No BLE, no relay drive</td><td>Same as kernel panic — car reverts to stock behavior. OEM fob (Topology A) works.</td></tr>
+  <tr><td>Watchdog MCU dies</td><td>Enable line stuck</td><td>If stuck LOW (safe), outputs disabled. If stuck HIGH, the pull-down and the Pi's own watchdog still limit exposure; monitor the MCU's own heartbeat back to the Pi so this is detectable.</td></tr>
+</table>
+
+<h2>Bench-test sequence</h2>
+
+<p>Order of operations for actually building this, from safest to riskiest:</p>
+
+<ol>
+  <li><strong><s>Meter B176, no parts needed.</s> Done 2026-09-13:</strong> B176 closed by a hand-made jumper on pins 6&ndash;10 (LW&ndash;RG, same as the factory dummy), pin 3 constant, pin 2 key-ON, pin 9 (YR) unlock and pin 7 (LG) lock, both active-low, and a jumper to ground on each unlocked/locked the car. Pin 10 reads 0&thinsp;V at rest but pulses ~12&thinsp;V on unlock, so it works as an unlock-event signal. The mechanical door key produces no pulse and only affects its own door. Next: MIN/MAX on LgB for lock events.</li>
+  <li><strong>OEM retrofit.</strong> Buy the H7110AS011 + fobs, install per the retrofit doc, confirm keyless works. No Pi involvement yet.</li>
+  <li><strong>Scope pins 7/9 during fob presses.</strong> With the module installed, capture what it sends for lock, single unlock and held unlock. That's the pattern to copy if the Pi should behave like the fob.</li>
+  <li><strong>Bench-build the Pi relay board.</strong> Two MOSFETs, one watchdog MCU, one buck converter, no car yet. Drive from a bench Pi with mock GATT commands. Verify the outputs pulse-match what you captured in step 2. Verify the watchdog actually kills outputs on heartbeat loss.</li>
+  <li><strong>Wire into the car in Topology A.</strong> 3-way harness or T-tap between OEM receiver and door-lock timer. Confirm both OEM fob and Pi BLE can independently trigger lock/unlock, and that neither interferes with the other.</li>
+  <li><strong>Add walkaway auto-lock</strong> (Phase 1.5 in the gateway doc) once the manual-command path has been stable through a few weeks of normal use.</li>
+</ol>
+
+<h2>What this doesn't cover (yet)</h2>
+
+<ul>
+  <li><strong>Trunk / hatch release.</strong> The '01 coupe body doesn't have a factory-actuated trunk release from RKE — the third button on the GOH-M24 fob is a panic/alarm trigger, not a trunk pop. If Alex wants remote trunk from the Pi, that's a separate actuator + wiring project.</li>
+  <li><strong>Door-open state.</strong> Pins 5 and 6 are door switch lines per the FSM. Whether a Pi can usefully read door-open state from them needs its own measurement (open each door, watch 5 and 6). The FSM shows no separate keyless LED or interior-lamp trigger pin on B176; an earlier draft of this doc was wrong about that.</li>
+  <li><strong>Alarm / security upgrade.</strong> Subaru's <a class="pn-link" href="https://parts.subaru.com/p/H7110FS200.html" target="_blank" rel="noopener"><code class="pn">H7110FS200</code></a> layered an alarm on top of RKE. Out of scope here — the Pi could implement its own soft alarm (door-open detection triggers BLE notification to the phone) without any of the OEM alarm hardware.</li>
+</ul>
+
+</body>
+</html>
