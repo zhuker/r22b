@@ -2,7 +2,7 @@
 # -*- coding:utf-8 -*-
 
 import time
-import ADS1263
+from r22b.adc import ads1263 as ADS1263
 import RPi.GPIO as GPIO
 
 REF = 5.08          # Modify according to actual voltage

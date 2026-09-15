@@ -2,41 +2,33 @@
 BLE GATT Server using Bumble
 Provides RealDash CAN data streaming and H.264 video streaming
 
-Rewritten from hello.py using Google Bumble library
+Rewritten from hello.py (experiments/legacy/bluezero_service.py) using Google Bumble.
+Run on the Pi as root with bluetoothd stopped, from the repo root:
+
+    sudo systemctl stop bluetooth
+    sudo hciconfig hci0 down
+    sudo .venv/bin/python -m r22b.ble_service
 """
 
-import traceback
-import ADS1263
-import time
-import struct
 import asyncio
-import os
-import sys
-import glob
-import fractions
-from typing import List, Iterator, Dict
-from struct import pack
-from abc import ABC, abstractmethod
 import logging
 
 # Local imports
-import h264_packetizer
-from h264_stream_sources import H264StreamSource, H264FileStreamSource, H264CameraStreamSource
-import av
+from r22b.diff_temp import SensorReader
+from r22b.tpms import TPMSData, tpms_scanner_loop
+from r22b.realdash import build_realdash_frame, build_tpms_frame
+from r22b.video.sources import H264StreamSource, H264FileStreamSource, H264CameraStreamSource
 
 # Bumble imports
 from bumble.device import Device, Connection, AdvertisingType
-from bumble.host import Host
 from bumble.gatt import (
     Service,
     Characteristic,
     CharacteristicValue,
 )
-from bumble.att import ATT_Error
 from bumble.transport import open_transport
 from bumble.core import UUID, AdvertisingData
 from bumble import data_types
-from bumble.hci import HCI_LE_1M_PHY
 
 # Bumble GATT property constants
 PROPERTY_READ = Characteristic.Properties.READ
@@ -45,16 +37,8 @@ PROPERTY_WRITE_WITHOUT_RESPONSE = Characteristic.Properties.WRITE_WITHOUT_RESPON
 PROPERTY_NOTIFY = Characteristic.Properties.NOTIFY
 PROPERTY_INDICATE = Characteristic.Properties.INDICATE
 
-# Bleak for TPMS scanning
-from bleak import BleakScanner
-
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# --- Configuration ---
-V_SOURCE = 3.3
-R_PULLUP = 2200.0
-REF = 5.08
 
 # BLE UUIDs
 NUS_SERVICE_UUID = '6E400001-B5A3-F393-E0A9-E50E24DCCA9E'
@@ -62,148 +46,6 @@ NUS_RX_CHAR_UUID = '6E400002-B5A3-F393-E0A9-E50E24DCCA9E'
 NUS_TX_CHAR_UUID = '6E400003-B5A3-F393-E0A9-E50E24DCCA9E'
 H264_STREAM_CHAR_UUID = '6E400012-B5A3-F393-E0A9-E50E24DCCA9E'
 H264_CONTROL_CHAR_UUID = '6E400013-B5A3-F393-E0A9-E50E24DCCA9E'
-
-# Calibration Table
-CALIBRATION_TABLE = {
-    28136: -20, 15813: -10, 9319: 0, 5589: 10, 3476: 20,
-    2230: 30, 1466: 40, 984: 50, 671: 60, 468: 70,
-    332: 80, 239: 90, 175: 100, 129: 110, 97: 120,
-    73: 130, 57: 140, 43: 150
-}
-
-# --- State Classes ---
-class TPMSData:
-    """Container for TPMS sensor data."""
-    def __init__(self):
-        self.data: Dict[str, Dict[str, float]] = {
-            'FL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-            'FR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-            'RL': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0},
-            'RR': {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0}
-        }
-    
-    def update(self, position: str, pressure: float, temp: float, battery: int, leaking: int):
-        """Update TPMS data for a position."""
-        if position in self.data:
-            self.data[position]['pressure'] = pressure
-            self.data[position]['temp'] = temp
-            self.data[position]['battery'] = battery
-            self.data[position]['leaking'] = leaking
-    
-    def get(self, position: str) -> Dict[str, float]:
-        """Get TPMS data for a position."""
-        return self.data.get(position, {'pressure': 0.0, 'temp': 0.0, 'battery': 0, 'leaking': 0})
-
-
-class SensorReader:
-    """Handles ADC sensor reading."""
-    def __init__(self):
-        self.adc = ADS1263.ADS1263()
-        if self.adc.ADS1263_init_ADC1('ADS1263_400SPS') != -1:
-            self.adc.ADS1263_SetMode(0)
-    
-    def read_temp(self) -> float:
-        """Reads sensor and returns temp in Celsius."""
-        try:
-            adc_value = self.adc.ADS1263_GetChannalValue(0)
-            v_out = adc_value * (REF / 0x7fffffff)
-            if v_out >= (REF - 0.05):
-                return -999.0
-            r_sensor = (R_PULLUP * v_out) / (REF - v_out)
-            return get_temp_from_resistance(r_sensor)
-        except:
-            return -999.0
-
-
-# --- Temperature/TPMS Functions ---
-def get_temp_from_resistance(r_measured):
-    """Interpolates temperature from resistance value."""
-    sorted_ohms = sorted(CALIBRATION_TABLE.keys(), reverse=True)
-    if r_measured >= sorted_ohms[0]:
-        return CALIBRATION_TABLE[sorted_ohms[0]]
-    if r_measured <= sorted_ohms[-1]:
-        return CALIBRATION_TABLE[sorted_ohms[-1]]
-    for i in range(len(sorted_ohms) - 1):
-        r_high = sorted_ohms[i]
-        r_low = sorted_ohms[i+1]
-        if r_low <= r_measured <= r_high:
-            t_low_r = CALIBRATION_TABLE[r_high]
-            t_high_r = CALIBRATION_TABLE[r_low]
-            ratio = (r_measured - r_low) / (r_high - r_low)
-            temp = t_high_r - (ratio * (t_high_r - t_low_r))
-            return temp
-    return None
-
-def decode_tpms(raw_bytes):
-    """Decodes TPMS data from BLE advertisement."""
-    try:
-        pressure_raw = struct.unpack('<I', raw_bytes[6:10])[0]
-        pressure_bar = pressure_raw / 100000
-        temp_raw = struct.unpack('<I', raw_bytes[10:14])[0]
-        temp_c = temp_raw / 100
-        battery_raw = raw_bytes[14]
-        battery_low = 1 if battery_raw < 20 else 0
-        leaking = raw_bytes[15]
-        return pressure_bar, temp_c, battery_low, leaking
-    except:
-        return 0.0, 0.0, 0, 0
-
-async def tpms_scanner_loop(tpms_data: TPMSData):
-    """Async loop for TPMS BLE scanning."""
-    def callback(device, advertisement_data):
-        """Callback for TPMS sensor detection."""
-        if device.name and "TPMS" in device.name:
-            try:
-                p, t, b, l = decode_tpms(advertisement_data.manufacturer_data[256])
-                if "TPMS1" in device.name:
-                    pos = 'FL'
-                elif "TPMS2" in device.name:
-                    pos = 'FR'
-                elif "TPMS3" in device.name:
-                    pos = 'RL'
-                elif "TPMS4" in device.name:
-                    pos = 'RR'
-                else:
-                    pos = 'FL'
-                tpms_data.update(pos, p, t, b, l)
-            except:
-                pass
-    
-    try:
-        scanner = BleakScanner(callback)
-        await scanner.start()
-        logger.info("TPMS Scanner started...")
-        while True:
-            await asyncio.sleep(1)
-    except Exception as e:
-        logger.warning(f"TPMS Scanner unavailable (Bumble using HCI): {e}")
-        logger.info("TPMS scanning disabled - Bumble has exclusive HCI access")
-        # Keep running but do nothing
-        while True:
-            await asyncio.sleep(10)
-
-# --- RealDash CAN Frame Builder ---
-def build_realdash_frame(can_id, value):
-    """Packs data into RealDash CAN Protocol."""
-    frame = bytearray([0x44, 0x33, 0x22, 0x11])
-    frame.extend(can_id.to_bytes(4, byteorder='little'))
-    temp_int = int(value * 10)
-    frame.extend(temp_int.to_bytes(2, byteorder='little', signed=True))
-    frame.extend(bytearray([0,0,0,0,0,0]))
-    return bytes(frame)
-
-def build_tpms_frame(can_id, pressure_bar, temp_c, leaking, battery_low):
-    """Builds TPMS CAN frame."""
-    frame = bytearray([0x44, 0x33, 0x22, 0x11])
-    frame.extend(can_id.to_bytes(4, byteorder='little'))
-    pressure_int = int(pressure_bar * 100)
-    frame.extend(pressure_int.to_bytes(2, byteorder='little', signed=False))
-    temp_int = int(temp_c * 10)
-    frame.extend(temp_int.to_bytes(2, byteorder='little', signed=True))
-    frame.append(leaking & 0xFF)
-    frame.append(battery_low & 0xFF)
-    frame.extend(bytearray([0, 0]))
-    return bytes(frame)
 
 # --- GATT Server Implementation ---
 class BumbleGATTServer:
@@ -389,7 +231,7 @@ async def main():
     tpms_data = TPMSData()
     
     # Choose H.264 source: file-based or camera
-    # h264_source = H264FileStreamSource(frames_dir="h264SampleFrames")
+    # h264_source = H264FileStreamSource(frames_dir="data/samples/h264")
     h264_source = H264CameraStreamSource(device='/dev/video0', width=640, height=360, framerate=30, bitrate=300000)
     
     # Open transport

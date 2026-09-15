@@ -1,5 +1,5 @@
 import traceback
-import ADS1263
+from r22b.adc import ads1263 as ADS1263
 import time
 # --- BLE Imports ---
 from bluezero import adapter

@@ -3,7 +3,7 @@ import av
 import signal
 import sys
 
-from h264_stream_sources import H264CameraStreamSource
+from r22b.video.sources import H264CameraStreamSource
 
 # Flag to handle clean exit on Ctrl+C
 keep_running = True

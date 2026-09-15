@@ -1,5 +1,5 @@
 import traceback
-import ADS1263
+from r22b.adc import ads1263 as ADS1263
 import time
 import struct
 import asyncio
@@ -88,7 +88,7 @@ tpms_data = {
 h264_streaming_active = True
 h264_current_frame = 0
 # h264_frame_files = []
-h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
+h264_frame_files = sorted(glob.glob("data/samples/h264/frame-*.h264"))
 
 # --- H.264 Packetization (from h264_packetize.py) ---
 NAL_TYPE_FU_A = 28
@@ -584,7 +584,7 @@ def h264_control_callback(value, options, characteristic):
         h264_streaming_active = True
         h264_current_frame = 0
         # Load frame files
-        h264_frame_files = sorted(glob.glob("h264SampleFrames/frame-*.h264"))
+        h264_frame_files = sorted(glob.glob("data/samples/h264/frame-*.h264"))
         print(f"H.264: Starting stream ({len(h264_frame_files)} frames)")
     elif cmd == "STOP":
         h264_streaming_active = False

@@ -13,7 +13,7 @@ from typing import List, Dict
 from abc import ABC, abstractmethod
 
 # Local imports
-import h264_packetizer
+from . import packetizer as h264_packetizer
 
 # PyAV for camera capture
 import av
@@ -58,7 +58,7 @@ class H264StreamSource(ABC):
 class H264FileStreamSource(H264StreamSource):
     """H.264 stream source that reads from files on disk."""
     
-    def __init__(self, frames_dir: str = "h264SampleFrames"):
+    def __init__(self, frames_dir: str = "data/samples/h264"):
         self.frames_dir = frames_dir
         self.frame_files: List[str] = []
         self.current_frame = 0

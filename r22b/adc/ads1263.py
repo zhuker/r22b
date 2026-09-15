@@ -27,7 +27,7 @@
 # THE SOFTWARE.
 #
 
-import config
+from . import waveshare_config as config
 import RPi.GPIO as GPIO
 
 # gain

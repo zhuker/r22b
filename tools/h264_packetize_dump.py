@@ -297,7 +297,7 @@ def save_packets(packets: List[bytes], frame_name: str, output_dir: str = "tmp_p
             f.write(packet)
 
 
-def process_h264_frames(frames_dir: str = "h264SampleFrames", max_packet_size: int = PACKET_MAX):
+def process_h264_frames(frames_dir: str = "data/samples/h264", max_packet_size: int = PACKET_MAX):
     """
     Process all H.264 frames in a directory and packetize them.
     
@@ -374,5 +374,5 @@ def process_h264_frames(frames_dir: str = "h264SampleFrames", max_packet_size: i
 
 
 if __name__ == "__main__":
-    # Process frames from the h264SampleFrames directory
+    # Process frames from data/samples/h264
     process_h264_frames()
